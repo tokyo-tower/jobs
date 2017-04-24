@@ -1,0 +1,10 @@
+{
+    "official_website_url": "http://motionpicture.jp",
+    "email": {
+        "from": "noreply@default.chevre.motionpicture.jp",
+        "fromname": "CHEVRE_EVENT_NAME Online Ticket [dev]"
+    },
+    "datetimes": {
+        "reservation_end_members": "2017-12-31T23:59:59+09:00"
+    }
+}

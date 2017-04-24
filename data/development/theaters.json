@@ -1,0 +1,24 @@
+[
+    {
+        "_id": "001",
+        "name": {
+            "ja": "TOHOシネマズ 六本木ヒルズ",
+            "en": "TOHO CINEMAS Roppongi Hills"
+        },
+        "address": {
+            "ja": "東京都港区六本木6-10-2　六本木ヒルズけやき坂コンプレックス内",
+            "en": "Roppongi Hills Keyakizaka Complex, 6-10-2 Roppongi, Minato-ku, Tokyo"
+        }
+    },
+    {
+        "_id": "002",
+        "name": {
+            "ja": "EX THEATER 六本木",
+            "en": "EX THEATER ROPPONGI"
+        },
+        "address": {
+            "ja": "東京都港区西麻布1-2-9",
+            "en": "1-2-9 Nishiazabu Minatoku Tokyo Japan"
+        }
+    }
+]
