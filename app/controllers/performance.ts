@@ -124,11 +124,10 @@ export async function updateStatuses() {
     });
 
     logger.info('saving performanceStatusesModel...', performanceStatusesModel);
-    PerformanceStatusesModel.store(performanceStatusesModel, (storeErr) => {
-        logger.info('performanceStatusesModel saved.', storeErr);
-        mongoose.disconnect();
-        process.exit(0);
-    });
+    await PerformanceStatusesModel.store(performanceStatusesModel);
+    logger.info('performanceStatusesModel saved.');
+    mongoose.disconnect();
+    process.exit(0);
 }
 
 /**

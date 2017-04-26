@@ -107,11 +107,10 @@ function updateStatuses() {
             performanceStatusesModel.setStatus(performance._id.toString(), status);
         });
         logger.info('saving performanceStatusesModel...', performanceStatusesModel);
-        chevre_domain_1.PerformanceStatusesModel.store(performanceStatusesModel, (storeErr) => {
-            logger.info('performanceStatusesModel saved.', storeErr);
-            mongoose.disconnect();
-            process.exit(0);
-        });
+        yield chevre_domain_1.PerformanceStatusesModel.store(performanceStatusesModel);
+        logger.info('performanceStatusesModel saved.');
+        mongoose.disconnect();
+        process.exit(0);
     });
 }
 exports.updateStatuses = updateStatuses;
