@@ -3,7 +3,8 @@ cd ../
 set NODE_ENV=development
 node bin/command schema dropCollections
 
-node bin/command film createTicketTypeGroupsFromJson
+node bin/command ticketType createFromJson
+node bin/command ticketTypeGroup createFromJson
 node bin/command film createFromJson
 node bin/command theater createFromJson
 node bin/command theater createScreensFromJson

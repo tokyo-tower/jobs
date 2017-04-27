@@ -4,8 +4,7 @@
  * @namespace MemberController
  */
 
-import { Models } from '@motionpicture/chevre-domain';
-import * as Util from '../../common/Util/Util';
+import { CommonUtil, Models } from '@motionpicture/chevre-domain';
 
 import * as crypto from 'crypto';
 import * as fs from 'fs-extra';
@@ -48,7 +47,7 @@ export function createFromJson() {
             return {
                 user_id: member.user_id,
                 password_salt: passwordSalt,
-                password_hash: Util.createHash(member.password, passwordSalt)
+                password_hash: CommonUtil.createHash(member.password, passwordSalt)
             };
         });
         logger.info('removing all members...');

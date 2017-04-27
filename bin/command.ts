@@ -16,6 +16,8 @@ import * as SchemaController from '../app/controllers/schema';
 import * as StaffController from '../app/controllers/staff';
 import * as TestController from '../app/controllers/test';
 import * as TheaterController from '../app/controllers/theater';
+import * as TicketTypeController from '../app/controllers/ticketType';
+import * as TicketTypeGroupController from '../app/controllers/ticketTypeGroup';
 import * as WindowController from '../app/controllers/window';
 
 program
@@ -82,6 +84,20 @@ program
     .description('劇場タスク')
     .action((method) => {
         (<any>TheaterController)[method]();
+    });
+
+program
+    .command('ticketType <method>')
+    .description('券種タスク')
+    .action((method) => {
+        (<any>TicketTypeController)[method]();
+    });
+
+program
+    .command('ticketTypeGroup <method>')
+    .description('券種グループタスク')
+    .action((method) => {
+        (<any>TicketTypeGroupController)[method]();
     });
 
 program

@@ -14,7 +14,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
-const Util = require("../../common/Util/Util");
 const crypto = require("crypto");
 const fs = require("fs-extra");
 const log4js = require("log4js");
@@ -52,7 +51,7 @@ function createFromJson() {
             return {
                 user_id: member.user_id,
                 password_salt: passwordSalt,
-                password_hash: Util.createHash(member.password, passwordSalt)
+                password_hash: chevre_domain_1.CommonUtil.createHash(member.password, passwordSalt)
             };
         });
         logger.info('removing all members...');

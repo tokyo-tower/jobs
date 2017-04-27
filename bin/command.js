@@ -25,6 +25,8 @@ const SchemaController = require("../app/controllers/schema");
 const StaffController = require("../app/controllers/staff");
 const TestController = require("../app/controllers/test");
 const TheaterController = require("../app/controllers/theater");
+const TicketTypeController = require("../app/controllers/ticketType");
+const TicketTypeGroupController = require("../app/controllers/ticketTypeGroup");
 const WindowController = require("../app/controllers/window");
 program
     .version('0.0.1');
@@ -81,6 +83,18 @@ program
     .description('劇場タスク')
     .action((method) => {
     TheaterController[method]();
+});
+program
+    .command('ticketType <method>')
+    .description('券種タスク')
+    .action((method) => {
+    TicketTypeController[method]();
+});
+program
+    .command('ticketTypeGroup <method>')
+    .description('券種グループタスク')
+    .action((method) => {
+    TicketTypeGroupController[method]();
 });
 program
     .command('film <method>')

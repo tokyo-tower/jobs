@@ -1,4 +1,3 @@
-// read http://json.schemastore.org/tsconfig
 {
     "compilerOptions": {
         "allowUnreachableCode": false,
@@ -41,10 +40,8 @@
     "exclude": [
         "config",
         "data",
-        "definitions",
         "locales",
         "node_modules",
-        "public",
-        "typings"
+        "public"
     ]
 }

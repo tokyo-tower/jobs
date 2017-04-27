@@ -4,9 +4,8 @@
  * @namespace StaffController
  */
 
-import { Models } from '@motionpicture/chevre-domain';
+import { CommonUtil, Models } from '@motionpicture/chevre-domain';
 import { ReservationUtil } from '@motionpicture/chevre-domain';
-import * as Util from '../../common/Util/Util';
 
 import * as crypto from 'crypto';
 import * as fs from 'fs-extra';
@@ -47,7 +46,7 @@ export function createFromJson(): void {
             const SIZE = 64;
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
             staff.password_salt = passwordSalt;
-            staff.password_hash = Util.createHash(staff.password, passwordSalt);
+            staff.password_hash = CommonUtil.createHash(staff.password, passwordSalt);
 
             logger.debug('updating staff...');
             await Models.Staff.findOneAndUpdate(
@@ -135,7 +134,6 @@ function createReservationsByScreenId(screenId: string, cb: (err: Error | null) 
             .populate('screen', 'name')
             .populate('theater', 'name address')
             .exec();
-
         for (const performance of performances) {
             const paymentNo = await ReservationUtil.publishPaymentNo(performance.get('day'));
             let reservationsByPerformance = JSON.parse(data);
@@ -182,7 +180,6 @@ function createReservationsByScreenId(screenId: string, cb: (err: Error | null) 
                     ticket_type_charge: 0,
                     ticket_type_name_en: 'Free',
                     ticket_type_name_ja: '無料',
-                    ticket_type_code: '00',
                     seat_grade_additional_charge: 0,
                     seat_grade_name_en: 'Normal Seat',
                     seat_grade_name_ja: 'ノーマルシート'
@@ -300,7 +297,6 @@ export async function createReservationsByPerformanceId(performanceId: string) {
                     ticket_type_charge: 0,
                     ticket_type_name_en: 'Free',
                     ticket_type_name_ja: '無料',
-                    ticket_type_code: '00',
                     seat_grade_additional_charge: 0,
                     seat_grade_name_en: 'Normal Seat',
                     seat_grade_name_ja: 'ノーマルシート'

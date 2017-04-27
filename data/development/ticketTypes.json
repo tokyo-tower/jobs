@@ -1,0 +1,83 @@
+[
+    {
+        "_id": "000001",
+        "name": {
+            "ja": "一般",
+            "en": "Adults"
+        },
+        "charge": 2000,
+        "is_on_the_day": false
+    },
+    {
+        "_id": "000002",
+        "name": {
+            "ja": "一般",
+            "en": "Adults"
+        },
+        "charge": 1800,
+        "is_on_the_day": false
+    },
+    {
+        "_id": "000003",
+        "name": {
+            "ja": "一般",
+            "en": "Adults"
+        },
+        "charge": 1500,
+        "is_on_the_day": false
+    },
+    {
+        "_id": "000004",
+        "name": {
+            "ja": "一般",
+            "en": "Adults"
+        },
+        "charge": 1300,
+        "is_on_the_day": false
+    },
+    {
+        "_id": "000005",
+        "name": {
+            "ja": "一般",
+            "en": "Adults"
+        },
+        "charge": 1000,
+        "is_on_the_day": false
+    },
+    {
+        "_id": "000006",
+        "name": {
+            "ja": "学生",
+            "en": "Students"
+        },
+        "charge": 1500,
+        "is_on_the_day": false
+    },
+    {
+        "_id": "000007",
+        "name": {
+            "ja": "学生",
+            "en": "Students"
+        },
+        "charge": 1000,
+        "is_on_the_day": false
+    },
+    {
+        "_id": "000008",
+        "name": {
+            "ja": "学生",
+            "en": "Students"
+        },
+        "charge": 500,
+        "is_on_the_day": false
+    },
+    {
+        "_id": "000009",
+        "name": {
+            "ja": "学生当日",
+            "en": "Students on the day"
+        },
+        "charge": 500,
+        "is_on_the_day": true
+    }
+]

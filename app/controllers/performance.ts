@@ -5,28 +5,13 @@
  */
 
 import { Models, PerformanceStatusesModel } from '@motionpicture/chevre-domain';
-
+import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as log4js from 'log4js';
 import * as mongoose from 'mongoose';
 
 const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const DEFAULT_RADIX = 10;
-
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
+const debug = createDebug('chevre-jobs:controller:performance');
 
 /**
  *
@@ -53,20 +38,13 @@ export function createFromJson(): void {
             performance.screen_name = screenOfPerformance.get('name');
             performance.theater_name = screenOfPerformance.get('theater').get('name');
 
-            logger.debug('updating performance...');
-            await Models.Performance.findOneAndUpdate(
-                { _id: performance._id },
-                performance,
-                {
-                    new: true,
-                    upsert: true
-                }
-            ).exec();
-            logger.debug('performance updated');
+            debug('creating performance...');
+            await Models.Performance.create(performance);
+            debug('performance created');
         });
 
         await Promise.all(promises);
-        logger.info('promised.');
+        debug('promised.');
         mongoose.disconnect();
         process.exit(0);
     });
@@ -80,7 +58,7 @@ export function createFromJson(): void {
 export async function updateStatuses() {
     mongoose.connect(MONGOLAB_URI, {});
 
-    logger.info('finding performances...');
+    debug('finding performances...');
     const performances = await Models.Performance.find(
         {},
         'day start_time screen'
@@ -88,11 +66,11 @@ export async function updateStatuses() {
         .populate('screen', 'seats_number')
         .exec();
 
-    logger.info('performances found.');
+    debug('performances found.');
 
     const performanceStatusesModel = PerformanceStatusesModel.create();
 
-    logger.info('aggregating...');
+    debug('aggregating...');
     const results: any[] = await Models.Reservation.aggregate(
         [
             {
@@ -123,9 +101,9 @@ export async function updateStatuses() {
         performanceStatusesModel.setStatus(performance._id.toString(), status);
     });
 
-    logger.info('saving performanceStatusesModel...', performanceStatusesModel);
+    debug('saving performanceStatusesModel...', performanceStatusesModel);
     await PerformanceStatusesModel.store(performanceStatusesModel);
-    logger.info('performanceStatusesModel saved.');
+    debug('performanceStatusesModel saved.');
     mongoose.disconnect();
     process.exit(0);
 }
@@ -138,7 +116,7 @@ export async function updateStatuses() {
 export function release(performanceId: string): void {
     mongoose.connect(MONGOLAB_URI, {});
 
-    logger.info('updating performance..._id:', performanceId);
+    debug('updating performance..._id:', performanceId);
     Models.Performance.findOneAndUpdate(
         {
             _id: performanceId
@@ -150,7 +128,7 @@ export function release(performanceId: string): void {
             new: true
         },
         (err, performance) => {
-            logger.info('performance updated', err, performance);
+            debug('performance updated', err, performance);
             mongoose.disconnect();
             process.exit(0);
         }

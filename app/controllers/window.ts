@@ -4,8 +4,7 @@
  * @namespace WindowController
  */
 
-import { Models } from '@motionpicture/chevre-domain';
-import * as Util from '../../common/Util/Util';
+import { CommonUtil, Models } from '@motionpicture/chevre-domain';
 
 import * as crypto from 'crypto';
 import * as fs from 'fs-extra';
@@ -45,7 +44,7 @@ export function createFromJson() {
             const SIZE = 64;
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
             window.password_salt = passwordSalt;
-            window.password_hash = Util.createHash(window.password, passwordSalt);
+            window.password_hash = CommonUtil.createHash(window.password, passwordSalt);
             return window;
         });
 

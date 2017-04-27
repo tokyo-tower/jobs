@@ -14,7 +14,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
-const Util = require("../../common/Util/Util");
 const crypto = require("crypto");
 const fs = require("fs-extra");
 const log4js = require("log4js");
@@ -49,7 +48,7 @@ function createFromJson() {
             const SIZE = 64;
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
             window.password_salt = passwordSalt;
-            window.password_hash = Util.createHash(window.password, passwordSalt);
+            window.password_hash = chevre_domain_1.CommonUtil.createHash(window.password, passwordSalt);
             return window;
         });
         logger.info('removing all windows...');

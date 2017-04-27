@@ -6,8 +6,7 @@
  * @namespace TestController
  */
 
-import { Models, ReservationUtil } from '@motionpicture/chevre-domain';
-import * as Util from '../../common/Util/Util';
+import { CommonUtil, Models, ReservationUtil } from '@motionpicture/chevre-domain';
 
 import * as conf from 'config';
 import * as createDebug from 'debug';
@@ -44,7 +43,7 @@ const logger = log4js.getLogger('system');
  */
 export function checkFullWidthLetter() {
     const filmName = '作家性の萌芽　1999-2003 （細田守監督短編集）『劇場版デジモンアドベンチャー』『劇場版デジモンアドベンチャー　ぼくらのウォーゲーム！』『村上隆作品　SUPERFLAT MONOGRAM』『村上隆作品　The Creatures From Planet 66 ～Roppongi Hills Story～』『おジャ魔女どれみドッカ～ン！（40話）』『明日のナージャ（OP、ED）』';
-    const filmNameFullWidth = Util.toFullWidth(filmName);
+    const filmNameFullWidth = CommonUtil.toFullWidth(filmName);
     let registerDisp1 = '';
     // tslint:disable-next-line:prefer-for-of no-increment-decrement
     for (let i = 0; i < filmNameFullWidth.length; i++) {

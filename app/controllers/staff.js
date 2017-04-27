@@ -15,7 +15,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const chevre_domain_2 = require("@motionpicture/chevre-domain");
-const Util = require("../../common/Util/Util");
 const crypto = require("crypto");
 const fs = require("fs-extra");
 const log4js = require("log4js");
@@ -51,7 +50,7 @@ function createFromJson() {
             const SIZE = 64;
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
             staff.password_salt = passwordSalt;
-            staff.password_hash = Util.createHash(staff.password, passwordSalt);
+            staff.password_hash = chevre_domain_1.CommonUtil.createHash(staff.password, passwordSalt);
             logger.debug('updating staff...');
             yield chevre_domain_1.Models.Staff.findOneAndUpdate({
                 user_id: staff.user_id
@@ -169,7 +168,6 @@ function createReservationsByScreenId(screenId, cb) {
                     ticket_type_charge: 0,
                     ticket_type_name_en: 'Free',
                     ticket_type_name_ja: '無料',
-                    ticket_type_code: '00',
                     seat_grade_additional_charge: 0,
                     seat_grade_name_en: 'Normal Seat',
                     seat_grade_name_ja: 'ノーマルシート'
@@ -276,7 +274,6 @@ function createReservationsByPerformanceId(performanceId) {
                     ticket_type_charge: 0,
                     ticket_type_name_en: 'Free',
                     ticket_type_name_ja: '無料',
-                    ticket_type_code: '00',
                     seat_grade_additional_charge: 0,
                     seat_grade_name_en: 'Normal Seat',
                     seat_grade_name_ja: 'ノーマルシート'

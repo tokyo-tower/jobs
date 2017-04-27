@@ -14,25 +14,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
+const createDebug = require("debug");
 const fs = require("fs-extra");
-const log4js = require("log4js");
 const mongoose = require("mongoose");
 const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const DEFAULT_RADIX = 10;
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
+const debug = createDebug('chevre-jobs:controller:performance');
 /**
  *
  *
@@ -55,15 +42,12 @@ function createFromJson() {
                 throw new Error('screen not found.');
             performance.screen_name = screenOfPerformance.get('name');
             performance.theater_name = screenOfPerformance.get('theater').get('name');
-            logger.debug('updating performance...');
-            yield chevre_domain_1.Models.Performance.findOneAndUpdate({ _id: performance._id }, performance, {
-                new: true,
-                upsert: true
-            }).exec();
-            logger.debug('performance updated');
+            debug('creating performance...');
+            yield chevre_domain_1.Models.Performance.create(performance);
+            debug('performance created');
         }));
         yield Promise.all(promises);
-        logger.info('promised.');
+        debug('promised.');
         mongoose.disconnect();
         process.exit(0);
     }));
@@ -77,13 +61,13 @@ exports.createFromJson = createFromJson;
 function updateStatuses() {
     return __awaiter(this, void 0, void 0, function* () {
         mongoose.connect(MONGOLAB_URI, {});
-        logger.info('finding performances...');
+        debug('finding performances...');
         const performances = yield chevre_domain_1.Models.Performance.find({}, 'day start_time screen')
             .populate('screen', 'seats_number')
             .exec();
-        logger.info('performances found.');
+        debug('performances found.');
         const performanceStatusesModel = chevre_domain_1.PerformanceStatusesModel.create();
-        logger.info('aggregating...');
+        debug('aggregating...');
         const results = yield chevre_domain_1.Models.Reservation.aggregate([
             {
                 $group: {
@@ -106,9 +90,9 @@ function updateStatuses() {
             const status = performance.getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
             performanceStatusesModel.setStatus(performance._id.toString(), status);
         });
-        logger.info('saving performanceStatusesModel...', performanceStatusesModel);
+        debug('saving performanceStatusesModel...', performanceStatusesModel);
         yield chevre_domain_1.PerformanceStatusesModel.store(performanceStatusesModel);
-        logger.info('performanceStatusesModel saved.');
+        debug('performanceStatusesModel saved.');
         mongoose.disconnect();
         process.exit(0);
     });
@@ -121,7 +105,7 @@ exports.updateStatuses = updateStatuses;
  */
 function release(performanceId) {
     mongoose.connect(MONGOLAB_URI, {});
-    logger.info('updating performance..._id:', performanceId);
+    debug('updating performance..._id:', performanceId);
     chevre_domain_1.Models.Performance.findOneAndUpdate({
         _id: performanceId
     }, {
@@ -129,7 +113,7 @@ function release(performanceId) {
     }, {
         new: true
     }, (err, performance) => {
-        logger.info('performance updated', err, performance);
+        debug('performance updated', err, performance);
         mongoose.disconnect();
         process.exit(0);
     });
