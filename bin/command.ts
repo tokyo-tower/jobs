@@ -6,12 +6,12 @@
 
 import * as program from 'commander';
 import * as AnalysisController from '../app/controllers/analysis';
+import * as EmailQueueController from '../app/controllers/emailQueue';
 import * as FilmController from '../app/controllers/film';
 import * as GMOController from '../app/controllers/gmo';
 import * as MemberController from '../app/controllers/member';
 import * as PerformanceController from '../app/controllers/performance';
 import * as ReservationController from '../app/controllers/reservation';
-import * as ReservationEmailCueController from '../app/controllers/reservationEmailCue';
 import * as SchemaController from '../app/controllers/schema';
 import * as StaffController from '../app/controllers/staff';
 import * as TestController from '../app/controllers/test';
@@ -129,10 +129,10 @@ program
     });
 
 program
-    .command('reservationEmailCue <method>')
-    .description('予約メール関連タスク')
+    .command('emailQueue <method>')
+    .description('メールキュー関連タスク')
     .action((method) => {
-        (<any>ReservationEmailCueController)[method]();
+        (<any>EmailQueueController)[method]();
     });
 
 program

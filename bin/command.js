@@ -15,12 +15,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const program = require("commander");
 const AnalysisController = require("../app/controllers/analysis");
+const EmailQueueController = require("../app/controllers/emailQueue");
 const FilmController = require("../app/controllers/film");
 const GMOController = require("../app/controllers/gmo");
 const MemberController = require("../app/controllers/member");
 const PerformanceController = require("../app/controllers/performance");
 const ReservationController = require("../app/controllers/reservation");
-const ReservationEmailCueController = require("../app/controllers/reservationEmailCue");
 const SchemaController = require("../app/controllers/schema");
 const StaffController = require("../app/controllers/staff");
 const TestController = require("../app/controllers/test");
@@ -121,10 +121,10 @@ program
     ReservationController[method]();
 });
 program
-    .command('reservationEmailCue <method>')
-    .description('予約メール関連タスク')
+    .command('emailQueue <method>')
+    .description('メールキュー関連タスク')
     .action((method) => {
-    ReservationEmailCueController[method]();
+    EmailQueueController[method]();
 });
 program
     .command('schema <method>')
