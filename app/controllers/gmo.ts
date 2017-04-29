@@ -4,7 +4,7 @@
  * @namespace GMOController
  */
 
-import { GMONotificationUtil, Models, ReservationEmailCueUtil, ReservationUtil } from '@motionpicture/chevre-domain';
+import { GMONotificationUtil, Models, ReservationUtil } from '@motionpicture/chevre-domain';
 import { Util as GMOUtil } from '@motionpicture/gmo-service';
 
 import * as log4js from 'log4js';
@@ -124,50 +124,7 @@ export async function processOne() {
         if (notification.get('pay_type') === GMOUtil.PAY_TYPE_CREDIT) {
             switch (notification.get('status')) {
                 case GMOUtil.STATUS_CREDIT_CAPTURE:
-                    // 予約完了ステータスへ変更
-                    logger.info('updating reservations by paymentNo...', notification.get('order_id'));
-                    rawUpdateReservation = await Models.Reservation.update(
-                        { payment_no: notification.get('order_id') },
-                        {
-                            gmo_shop_id: notification.get('shop_id'),
-                            gmo_amount: notification.get('amount'),
-                            gmo_tax: notification.get('tax'),
-                            gmo_access_id: notification.get('access_id'),
-                            gmo_forward: notification.get('forward'),
-                            gmo_method: notification.get('method'),
-                            gmo_approve: notification.get('approve'),
-                            gmo_tran_id: notification.get('tran_id'),
-                            gmo_tran_date: notification.get('tran_date'),
-                            gmo_pay_type: notification.get('pay_type'),
-                            gmo_status: notification.get('status'),
-                            status: ReservationUtil.STATUS_RESERVED,
-                            updated_user: 'system'
-                        },
-                        { multi: true }
-                    ).exec();
-                    logger.info('reservations updated.', rawUpdateReservation);
-
-                    // 完了メールキュー追加(あれば更新日時を更新するだけ)
-                    logger.info('creating reservationEmailCue...');
-                    await Models.ReservationEmailCue.findOneAndUpdate(
-                        {
-                            payment_no: notification.get('order_id'),
-                            template: ReservationEmailCueUtil.TEMPLATE_COMPLETE
-                        },
-                        {
-                            $set: { updated_at: Date.now() },
-                            $setOnInsert: { status: ReservationEmailCueUtil.STATUS_UNSENT }
-                        },
-                        {
-                            upsert: true,
-                            new: true
-                        }
-                    ).exec();
-                    logger.info('reservationEmailCue created.');
-
-                    // あったにせよなかったにせよ処理済に
                     await next(null, notification);
-
                     break;
 
                 case GMOUtil.STATUS_CREDIT_UNPROCESSED:
@@ -226,21 +183,22 @@ export async function processOne() {
                     logger.info('reservations updated.', rawUpdateReservation);
 
                     // 完了メールキュー追加(あれば更新日時を更新するだけ)
+                    // todo 新メールキュー方式に変更
                     logger.info('creating reservationEmailCue...');
-                    await Models.ReservationEmailCue.findOneAndUpdate(
-                        {
-                            payment_no: notification.get('order_id'),
-                            template: ReservationEmailCueUtil.TEMPLATE_COMPLETE
-                        },
-                        {
-                            $set: { updated_at: Date.now() },
-                            $setOnInsert: { status: ReservationEmailCueUtil.STATUS_UNSENT }
-                        },
-                        {
-                            upsert: true,
-                            new: true
-                        }
-                    ).exec();
+                    // await Models.ReservationEmailCue.findOneAndUpdate(
+                    //     {
+                    //         payment_no: notification.get('order_id'),
+                    //         template: ReservationEmailCueUtil.TEMPLATE_COMPLETE
+                    //     },
+                    //     {
+                    //         $set: { updated_at: Date.now() },
+                    //         $setOnInsert: { status: ReservationEmailCueUtil.STATUS_UNSENT }
+                    //     },
+                    //     {
+                    //         upsert: true,
+                    //         new: true
+                    //     }
+                    // ).exec();
                     logger.info('reservationEmailCue created.');
 
                     // あったにせよなかったにせよ処理済に
@@ -268,22 +226,23 @@ export async function processOne() {
                     logger.info('reservations updated.', rawUpdateReservation);
 
                     // 仮予約完了メールキュー追加(あれば更新日時を更新するだけ)
-                    logger.info('creating reservationEmailCue...');
-                    await Models.ReservationEmailCue.findOneAndUpdate(
-                        {
-                            payment_no: notification.get('order_id'),
-                            template: ReservationEmailCueUtil.TEMPLATE_TEMPORARY
-                        },
-                        {
-                            $set: { updated_at: Date.now() },
-                            $setOnInsert: { status: ReservationEmailCueUtil.STATUS_UNSENT }
-                        },
-                        {
-                            upsert: true,
-                            new: true
-                        }
-                    ).exec();
-                    logger.info('reservationEmailCue created.');
+                    // todo 新メールキュー方式に変更
+                    // logger.info('creating reservationEmailCue...');
+                    // await Models.ReservationEmailCue.findOneAndUpdate(
+                    //     {
+                    //         payment_no: notification.get('order_id'),
+                    //         template: ReservationEmailCueUtil.TEMPLATE_TEMPORARY
+                    //     },
+                    //     {
+                    //         $set: { updated_at: Date.now() },
+                    //         $setOnInsert: { status: ReservationEmailCueUtil.STATUS_UNSENT }
+                    //     },
+                    //     {
+                    //         upsert: true,
+                    //         new: true
+                    //     }
+                    // ).exec();
+                    // logger.info('reservationEmailCue created.');
 
                     // あったにせよなかったにせよ処理済に
                     await next(null, notification);

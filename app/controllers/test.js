@@ -166,30 +166,6 @@ function getPaymentNosWithEmail() {
 }
 exports.getPaymentNosWithEmail = getPaymentNosWithEmail;
 /**
- *
- * @memberOf TestController
- */
-function createEmailCues() {
-    fs.readFile(`${__dirname}/../../../../logs/${process.env.NODE_ENV}/20161021_orderIds4reemail.json`, 'utf8', (err, data) => {
-        const orderIds = JSON.parse(data);
-        debug('orderIds length is ', orderIds.length, err);
-        const cues = orderIds.map((orderId) => {
-            return {
-                payment_no: orderId,
-                is_sent: false
-            };
-        });
-        mongoose.connect(MONGOLAB_URI);
-        logger.info('creating ReservationEmailCues...length:', cues.length);
-        chevre_domain_1.Models.ReservationEmailCue.insertMany(cues, (insertErr) => {
-            logger.info('ReservationEmailCues created.', insertErr);
-            mongoose.disconnect();
-            process.exit(0);
-        });
-    });
-}
-exports.createEmailCues = createEmailCues;
-/**
  * 座席解放
  *
  * @memberOf TestController
