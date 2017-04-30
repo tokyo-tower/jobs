@@ -7,42 +7,10 @@
 import { EmailQueueUtil, Models } from '@motionpicture/chevre-domain';
 import * as createDebug from 'debug';
 import * as httpStatus from 'http-status';
-import * as mongoose from 'mongoose';
 import * as sendgrid from 'sendgrid';
 import * as util from 'util';
 
 const debug = createDebug('chevre-jobs:controller:emailQueue');
-
-/**
- * キューを監視させる
- *
- * @memberOf controller/emailQueue
- */
-export function watch(): void {
-    mongoose.connect(process.env.MONGOLAB_URI);
-    let count = 0;
-
-    const INTERVAL_MILLISECONDS = 250;
-    const MAX_NUMBER_OF_PARALLEL_TASK = 10;
-    setInterval(
-        async () => {
-            if (count > MAX_NUMBER_OF_PARALLEL_TASK) {
-                return;
-            }
-
-            count += 1;
-
-            try {
-                await sendOne();
-            } catch (error) {
-                console.error(error);
-            }
-
-            count -= 1;
-        },
-        INTERVAL_MILLISECONDS
-    );
-}
 
 /**
  * メールをひとつ送信する

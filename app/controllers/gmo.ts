@@ -8,40 +8,8 @@ import * as chevre from '@motionpicture/chevre-domain';
 import { Util as GMOUtil } from '@motionpicture/gmo-service';
 
 import * as createDebug from 'debug';
-import * as mongoose from 'mongoose';
 
 const debug = createDebug('chevre-jobs:controller:gmo');
-
-/**
- * 通知を監視させる
- *
- * @memberOf controller/gmo
- */
-export function watch(): void {
-    mongoose.connect(process.env.MONGOLAB_URI);
-    let count = 0;
-
-    const INTERVAL_MILLISECONDS = 250;
-    const MAX_NUMBER_OF_PARALLEL_TASK = 10;
-    setInterval(
-        async () => {
-            if (count > MAX_NUMBER_OF_PARALLEL_TASK) {
-                return;
-            }
-
-            count += 1;
-
-            try {
-                await processOne();
-            } catch (error) {
-                console.error(error);
-            }
-
-            count -= 1;
-        },
-        INTERVAL_MILLISECONDS
-    );
-}
 
 /**
  * GMO結果通知を処理する

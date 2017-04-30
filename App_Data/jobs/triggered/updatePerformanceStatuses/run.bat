@@ -1,2 +1,2 @@
 cd D:\home\site\wwwroot
-node bin/command performance updateStatuses
+node bin/updatePerformanceStatuses/index

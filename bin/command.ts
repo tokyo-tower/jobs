@@ -5,9 +5,9 @@
  */
 
 import * as program from 'commander';
-import * as EmailQueueController from '../app/controllers/emailQueue';
+import * as mongoose from 'mongoose';
+
 import * as FilmController from '../app/controllers/film';
-import * as GMOController from '../app/controllers/gmo';
 import * as MemberController from '../app/controllers/member';
 import * as PerformanceController from '../app/controllers/performance';
 import * as ReservationController from '../app/controllers/reservation';
@@ -19,6 +19,8 @@ import * as TicketTypeController from '../app/controllers/ticketType';
 import * as TicketTypeGroupController from '../app/controllers/ticketTypeGroup';
 import * as WindowController from '../app/controllers/window';
 
+mongoose.connect(process.env.MONGOLAB_URI, {});
+
 program
     .version('0.0.1');
 
@@ -27,13 +29,6 @@ program
     .description('テストタスク')
     .action((method) => {
         (<any>TestController)[method]();
-    });
-
-program
-    .command('gmo <method>')
-    .description('GMO結果通知処理タスク')
-    .action((method) => {
-        (<any>GMOController)[method]();
     });
 
 program
@@ -111,13 +106,6 @@ program
     .description('予約関連タスク')
     .action((method) => {
         (<any>ReservationController)[method]();
-    });
-
-program
-    .command('emailQueue <method>')
-    .description('メールキュー関連タスク')
-    .action((method) => {
-        (<any>EmailQueueController)[method]();
     });
 
 program

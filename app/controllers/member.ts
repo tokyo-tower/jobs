@@ -9,7 +9,6 @@ import { CommonUtil, Models } from '@motionpicture/chevre-domain';
 import * as crypto from 'crypto';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as mongoose from 'mongoose';
 
 const debug = createDebug('chevre-jobs:controller:member');
 
@@ -19,8 +18,6 @@ const debug = createDebug('chevre-jobs:controller:member');
  * @memberOf MemberController
  */
 export function createFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/members.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -43,8 +40,6 @@ export function createFromJson() {
         debug('creating members...');
         await Models.Member.create(members);
         debug('members created.');
-        mongoose.disconnect();
-        process.exit(0);
     });
 }
 
@@ -54,8 +49,6 @@ export function createFromJson() {
  * @memberOf MemberController
  */
 export function createReservationsFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/memberReservations.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -81,7 +74,5 @@ export function createReservationsFromJson() {
 
         await Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     });
 }

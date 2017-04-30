@@ -7,7 +7,6 @@
 import { Models, PerformanceStatusesModel } from '@motionpicture/chevre-domain';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as mongoose from 'mongoose';
 
 const DEFAULT_RADIX = 10;
 const debug = createDebug('chevre-jobs:controller:performance');
@@ -18,8 +17,6 @@ const debug = createDebug('chevre-jobs:controller:performance');
  * @memberOf PerformanceController
  */
 export function createFromJson(): void {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`, 'utf8', async (readFileErr, data) => {
         if (readFileErr instanceof Error) {
             throw readFileErr;
@@ -48,8 +45,6 @@ export function createFromJson(): void {
 
         await Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     });
 }
 
@@ -59,16 +54,11 @@ export function createFromJson(): void {
  * @memberOf PerformanceController
  */
 export async function updateStatuses() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     debug('finding performances...');
     const performances = await Models.Performance.find(
         {},
         'day start_time screen'
-    )
-        .populate('screen', 'seats_number')
-        .exec();
-
+    ).populate('screen', 'seats_number').exec();
     debug('performances found.');
 
     const performanceStatusesModel = PerformanceStatusesModel.create();
@@ -107,8 +97,6 @@ export async function updateStatuses() {
     debug('saving performanceStatusesModel...', performanceStatusesModel);
     await PerformanceStatusesModel.store(performanceStatusesModel);
     debug('performanceStatusesModel saved.');
-    mongoose.disconnect();
-    process.exit(0);
 }
 
 /**
@@ -117,8 +105,6 @@ export async function updateStatuses() {
  * @memberOf PerformanceController
  */
 export function release(performanceId: string): void {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     debug('updating performance..._id:', performanceId);
     Models.Performance.findOneAndUpdate(
         {
@@ -132,8 +118,6 @@ export function release(performanceId: string): void {
         },
         (err, performance) => {
             debug('performance updated', err, performance);
-            mongoose.disconnect();
-            process.exit(0);
         }
     );
 }

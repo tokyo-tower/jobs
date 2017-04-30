@@ -9,7 +9,6 @@ import { CommonUtil, Models } from '@motionpicture/chevre-domain';
 import * as crypto from 'crypto';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as mongoose from 'mongoose';
 
 const debug = createDebug('chevre-jobs:controller:window');
 
@@ -18,8 +17,6 @@ const debug = createDebug('chevre-jobs:controller:window');
  * @memberOf WindowController
  */
 export function createFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`, 'utf8', (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -44,9 +41,6 @@ export function createFromJson() {
             debug('creating windows...');
             await Models.Window.create(windows);
             debug('windows created.');
-
-            mongoose.disconnect();
-            process.exit(0);
         });
     });
 }

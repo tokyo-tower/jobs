@@ -17,14 +17,12 @@ const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const crypto = require("crypto");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const mongoose = require("mongoose");
 const debug = createDebug('chevre-jobs:controller:window');
 /**
  *
  * @memberOf WindowController
  */
 function createFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`, 'utf8', (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -46,8 +44,6 @@ function createFromJson() {
             debug('creating windows...');
             yield chevre_domain_1.Models.Window.create(windows);
             debug('windows created.');
-            mongoose.disconnect();
-            process.exit(0);
         }));
     });
 }

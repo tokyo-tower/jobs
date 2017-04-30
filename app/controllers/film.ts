@@ -19,8 +19,6 @@ const STATUS_CODE_OK = 200;
  * @memberOf FilmController
  */
 export function createTicketTypeGroupsFromJson(): void {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -33,8 +31,6 @@ export function createTicketTypeGroupsFromJson(): void {
         debug('creating groups...');
         await Models.TicketTypeGroup.create(groups);
         debug('groups created.');
-        mongoose.disconnect();
-        process.exit(0);
     });
 }
 
@@ -42,8 +38,6 @@ export function createTicketTypeGroupsFromJson(): void {
  * @memberOf FilmController
  */
 export function createFromJson(): void {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/films.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -67,8 +61,6 @@ export function createFromJson(): void {
 
         await Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     });
 }
 
@@ -78,8 +70,6 @@ export function createFromJson(): void {
  * @memberOf FilmController
  */
 export function getImages() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     Models.Film.find({}, 'name', { sort: { _id: 1 } }, (err, films) => {
         if (err !== null) {
             throw err;
@@ -117,8 +107,6 @@ export function getImages() {
 
                             if (i === films.length - 1) {
                                 debug('success!');
-                                mongoose.disconnect();
-                                process.exit(0);
                             } else {
                                 i += 1;
                                 next(films[i]);
@@ -131,8 +119,6 @@ export function getImages() {
                 } else {
                     if (i === films.length - 1) {
                         debug('success!');
-                        mongoose.disconnect();
-                        process.exit(0);
                     } else {
                         i += 1;
                         next(films[i]);

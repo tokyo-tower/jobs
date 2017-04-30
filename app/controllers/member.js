@@ -17,7 +17,6 @@ const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const crypto = require("crypto");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const mongoose = require("mongoose");
 const debug = createDebug('chevre-jobs:controller:member');
 /**
  *
@@ -25,7 +24,6 @@ const debug = createDebug('chevre-jobs:controller:member');
  * @memberOf MemberController
  */
 function createFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/members.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
@@ -46,8 +44,6 @@ function createFromJson() {
         debug('creating members...');
         yield chevre_domain_1.Models.Member.create(members);
         debug('members created.');
-        mongoose.disconnect();
-        process.exit(0);
     }));
 }
 exports.createFromJson = createFromJson;
@@ -57,7 +53,6 @@ exports.createFromJson = createFromJson;
  * @memberOf MemberController
  */
 function createReservationsFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/memberReservations.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
@@ -78,8 +73,6 @@ function createReservationsFromJson() {
         }));
         yield Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     }));
 }
 exports.createReservationsFromJson = createReservationsFromJson;

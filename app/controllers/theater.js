@@ -17,14 +17,12 @@ const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const chevre_domain_2 = require("@motionpicture/chevre-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const mongoose = require("mongoose");
 const debug = createDebug('chevre-jobs:controller:theater');
 /**
  *
  * @memberOf TheaterController
  */
 function createScreensFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
@@ -59,8 +57,6 @@ function createScreensFromJson() {
         }));
         yield Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     }));
 }
 exports.createScreensFromJson = createScreensFromJson;
@@ -69,7 +65,6 @@ exports.createScreensFromJson = createScreensFromJson;
  * @memberOf TheaterController
  */
 function createFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
@@ -87,8 +82,6 @@ function createFromJson() {
         }));
         yield Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     }));
 }
 exports.createFromJson = createFromJson;

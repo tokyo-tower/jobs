@@ -16,35 +16,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const createDebug = require("debug");
 const httpStatus = require("http-status");
-const mongoose = require("mongoose");
 const sendgrid = require("sendgrid");
 const util = require("util");
 const debug = createDebug('chevre-jobs:controller:emailQueue');
-/**
- * キューを監視させる
- *
- * @memberOf controller/emailQueue
- */
-function watch() {
-    mongoose.connect(process.env.MONGOLAB_URI);
-    let count = 0;
-    const INTERVAL_MILLISECONDS = 250;
-    const MAX_NUMBER_OF_PARALLEL_TASK = 10;
-    setInterval(() => __awaiter(this, void 0, void 0, function* () {
-        if (count > MAX_NUMBER_OF_PARALLEL_TASK) {
-            return;
-        }
-        count += 1;
-        try {
-            yield sendOne();
-        }
-        catch (error) {
-            console.error(error);
-        }
-        count -= 1;
-    }), INTERVAL_MILLISECONDS);
-}
-exports.watch = watch;
 /**
  * メールをひとつ送信する
  *

@@ -9,7 +9,6 @@ import { ScreenUtil } from '@motionpicture/chevre-domain';
 
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as mongoose from 'mongoose';
 
 const debug = createDebug('chevre-jobs:controller:theater');
 
@@ -18,8 +17,6 @@ const debug = createDebug('chevre-jobs:controller:theater');
  * @memberOf TheaterController
  */
 export function createScreensFromJson(): void {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -64,8 +61,6 @@ export function createScreensFromJson(): void {
 
         await Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     });
 }
 
@@ -74,7 +69,6 @@ export function createScreensFromJson(): void {
  * @memberOf TheaterController
  */
 export function createFromJson(): void {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -98,7 +92,5 @@ export function createFromJson(): void {
 
         await Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     });
 }

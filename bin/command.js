@@ -14,9 +14,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const program = require("commander");
-const EmailQueueController = require("../app/controllers/emailQueue");
+const mongoose = require("mongoose");
 const FilmController = require("../app/controllers/film");
-const GMOController = require("../app/controllers/gmo");
 const MemberController = require("../app/controllers/member");
 const PerformanceController = require("../app/controllers/performance");
 const ReservationController = require("../app/controllers/reservation");
@@ -27,6 +26,7 @@ const TheaterController = require("../app/controllers/theater");
 const TicketTypeController = require("../app/controllers/ticketType");
 const TicketTypeGroupController = require("../app/controllers/ticketTypeGroup");
 const WindowController = require("../app/controllers/window");
+mongoose.connect(process.env.MONGOLAB_URI, {});
 program
     .version('0.0.1');
 program
@@ -34,12 +34,6 @@ program
     .description('テストタスク')
     .action((method) => {
     TestController[method]();
-});
-program
-    .command('gmo <method>')
-    .description('GMO結果通知処理タスク')
-    .action((method) => {
-    GMOController[method]();
 });
 program
     .command('staff <method>')
@@ -106,12 +100,6 @@ program
     .description('予約関連タスク')
     .action((method) => {
     ReservationController[method]();
-});
-program
-    .command('emailQueue <method>')
-    .description('メールキュー関連タスク')
-    .action((method) => {
-    EmailQueueController[method]();
 });
 program
     .command('schema <method>')

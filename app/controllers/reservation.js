@@ -18,7 +18,6 @@ const gmo_service_1 = require("@motionpicture/gmo-service");
 const conf = require("config");
 const createDebug = require("debug");
 const moment = require("moment");
-const mongoose = require("mongoose");
 const querystring = require("querystring");
 const request = require("request");
 const debug = createDebug('chevre-jobs:controller:reservation');
@@ -28,22 +27,18 @@ const debug = createDebug('chevre-jobs:controller:reservation');
  * @memberOf ReservationController
  */
 function removeTmps() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-    const BUFFER_PERIOD_SECONDS = -60;
-    debug('removing temporary reservations...');
-    chevre_domain_1.Models.Reservation.remove({
-        status: chevre_domain_1.ReservationUtil.STATUS_TEMPORARY,
-        expired_at: {
-            // 念のため、仮予約有効期間より1分長めにしておく
-            $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
-        }
-    }, (err) => {
-        debug('temporary reservations removed.', err);
+    return __awaiter(this, void 0, void 0, function* () {
+        const BUFFER_PERIOD_SECONDS = -60;
+        debug('removing temporary reservations...');
+        yield chevre_domain_1.Models.Reservation.remove({
+            status: chevre_domain_1.ReservationUtil.STATUS_TEMPORARY,
+            expired_at: {
+                // 念のため、仮予約有効期間より1分長めにしておく
+                $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
+            }
+        }).exec();
+        debug('temporary reservations removed.');
         // 失敗しても、次のタスクにまかせる(気にしない)
-        // if (err) {
-        // }
-        mongoose.disconnect();
-        process.exit(0);
     });
 }
 exports.removeTmps = removeTmps;
@@ -52,31 +47,24 @@ exports.removeTmps = removeTmps;
  *
  * @memberOf ReservationController
  */
-function tmp2tiff() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-    const BUFFER_PERIOD_SECONDS = -60;
-    chevre_domain_1.Models.Reservation.distinct('_id', {
-        status: chevre_domain_1.ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_CHEVRE,
-        expired_at: {
-            // 念のため、仮予約有効期間より1分長めにしておく
-            $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
-        }
-    }, (err, ids) => __awaiter(this, void 0, void 0, function* () {
-        if (err !== null) {
-            mongoose.disconnect();
-            process.exit(0);
-        }
-        const promises = ids.map((id) => __awaiter(this, void 0, void 0, function* () {
+function tmp2chevre() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const BUFFER_PERIOD_SECONDS = -60;
+        const ids = yield chevre_domain_1.Models.Reservation.distinct('_id', {
+            status: chevre_domain_1.ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_CHEVRE,
+            expired_at: {
+                // 念のため、仮予約有効期間より1分長めにしておく
+                $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
+            }
+        }).exec();
+        yield Promise.all(ids.map((id) => __awaiter(this, void 0, void 0, function* () {
             debug('updating to STATUS_KEPT_BY_CHEVRE...id:', id);
-            const reservation = yield chevre_domain_1.Models.Reservation.findOneAndUpdate({ _id: id }, { status: chevre_domain_1.ReservationUtil.STATUS_KEPT_BY_CHEVRE }, { new: true }).exec();
-            debug('updated to STATUS_KEPT_BY_CHEVRE. id:', id, reservation);
-        }));
-        yield Promise.all(promises);
-        mongoose.disconnect();
-        process.exit(0);
-    }));
+            yield chevre_domain_1.Models.Reservation.findByIdAndUpdate(id, { status: chevre_domain_1.ReservationUtil.STATUS_KEPT_BY_CHEVRE }).exec();
+            debug('updated to STATUS_KEPT_BY_CHEVRE. id:', id);
+        })));
+    });
 }
-exports.tmp2tiff = tmp2tiff;
+exports.tmp2chevre = tmp2chevre;
 /**
  * 固定日時を経過したら、空席ステータスにするバッチ
  *
@@ -85,15 +73,12 @@ exports.tmp2tiff = tmp2tiff;
 // tslint:disable-next-line:max-func-body-length
 function releaseSeatsKeptByMembers() {
     if (moment(conf.get('datetimes.reservation_end_members')) < moment()) {
-        mongoose.connect(process.env.MONGOLAB_URI);
         // 内部関係者で確保する
         chevre_domain_1.Models.Staff.findOne({
             user_id: '2016sagyo2'
         }, (err, staff) => __awaiter(this, void 0, void 0, function* () {
             debug('staff found.', err, staff);
             if (err !== null) {
-                mongoose.disconnect();
-                process.exit(0);
                 return;
             }
             const reservations = yield chevre_domain_1.Models.Reservation.find({
@@ -158,8 +143,6 @@ function releaseSeatsKeptByMembers() {
             }));
             yield Promise.all(promises);
             debug('promised.', err);
-            mongoose.disconnect();
-            process.exit(0);
         }));
         // 空席にする場合はこちら
         // debug('releasing reservations kept by members...');
@@ -172,8 +155,6 @@ function releaseSeatsKeptByMembers() {
         //         if (err) {
         //         } else {
         //         }
-        //         mongoose.disconnect();
-        //         process.exit(0);
         //     }
         // );
     }
@@ -184,112 +165,90 @@ function releaseSeatsKeptByMembers() {
 exports.releaseSeatsKeptByMembers = releaseSeatsKeptByMembers;
 /**
  * GMO離脱データを解放する(内部確保)
+ * todo 空席に変更する仕様に変更
  *
  * @memberOf ReservationController
  */
-// tslint:disable-next-line:max-func-body-length
 function releaseGarbages() {
-    mongoose.connect(process.env.MONGOLAB_URI);
-    // 一定期間WAITING_SETTLEMENTの予約を抽出
-    const WAITING_PERIOD_HOURS = -2;
-    chevre_domain_1.Models.Reservation.find({
-        status: chevre_domain_1.ReservationUtil.STATUS_WAITING_SETTLEMENT,
-        updated_at: { $lt: moment().add(WAITING_PERIOD_HOURS, 'hours').toISOString() }
-    }, 
-    // tslint:disable-next-line:max-func-body-length
-    (err, reservations) => __awaiter(this, void 0, void 0, function* () {
-        debug('reservations found.', err, reservations);
-        if (err !== null) {
-            mongoose.disconnect();
-            process.exit(0);
+    return __awaiter(this, void 0, void 0, function* () {
+        // 一定期間WAITING_SETTLEMENTの予約を抽出
+        const WAITING_PERIOD_HOURS = -2;
+        const reservations = yield chevre_domain_1.Models.Reservation.find({
+            status: chevre_domain_1.ReservationUtil.STATUS_WAITING_SETTLEMENT,
+            updated_at: { $lt: moment().add(WAITING_PERIOD_HOURS, 'hours').toISOString() }
+        }).exec();
+        const paymentNos4release = [];
+        const gmoUrl = (process.env.NODE_ENV === 'production') ?
+            'https://p01.mul-pay.jp/payment/SearchTradeMulti.idPass' :
+            'https://pt01.mul-pay.jp/payment/SearchTradeMulti.idPass';
+        const promises = reservations.map((reservation) => __awaiter(this, void 0, void 0, function* () {
+            // GMO取引状態参照
+            debug('requesting... ');
+            request.post({
+                url: gmoUrl,
+                form: {
+                    ShopID: process.env.GMO_SHOP_ID,
+                    ShopPass: process.env.GMO_SHOP_PASS,
+                    OrderID: reservation.get('payment_no'),
+                    PayType: reservation.get('payment_method')
+                }
+            }, (error, response, body) => {
+                const STATUS_CODE_OK = 200;
+                debug('request processed.', error);
+                if (error instanceof Error) {
+                    throw error;
+                }
+                if (response.statusCode !== STATUS_CODE_OK) {
+                    throw new Error(`statusCode is ${response.statusCode}`);
+                }
+                const searchTradeResult = querystring.parse(body);
+                // GMOにない、あるいは、UNPROCESSEDであれば離脱データ
+                if (searchTradeResult.ErrCode !== undefined) {
+                    // M01-M01004002
+                    // 指定されたオーダーIDの取引は登録されていません。
+                    if (searchTradeResult.ErrCode === 'M01' && searchTradeResult.ErrInfo === 'M01004002') {
+                        paymentNos4release.push(reservation.get('payment_no'));
+                    }
+                }
+                else {
+                    if (searchTradeResult.Status === gmo_service_1.Util.STATUS_CVS_UNPROCESSED ||
+                        searchTradeResult.Status === gmo_service_1.Util.STATUS_CREDIT_UNPROCESSED) {
+                        paymentNos4release.push(reservation.get('payment_no'));
+                    }
+                }
+            });
+        }));
+        yield Promise.all(promises);
+        debug('promised.');
+        if (paymentNos4release.length === 0) {
             return;
         }
-        try {
-            const paymentNos4release = [];
-            const gmoUrl = (process.env.NODE_ENV === 'production') ?
-                'https://p01.mul-pay.jp/payment/SearchTradeMulti.idPass' :
-                'https://pt01.mul-pay.jp/payment/SearchTradeMulti.idPass';
-            const promises = reservations.map((reservation) => __awaiter(this, void 0, void 0, function* () {
-                // GMO取引状態参照
-                debug('requesting... ');
-                request.post({
-                    url: gmoUrl,
-                    form: {
-                        ShopID: process.env.GMO_SHOP_ID,
-                        ShopPass: process.env.GMO_SHOP_PASS,
-                        OrderID: reservation.get('payment_no'),
-                        PayType: reservation.get('payment_method')
-                    }
-                }, (error, response, body) => {
-                    const STATUS_CODE_OK = 200;
-                    debug('request processed.', error);
-                    if (error instanceof Error) {
-                        throw error;
-                    }
-                    if (response.statusCode !== STATUS_CODE_OK) {
-                        throw new Error(`statusCode is ${response.statusCode}`);
-                    }
-                    const searchTradeResult = querystring.parse(body);
-                    // GMOにない、あるいは、UNPROCESSEDであれば離脱データ
-                    if (searchTradeResult.ErrCode !== undefined) {
-                        // M01-M01004002
-                        // 指定されたオーダーIDの取引は登録されていません。
-                        if (searchTradeResult.ErrCode === 'M01' && searchTradeResult.ErrInfo === 'M01004002') {
-                            paymentNos4release.push(reservation.get('payment_no'));
-                        }
-                    }
-                    else {
-                        if (searchTradeResult.Status === gmo_service_1.Util.STATUS_CVS_UNPROCESSED ||
-                            searchTradeResult.Status === gmo_service_1.Util.STATUS_CREDIT_UNPROCESSED) {
-                            paymentNos4release.push(reservation.get('payment_no'));
-                        }
-                    }
-                });
-            }));
-            yield Promise.all(promises);
-            debug('promised.');
-            if (paymentNos4release.length === 0) {
-                mongoose.disconnect();
-                process.exit(0);
-                return;
-            }
-            // 内部で確保する仕様の場合
-            const staff = yield chevre_domain_1.Models.Staff.findOne({
-                user_id: '2016sagyo2'
-            }).exec();
-            debug('staff found.', staff);
-            debug('updating reservations...');
-            const raw = yield chevre_domain_1.Models.Reservation.update({
-                payment_no: { $in: paymentNos4release }
-            }, {
-                status: chevre_domain_1.ReservationUtil.STATUS_RESERVED,
-                purchaser_group: chevre_domain_1.ReservationUtil.PURCHASER_GROUP_STAFF,
-                charge: 0,
-                ticket_type_charge: 0,
-                ticket_type_name_en: 'Free',
-                ticket_type_name_ja: '無料',
-                ticket_type_code: '00',
-                staff: staff.get('_id'),
-                staff_user_id: staff.get('user_id'),
-                staff_email: staff.get('email'),
-                staff_name: staff.get('name'),
-                staff_signature: 'system',
-                updated_user: 'system',
-                // "purchased_at": Date.now(), // 購入日更新しない
-                watcher_name_updated_at: null,
-                watcher_name: ''
-            }, {
-                multi: true
-            }).exec();
-            debug('updated.', raw);
-            mongoose.disconnect();
-            process.exit(0);
-        }
-        catch (error) {
-            console.error(error);
-            mongoose.disconnect();
-            process.exit(0);
-        }
-    }));
+        // 内部で確保する仕様の場合
+        const staff = yield chevre_domain_1.Models.Staff.findOne({ user_id: '2016sagyo2' }).exec();
+        debug('staff found.', staff);
+        debug('updating reservations...');
+        yield chevre_domain_1.Models.Reservation.update({
+            payment_no: { $in: paymentNos4release }
+        }, {
+            status: chevre_domain_1.ReservationUtil.STATUS_RESERVED,
+            purchaser_group: chevre_domain_1.ReservationUtil.PURCHASER_GROUP_STAFF,
+            charge: 0,
+            ticket_type_charge: 0,
+            ticket_type_name_en: 'Free',
+            ticket_type_name_ja: '無料',
+            ticket_type_code: '00',
+            staff: staff.get('_id'),
+            staff_user_id: staff.get('user_id'),
+            staff_email: staff.get('email'),
+            staff_name: staff.get('name'),
+            staff_signature: 'system',
+            updated_user: 'system',
+            // "purchased_at": Date.now(), // 購入日更新しない
+            watcher_name_updated_at: null,
+            watcher_name: ''
+        }, {
+            multi: true
+        }).exec();
+    });
 }
 exports.releaseGarbages = releaseGarbages;

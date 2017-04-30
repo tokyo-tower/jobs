@@ -19,8 +19,6 @@ const debug = createDebug('chevre-jobs:controller:staff');
  * @memberOf StaffController
  */
 export function createFromJson(): void {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/staffs.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -51,8 +49,6 @@ export function createFromJson(): void {
 
         await Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     });
 }
 
@@ -62,14 +58,10 @@ export function createFromJson(): void {
  * @memberOf StaffController
  */
 export function createReservationsFromJson(): void {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
-
     // スクリーンごとに内部予約を追加する
     Models.Screen.distinct('_id', (err, screenIds) => {
         if (err !== null) {
             debug('screen ids found.', err);
-            mongoose.disconnect();
-            process.exit(0);
             return;
         }
 
@@ -84,8 +76,6 @@ export function createReservationsFromJson(): void {
                 });
             } else {
                 debug('end.');
-                mongoose.disconnect();
-                process.exit(0);
             }
         };
 

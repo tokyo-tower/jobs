@@ -18,14 +18,12 @@ const chevre_domain_2 = require("@motionpicture/chevre-domain");
 const crypto = require("crypto");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const mongoose = require("mongoose");
 const debug = createDebug('chevre-jobs:controller:staff');
 /**
  *
  * @memberOf StaffController
  */
 function createFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/staffs.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
@@ -49,8 +47,6 @@ function createFromJson() {
         }));
         yield Promise.all(promises);
         debug('promised.');
-        mongoose.disconnect();
-        process.exit(0);
     }));
 }
 exports.createFromJson = createFromJson;
@@ -60,13 +56,10 @@ exports.createFromJson = createFromJson;
  * @memberOf StaffController
  */
 function createReservationsFromJson() {
-    mongoose.connect(process.env.MONGOLAB_URI, {});
     // スクリーンごとに内部予約を追加する
     chevre_domain_1.Models.Screen.distinct('_id', (err, screenIds) => {
         if (err !== null) {
             debug('screen ids found.', err);
-            mongoose.disconnect();
-            process.exit(0);
             return;
         }
         let i = 0;
@@ -81,8 +74,6 @@ function createReservationsFromJson() {
             }
             else {
                 debug('end.');
-                mongoose.disconnect();
-                process.exit(0);
             }
         };
         next();
