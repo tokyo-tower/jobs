@@ -19,13 +19,12 @@ const fs = require("fs-extra");
 const mongoose = require("mongoose");
 const request = require("request");
 const debug = createDebug('chevre-jobs:controller:film');
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const STATUS_CODE_OK = 200;
 /**
  * @memberOf FilmController
  */
 function createTicketTypeGroupsFromJson() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
@@ -45,7 +44,7 @@ exports.createTicketTypeGroupsFromJson = createTicketTypeGroupsFromJson;
  * @memberOf FilmController
  */
 function createFromJson() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/films.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
@@ -74,7 +73,7 @@ exports.createFromJson = createFromJson;
  * @memberOf FilmController
  */
 function getImages() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     chevre_domain_1.Models.Film.find({}, 'name', { sort: { _id: 1 } }, (err, films) => {
         if (err !== null) {
             throw err;
@@ -102,7 +101,7 @@ function getImages() {
                             debug('image saved.', error);
                             if (errorOfImageRequest !== null && responseOfImageRequest.statusCode === STATUS_CODE_OK) {
                                 // tslint:disable-next-line:max-line-length
-                                fs.writeFileSync(`${__dirname}/../../../../public/images/film/${film.get('_id').toString()}.jpg`, bodyOfImageRequest, 'binary');
+                                fs.writeFileSync(`${__dirname}/../../../../data/images/film/${film.get('_id').toString()}.jpg`, bodyOfImageRequest, 'binary');
                             }
                             if (i === films.length - 1) {
                                 debug('success!');

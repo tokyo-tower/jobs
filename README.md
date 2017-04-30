@@ -11,18 +11,21 @@ set CHEVRE_PERFORMANCE_STATUSES_REDIS_PORT=**********パフォーマンス空席
 set CHEVRE_PERFORMANCE_STATUSES_REDIS_KEY=**********パフォーマンス空席状況保管先redis key**********
 set FRONTEND_ENDPOINT=**********frontendのエンドポイント**********
 set MONGOLAB_URI=**********mongodb接続URI**********
-set MONGOLAB_URI_GMO=**********gmo結果通知保管先mongodb接続URI**********
 set GMO_ENDPOINT=**********gmo apiのエンドポイント**********
 set GMO_SITE_ID=**********gmo サイトID**********
 set GMO_SHOP_ID=**********gmo ショップID**********
 set GMO_SHOP_PASS=**********gmo ショップパスワード**********
 ```
-
 only on Aure WebApps
 
 ```shell
 set WEBSITE_NODE_DEFAULT_VERSION=**********node.jsバージョン**********
 set WEBSITE_TIME_ZONE=Tokyo Standard Time
+```
+DEBUG
+
+```shell
+set DEBUG=chevre-jobs*
 ```
 
 
@@ -36,4 +39,4 @@ set WEBSITE_TIME_ZONE=Tokyo Standard Time
 # test
 mochaフレームワークでテスト実行。
 * [mocha](https://www.npmjs.com/package/mocha)
-`npm test`でテスト実行。だが、現状テストコードなし。テストコードを増やしていくことが望ましい。
+`npm test`でテスト実行。

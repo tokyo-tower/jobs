@@ -8,28 +8,13 @@ import { Models, ReservationUtil } from '@motionpicture/chevre-domain';
 import { Util as GMOUtil } from '@motionpicture/gmo-service';
 
 import * as conf from 'config';
-import * as log4js from 'log4js';
+import * as createDebug from 'debug';
 import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 import * as querystring from 'querystring';
 import * as request from 'request';
 
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
-
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
+const debug = createDebug('chevre-jobs:controller:reservation');
 
 /**
  * 仮予約ステータスで、一定時間過ぎた予約を空席にする
@@ -37,10 +22,10 @@ const logger = log4js.getLogger('system');
  * @memberOf ReservationController
  */
 export function removeTmps(): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     const BUFFER_PERIOD_SECONDS = -60;
-    logger.info('removing temporary reservations...');
+    debug('removing temporary reservations...');
     Models.Reservation.remove(
         {
             status: ReservationUtil.STATUS_TEMPORARY,
@@ -50,7 +35,7 @@ export function removeTmps(): void {
             }
         },
         (err) => {
-            logger.info('temporary reservations removed.', err);
+            debug('temporary reservations removed.', err);
 
             // 失敗しても、次のタスクにまかせる(気にしない)
             // if (err) {
@@ -68,7 +53,7 @@ export function removeTmps(): void {
  * @memberOf ReservationController
  */
 export function tmp2tiff(): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     const BUFFER_PERIOD_SECONDS = -60;
     Models.Reservation.distinct(
@@ -87,13 +72,13 @@ export function tmp2tiff(): void {
             }
 
             const promises = ids.map(async (id) => {
-                logger.info('updating to STATUS_KEPT_BY_CHEVRE...id:', id);
+                debug('updating to STATUS_KEPT_BY_CHEVRE...id:', id);
                 const reservation = await Models.Reservation.findOneAndUpdate(
                     { _id: id },
                     { status: ReservationUtil.STATUS_KEPT_BY_CHEVRE },
                     { new: true }
                 ).exec();
-                logger.info('updated to STATUS_KEPT_BY_CHEVRE. id:', id, reservation);
+                debug('updated to STATUS_KEPT_BY_CHEVRE. id:', id, reservation);
             });
 
             await Promise.all(promises);
@@ -111,7 +96,7 @@ export function tmp2tiff(): void {
 // tslint:disable-next-line:max-func-body-length
 export function releaseSeatsKeptByMembers() {
     if (moment(conf.get<string>('datetimes.reservation_end_members')) < moment()) {
-        mongoose.connect(MONGOLAB_URI);
+        mongoose.connect(process.env.MONGOLAB_URI);
 
         // 内部関係者で確保する
         Models.Staff.findOne(
@@ -119,7 +104,7 @@ export function releaseSeatsKeptByMembers() {
                 user_id: '2016sagyo2'
             },
             async (err, staff) => {
-                logger.info('staff found.', err, staff);
+                debug('staff found.', err, staff);
                 if (err !== null) {
                     mongoose.disconnect();
                     process.exit(0);
@@ -133,7 +118,7 @@ export function releaseSeatsKeptByMembers() {
                 ).exec();
 
                 const promises = reservations.map(async (reservation, index) => {
-                    logger.info('finding performance...');
+                    debug('finding performance...');
                     const performance = await Models.Performance.findOne({
                         _id: reservation.get('performance')
                     })
@@ -142,7 +127,7 @@ export function releaseSeatsKeptByMembers() {
                         .populate('theater', 'name address')
                         .exec();
 
-                    logger.info('updating reservation...');
+                    debug('updating reservation...');
                     // 購入番号発行
                     const paymentNo = await ReservationUtil.publishPaymentNo(performance.get('day'));
                     const raw = await reservation.update(
@@ -190,18 +175,18 @@ export function releaseSeatsKeptByMembers() {
                             seat_grade_name_ja: 'ノーマルシート'
                         }
                     ).exec();
-                    logger.info('reservation updated.', raw);
+                    debug('reservation updated.', raw);
                 });
 
                 await Promise.all(promises);
-                logger.info('promised.', err);
+                debug('promised.', err);
                 mongoose.disconnect();
                 process.exit(0);
             }
         );
 
         // 空席にする場合はこちら
-        // logger.info('releasing reservations kept by members...');
+        // debug('releasing reservations kept by members...');
         // Models.Reservation.remove(
         //     {
         //         status: ReservationUtil.STATUS_KEPT_BY_MEMBER
@@ -228,7 +213,7 @@ export function releaseSeatsKeptByMembers() {
  */
 // tslint:disable-next-line:max-func-body-length
 export function releaseGarbages(): void {
-    mongoose.connect(MONGOLAB_URI);
+    mongoose.connect(process.env.MONGOLAB_URI);
 
     // 一定期間WAITING_SETTLEMENTの予約を抽出
     const WAITING_PERIOD_HOURS = -2;
@@ -239,7 +224,7 @@ export function releaseGarbages(): void {
         },
         // tslint:disable-next-line:max-func-body-length
         async (err, reservations) => {
-            logger.info('reservations found.', err, reservations);
+            debug('reservations found.', err, reservations);
             if (err !== null) {
                 mongoose.disconnect();
                 process.exit(0);
@@ -254,7 +239,7 @@ export function releaseGarbages(): void {
 
                 const promises = reservations.map(async (reservation) => {
                     // GMO取引状態参照
-                    logger.info('requesting... ');
+                    debug('requesting... ');
                     request.post(
                         {
                             url: gmoUrl,
@@ -267,7 +252,7 @@ export function releaseGarbages(): void {
                         },
                         (error, response, body) => {
                             const STATUS_CODE_OK = 200;
-                            logger.info('request processed.', error);
+                            debug('request processed.', error);
                             if (error instanceof Error) {
                                 throw error;
                             }
@@ -295,7 +280,7 @@ export function releaseGarbages(): void {
                 });
 
                 await Promise.all(promises);
-                logger.info('promised.');
+                debug('promised.');
 
                 if (paymentNos4release.length === 0) {
                     mongoose.disconnect();
@@ -309,9 +294,9 @@ export function releaseGarbages(): void {
                         user_id: '2016sagyo2'
                     }
                 ).exec();
-                logger.info('staff found.', staff);
+                debug('staff found.', staff);
 
-                logger.info('updating reservations...');
+                debug('updating reservations...');
                 const raw = await Models.Reservation.update(
                     {
                         payment_no: { $in: paymentNos4release }
@@ -340,7 +325,7 @@ export function releaseGarbages(): void {
                         multi: true
                     }
                 ).exec();
-                logger.info('updated.', raw);
+                debug('updated.', raw);
                 mongoose.disconnect();
                 process.exit(0);
             } catch (error) {

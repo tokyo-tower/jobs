@@ -16,35 +16,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const gmo_service_1 = require("@motionpicture/gmo-service");
 const conf = require("config");
-const log4js = require("log4js");
+const createDebug = require("debug");
 const moment = require("moment");
 const mongoose = require("mongoose");
 const querystring = require("querystring");
 const request = require("request");
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
+const debug = createDebug('chevre-jobs:controller:reservation');
 /**
  * 仮予約ステータスで、一定時間過ぎた予約を空席にする
  *
  * @memberOf ReservationController
  */
 function removeTmps() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     const BUFFER_PERIOD_SECONDS = -60;
-    logger.info('removing temporary reservations...');
+    debug('removing temporary reservations...');
     chevre_domain_1.Models.Reservation.remove({
         status: chevre_domain_1.ReservationUtil.STATUS_TEMPORARY,
         expired_at: {
@@ -52,7 +38,7 @@ function removeTmps() {
             $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
         }
     }, (err) => {
-        logger.info('temporary reservations removed.', err);
+        debug('temporary reservations removed.', err);
         // 失敗しても、次のタスクにまかせる(気にしない)
         // if (err) {
         // }
@@ -67,7 +53,7 @@ exports.removeTmps = removeTmps;
  * @memberOf ReservationController
  */
 function tmp2tiff() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     const BUFFER_PERIOD_SECONDS = -60;
     chevre_domain_1.Models.Reservation.distinct('_id', {
         status: chevre_domain_1.ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_CHEVRE,
@@ -81,9 +67,9 @@ function tmp2tiff() {
             process.exit(0);
         }
         const promises = ids.map((id) => __awaiter(this, void 0, void 0, function* () {
-            logger.info('updating to STATUS_KEPT_BY_CHEVRE...id:', id);
+            debug('updating to STATUS_KEPT_BY_CHEVRE...id:', id);
             const reservation = yield chevre_domain_1.Models.Reservation.findOneAndUpdate({ _id: id }, { status: chevre_domain_1.ReservationUtil.STATUS_KEPT_BY_CHEVRE }, { new: true }).exec();
-            logger.info('updated to STATUS_KEPT_BY_CHEVRE. id:', id, reservation);
+            debug('updated to STATUS_KEPT_BY_CHEVRE. id:', id, reservation);
         }));
         yield Promise.all(promises);
         mongoose.disconnect();
@@ -99,12 +85,12 @@ exports.tmp2tiff = tmp2tiff;
 // tslint:disable-next-line:max-func-body-length
 function releaseSeatsKeptByMembers() {
     if (moment(conf.get('datetimes.reservation_end_members')) < moment()) {
-        mongoose.connect(MONGOLAB_URI);
+        mongoose.connect(process.env.MONGOLAB_URI);
         // 内部関係者で確保する
         chevre_domain_1.Models.Staff.findOne({
             user_id: '2016sagyo2'
         }, (err, staff) => __awaiter(this, void 0, void 0, function* () {
-            logger.info('staff found.', err, staff);
+            debug('staff found.', err, staff);
             if (err !== null) {
                 mongoose.disconnect();
                 process.exit(0);
@@ -114,7 +100,7 @@ function releaseSeatsKeptByMembers() {
                 status: chevre_domain_1.ReservationUtil.STATUS_KEPT_BY_MEMBER
             }).exec();
             const promises = reservations.map((reservation, index) => __awaiter(this, void 0, void 0, function* () {
-                logger.info('finding performance...');
+                debug('finding performance...');
                 const performance = yield chevre_domain_1.Models.Performance.findOne({
                     _id: reservation.get('performance')
                 })
@@ -122,7 +108,7 @@ function releaseSeatsKeptByMembers() {
                     .populate('screen', 'name')
                     .populate('theater', 'name address')
                     .exec();
-                logger.info('updating reservation...');
+                debug('updating reservation...');
                 // 購入番号発行
                 const paymentNo = yield chevre_domain_1.ReservationUtil.publishPaymentNo(performance.get('day'));
                 const raw = yield reservation.update({
@@ -168,15 +154,15 @@ function releaseSeatsKeptByMembers() {
                     seat_grade_name_en: 'Normal Seat',
                     seat_grade_name_ja: 'ノーマルシート'
                 }).exec();
-                logger.info('reservation updated.', raw);
+                debug('reservation updated.', raw);
             }));
             yield Promise.all(promises);
-            logger.info('promised.', err);
+            debug('promised.', err);
             mongoose.disconnect();
             process.exit(0);
         }));
         // 空席にする場合はこちら
-        // logger.info('releasing reservations kept by members...');
+        // debug('releasing reservations kept by members...');
         // Models.Reservation.remove(
         //     {
         //         status: ReservationUtil.STATUS_KEPT_BY_MEMBER
@@ -203,7 +189,7 @@ exports.releaseSeatsKeptByMembers = releaseSeatsKeptByMembers;
  */
 // tslint:disable-next-line:max-func-body-length
 function releaseGarbages() {
-    mongoose.connect(MONGOLAB_URI);
+    mongoose.connect(process.env.MONGOLAB_URI);
     // 一定期間WAITING_SETTLEMENTの予約を抽出
     const WAITING_PERIOD_HOURS = -2;
     chevre_domain_1.Models.Reservation.find({
@@ -212,7 +198,7 @@ function releaseGarbages() {
     }, 
     // tslint:disable-next-line:max-func-body-length
     (err, reservations) => __awaiter(this, void 0, void 0, function* () {
-        logger.info('reservations found.', err, reservations);
+        debug('reservations found.', err, reservations);
         if (err !== null) {
             mongoose.disconnect();
             process.exit(0);
@@ -225,7 +211,7 @@ function releaseGarbages() {
                 'https://pt01.mul-pay.jp/payment/SearchTradeMulti.idPass';
             const promises = reservations.map((reservation) => __awaiter(this, void 0, void 0, function* () {
                 // GMO取引状態参照
-                logger.info('requesting... ');
+                debug('requesting... ');
                 request.post({
                     url: gmoUrl,
                     form: {
@@ -236,7 +222,7 @@ function releaseGarbages() {
                     }
                 }, (error, response, body) => {
                     const STATUS_CODE_OK = 200;
-                    logger.info('request processed.', error);
+                    debug('request processed.', error);
                     if (error instanceof Error) {
                         throw error;
                     }
@@ -261,7 +247,7 @@ function releaseGarbages() {
                 });
             }));
             yield Promise.all(promises);
-            logger.info('promised.');
+            debug('promised.');
             if (paymentNos4release.length === 0) {
                 mongoose.disconnect();
                 process.exit(0);
@@ -271,8 +257,8 @@ function releaseGarbages() {
             const staff = yield chevre_domain_1.Models.Staff.findOne({
                 user_id: '2016sagyo2'
             }).exec();
-            logger.info('staff found.', staff);
-            logger.info('updating reservations...');
+            debug('staff found.', staff);
+            debug('updating reservations...');
             const raw = yield chevre_domain_1.Models.Reservation.update({
                 payment_no: { $in: paymentNos4release }
             }, {
@@ -295,7 +281,7 @@ function releaseGarbages() {
             }, {
                 multi: true
             }).exec();
-            logger.info('updated.', raw);
+            debug('updated.', raw);
             mongoose.disconnect();
             process.exit(0);
         }

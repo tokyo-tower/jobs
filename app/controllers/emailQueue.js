@@ -19,7 +19,6 @@ const httpStatus = require("http-status");
 const mongoose = require("mongoose");
 const sendgrid = require("sendgrid");
 const util = require("util");
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const debug = createDebug('chevre-jobs:controller:emailQueue');
 /**
  * キューを監視させる
@@ -27,7 +26,7 @@ const debug = createDebug('chevre-jobs:controller:emailQueue');
  * @memberOf controller/emailQueue
  */
 function watch() {
-    mongoose.connect(MONGOLAB_URI);
+    mongoose.connect(process.env.MONGOLAB_URI);
     let count = 0;
     const INTERVAL_MILLISECONDS = 250;
     const MAX_NUMBER_OF_PARALLEL_TASK = 10;

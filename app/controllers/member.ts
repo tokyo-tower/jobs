@@ -7,26 +7,11 @@
 import { CommonUtil, Models } from '@motionpicture/chevre-domain';
 
 import * as crypto from 'crypto';
+import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as log4js from 'log4js';
 import * as mongoose from 'mongoose';
 
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
-
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
+const debug = createDebug('chevre-jobs:controller:member');
 
 /**
  *
@@ -34,7 +19,7 @@ const logger = log4js.getLogger('system');
  * @memberOf MemberController
  */
 export function createFromJson() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/members.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
@@ -52,12 +37,12 @@ export function createFromJson() {
                 password_hash: CommonUtil.createHash(member.password, passwordSalt)
             };
         });
-        logger.info('removing all members...');
+        debug('removing all members...');
         await Models.Member.remove({}).exec();
 
-        logger.debug('creating members...');
+        debug('creating members...');
         await Models.Member.create(members);
-        logger.info('members created.');
+        debug('members created.');
         mongoose.disconnect();
         process.exit(0);
     });
@@ -69,7 +54,7 @@ export function createFromJson() {
  * @memberOf MemberController
  */
 export function createReservationsFromJson() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/memberReservations.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
@@ -77,9 +62,9 @@ export function createReservationsFromJson() {
         }
         const reservations: any[] = JSON.parse(data);
 
-        logger.debug('creating reservations...');
+        debug('creating reservations...');
         const promises = reservations.map(async (reservationFromJson) => {
-            logger.info('removing reservation...');
+            debug('removing reservation...');
             // すでに予約があれば削除してから新規作成
             await Models.Reservation.remove(
                 {
@@ -87,15 +72,15 @@ export function createReservationsFromJson() {
                     seat_code: reservationFromJson.seat_code
                 }
             ).exec();
-            logger.info('reservation removed.');
+            debug('reservation removed.');
 
-            logger.info('creating reservationFromJson...', reservationFromJson);
+            debug('creating reservationFromJson...', reservationFromJson);
             await Models.Reservation.create(reservationFromJson);
-            logger.info('reservationFromJson created.');
+            debug('reservationFromJson created.');
         });
 
         await Promise.all(promises);
-        logger.info('promised.');
+        debug('promised.');
         mongoose.disconnect();
         process.exit(0);
     });

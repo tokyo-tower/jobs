@@ -15,30 +15,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const chevre_domain_2 = require("@motionpicture/chevre-domain");
+const createDebug = require("debug");
 const fs = require("fs-extra");
-const log4js = require("log4js");
 const mongoose = require("mongoose");
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
+const debug = createDebug('chevre-jobs:controller:theater');
 /**
  *
  * @memberOf TheaterController
  */
 function createScreensFromJson() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
@@ -62,17 +48,17 @@ function createScreensFromJson() {
                     seats_number: seatsNumbersBySeatCode[seatGradeCode]
                 };
             });
-            logger.debug('updating screen...');
+            debug('updating screen...');
             yield chevre_domain_1.Models.Screen.findOneAndUpdate({
                 _id: screen._id
             }, screen, {
                 new: true,
                 upsert: true
             }).exec();
-            logger.debug('screen updated');
+            debug('screen updated');
         }));
         yield Promise.all(promises);
-        logger.info('promised.');
+        debug('promised.');
         mongoose.disconnect();
         process.exit(0);
     }));
@@ -83,24 +69,24 @@ exports.createScreensFromJson = createScreensFromJson;
  * @memberOf TheaterController
  */
 function createFromJson() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;
         }
         const theaters = JSON.parse(data);
         const promises = theaters.map((theater) => __awaiter(this, void 0, void 0, function* () {
-            logger.debug('updating theater...');
+            debug('updating theater...');
             yield chevre_domain_1.Models.Theater.findOneAndUpdate({
                 _id: theater._id
             }, theater, {
                 new: true,
                 upsert: true
             }).exec();
-            logger.debug('theater updated');
+            debug('theater updated');
         }));
         yield Promise.all(promises);
-        logger.info('promised.');
+        debug('promised.');
         mongoose.disconnect();
         process.exit(0);
     }));

@@ -7,33 +7,18 @@
 import { Models } from '@motionpicture/chevre-domain';
 import { ScreenUtil } from '@motionpicture/chevre-domain';
 
+import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as log4js from 'log4js';
 import * as mongoose from 'mongoose';
 
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
-
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
+const debug = createDebug('chevre-jobs:controller:theater');
 
 /**
  *
  * @memberOf TheaterController
  */
 export function createScreensFromJson(): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
@@ -63,7 +48,7 @@ export function createScreensFromJson(): void {
                 };
             });
 
-            logger.debug('updating screen...');
+            debug('updating screen...');
             await Models.Screen.findOneAndUpdate(
                 {
                     _id: screen._id
@@ -74,11 +59,11 @@ export function createScreensFromJson(): void {
                     upsert: true
                 }
             ).exec();
-            logger.debug('screen updated');
+            debug('screen updated');
         });
 
         await Promise.all(promises);
-        logger.info('promised.');
+        debug('promised.');
         mongoose.disconnect();
         process.exit(0);
     });
@@ -89,7 +74,7 @@ export function createScreensFromJson(): void {
  * @memberOf TheaterController
  */
 export function createFromJson(): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -97,7 +82,7 @@ export function createFromJson(): void {
         const theaters: any[] = JSON.parse(data);
 
         const promises = theaters.map(async (theater) => {
-            logger.debug('updating theater...');
+            debug('updating theater...');
             await Models.Theater.findOneAndUpdate(
                 {
                     _id: theater._id
@@ -108,11 +93,11 @@ export function createFromJson(): void {
                     upsert: true
                 }
             ).exec();
-            logger.debug('theater updated');
+            debug('theater updated');
         });
 
         await Promise.all(promises);
-        logger.info('promised.');
+        debug('promised.');
         mongoose.disconnect();
         process.exit(0);
     });

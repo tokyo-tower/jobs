@@ -11,7 +11,6 @@ import * as mongoose from 'mongoose';
 import * as sendgrid from 'sendgrid';
 import * as util from 'util';
 
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const debug = createDebug('chevre-jobs:controller:emailQueue');
 
 /**
@@ -20,7 +19,7 @@ const debug = createDebug('chevre-jobs:controller:emailQueue');
  * @memberOf controller/emailQueue
  */
 export function watch(): void {
-    mongoose.connect(MONGOLAB_URI);
+    mongoose.connect(process.env.MONGOLAB_URI);
     let count = 0;
 
     const INTERVAL_MILLISECONDS = 250;

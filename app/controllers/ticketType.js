@@ -18,12 +18,11 @@ const createDebug = require("debug");
 const fs = require("fs-extra");
 const mongoose = require("mongoose");
 const debug = createDebug('chevre-api:task:controller:ticketType');
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
 /**
  * @memberOf FilmController
  */
 function createFromJson() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypes.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
         if (err instanceof Error) {
             throw err;

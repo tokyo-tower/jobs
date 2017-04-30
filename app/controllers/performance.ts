@@ -9,7 +9,6 @@ import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 import * as mongoose from 'mongoose';
 
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const DEFAULT_RADIX = 10;
 const debug = createDebug('chevre-jobs:controller:performance');
 
@@ -19,7 +18,7 @@ const debug = createDebug('chevre-jobs:controller:performance');
  * @memberOf PerformanceController
  */
 export function createFromJson(): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`, 'utf8', async (readFileErr, data) => {
         if (readFileErr instanceof Error) {
@@ -60,7 +59,7 @@ export function createFromJson(): void {
  * @memberOf PerformanceController
  */
 export async function updateStatuses() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     debug('finding performances...');
     const performances = await Models.Performance.find(
@@ -118,7 +117,7 @@ export async function updateStatuses() {
  * @memberOf PerformanceController
  */
 export function release(performanceId: string): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     debug('updating performance..._id:', performanceId);
     Models.Performance.findOneAndUpdate(

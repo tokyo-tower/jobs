@@ -40,7 +40,6 @@
     "exclude": [
         "config",
         "data",
-        "node_modules",
-        "public"
+        "node_modules"
     ]
 }

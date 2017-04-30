@@ -12,13 +12,11 @@ import * as mongoose from 'mongoose';
 
 const debug = createDebug('chevre-api:task:controller:ticketType');
 
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
-
 /**
  * @memberOf FilmController
  */
 export function createFromJson(): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypes.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {

@@ -44,13 +44,6 @@ program
     });
 
 program
-    .command('createStaffReservationsByPerformanceId <performanceId>')
-    .description('パフォーマンス指定で内部関係者の先抑えを行うタスク')
-    .action(async (performanceId) => {
-        await StaffController.createReservationsByPerformanceId(performanceId);
-    });
-
-program
     .command('performance <method>')
     .description('パフォーマンスタスク')
     .action((method) => {
@@ -133,14 +126,6 @@ program
     .action((method) => {
         (<any>SchemaController)[method]();
     });
-
-// program
-//     .command('log <method>')
-//     .description('ログ関連タスク')
-//     .action((method) => {
-//         let logDir = `${__dirname}/../../logs/${env}/Log${method.charAt(0).toUpperCase()}${method.slice(1)}`;
-//         (new LogController(logDir))[method]();
-//     });
 
 // program
 //   .command('*')

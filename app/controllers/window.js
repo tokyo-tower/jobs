@@ -15,30 +15,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const crypto = require("crypto");
+const createDebug = require("debug");
 const fs = require("fs-extra");
-const log4js = require("log4js");
 const mongoose = require("mongoose");
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
+const debug = createDebug('chevre-jobs:controller:window');
 /**
  *
  * @memberOf WindowController
  */
 function createFromJson() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`, 'utf8', (err, data) => {
         if (err instanceof Error) {
             throw err;
@@ -52,14 +38,14 @@ function createFromJson() {
             window.password_hash = chevre_domain_1.CommonUtil.createHash(window.password, passwordSalt);
             return window;
         });
-        logger.info('removing all windows...');
+        debug('removing all windows...');
         chevre_domain_1.Models.Window.remove({}, (removeErr) => __awaiter(this, void 0, void 0, function* () {
             if (removeErr !== null) {
                 throw removeErr;
             }
-            logger.debug('creating windows...');
+            debug('creating windows...');
             yield chevre_domain_1.Models.Window.create(windows);
-            logger.info('windows created.');
+            debug('windows created.');
             mongoose.disconnect();
             process.exit(0);
         }));

@@ -48,12 +48,6 @@ program
     StaffController[method]();
 });
 program
-    .command('createStaffReservationsByPerformanceId <performanceId>')
-    .description('パフォーマンス指定で内部関係者の先抑えを行うタスク')
-    .action((performanceId) => __awaiter(this, void 0, void 0, function* () {
-    yield StaffController.createReservationsByPerformanceId(performanceId);
-}));
-program
     .command('performance <method>')
     .description('パフォーマンスタスク')
     .action((method) => {
@@ -125,13 +119,6 @@ program
     .action((method) => {
     SchemaController[method]();
 });
-// program
-//     .command('log <method>')
-//     .description('ログ関連タスク')
-//     .action((method) => {
-//         let logDir = `${__dirname}/../../logs/${env}/Log${method.charAt(0).toUpperCase()}${method.slice(1)}`;
-//         (new LogController(logDir))[method]();
-//     });
 // program
 //   .command('*')
 //   .action(function(env){

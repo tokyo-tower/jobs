@@ -13,14 +13,13 @@ import * as request from 'request';
 
 const debug = createDebug('chevre-jobs:controller:film');
 
-const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const STATUS_CODE_OK = 200;
 
 /**
  * @memberOf FilmController
  */
 export function createTicketTypeGroupsFromJson(): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
@@ -43,7 +42,7 @@ export function createTicketTypeGroupsFromJson(): void {
  * @memberOf FilmController
  */
 export function createFromJson(): void {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/films.json`, 'utf8', async (err, data) => {
         if (err instanceof Error) {
@@ -79,7 +78,7 @@ export function createFromJson(): void {
  * @memberOf FilmController
  */
 export function getImages() {
-    mongoose.connect(MONGOLAB_URI, {});
+    mongoose.connect(process.env.MONGOLAB_URI, {});
 
     Models.Film.find({}, 'name', { sort: { _id: 1 } }, (err, films) => {
         if (err !== null) {
@@ -113,7 +112,7 @@ export function getImages() {
                             debug('image saved.', error);
                             if (errorOfImageRequest !== null && responseOfImageRequest.statusCode === STATUS_CODE_OK) {
                                 // tslint:disable-next-line:max-line-length
-                                fs.writeFileSync(`${__dirname}/../../../../public/images/film/${film.get('_id').toString()}.jpg`, bodyOfImageRequest, 'binary');
+                                fs.writeFileSync(`${__dirname}/../../../../data/images/film/${film.get('_id').toString()}.jpg`, bodyOfImageRequest, 'binary');
                             }
 
                             if (i === films.length - 1) {
