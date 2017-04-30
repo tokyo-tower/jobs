@@ -14,7 +14,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const program = require("commander");
-const AnalysisController = require("../app/controllers/analysis");
 const EmailQueueController = require("../app/controllers/emailQueue");
 const FilmController = require("../app/controllers/film");
 const GMOController = require("../app/controllers/gmo");
@@ -35,12 +34,6 @@ program
     .description('テストタスク')
     .action((method) => {
     TestController[method]();
-});
-program
-    .command('analysis <method>')
-    .description('分析タスク')
-    .action((method) => {
-    AnalysisController[method]();
 });
 program
     .command('gmo <method>')

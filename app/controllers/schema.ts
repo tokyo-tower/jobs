@@ -16,7 +16,9 @@ const debug = createDebug('chevre-api:task:controller:schema');
  */
 export function dropCollections() {
     mongodb.MongoClient.connect(process.env.MONGOLAB_URI, async (err, db) => {
-        if (err !== null) throw err;
+        if (err !== null) {
+            throw err;
+        }
 
         const collections = await db.collections();
         await Promise.all(collections.map(async (collection) => {
@@ -42,7 +44,9 @@ export function dropCollections() {
  */
 export function dropIndexes() {
     mongodb.MongoClient.connect(process.env.MONGOLAB_URI, async (err, db) => {
-        if (err !== null) throw err;
+        if (err !== null) {
+            throw err;
+        }
 
         const collections = await db.collections();
         await Promise.all(collections.map(async (collection) => {

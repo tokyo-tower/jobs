@@ -268,8 +268,12 @@ export function releaseGarbages(): void {
                         (error, response, body) => {
                             const STATUS_CODE_OK = 200;
                             logger.info('request processed.', error);
-                            if (error instanceof Error) throw error;
-                            if (response.statusCode !== STATUS_CODE_OK) throw new Error(`statusCode is ${response.statusCode}`);
+                            if (error instanceof Error) {
+                                throw error;
+                            }
+                            if (response.statusCode !== STATUS_CODE_OK) {
+                                throw new Error(`statusCode is ${response.statusCode}`);
+                            }
 
                             const searchTradeResult = querystring.parse(body);
 

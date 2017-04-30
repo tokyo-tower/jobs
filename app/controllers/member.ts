@@ -37,7 +37,9 @@ export function createFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/members.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) throw err;
+        if (err instanceof Error) {
+            throw err;
+        }
         let members: any[] = JSON.parse(data);
 
         // パスワードハッシュ化
@@ -70,7 +72,9 @@ export function createReservationsFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/memberReservations.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) throw err;
+        if (err instanceof Error) {
+            throw err;
+        }
         const reservations: any[] = JSON.parse(data);
 
         logger.debug('creating reservations...');

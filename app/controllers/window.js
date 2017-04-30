@@ -40,8 +40,9 @@ const logger = log4js.getLogger('system');
 function createFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`, 'utf8', (err, data) => {
-        if (err instanceof Error)
+        if (err instanceof Error) {
             throw err;
+        }
         let windows = JSON.parse(data);
         // パスワードハッシュ化
         windows = windows.map((window) => {
@@ -53,8 +54,9 @@ function createFromJson() {
         });
         logger.info('removing all windows...');
         chevre_domain_1.Models.Window.remove({}, (removeErr) => __awaiter(this, void 0, void 0, function* () {
-            if (removeErr !== null)
+            if (removeErr !== null) {
                 throw removeErr;
+            }
             logger.debug('creating windows...');
             yield chevre_domain_1.Models.Window.create(windows);
             logger.info('windows created.');

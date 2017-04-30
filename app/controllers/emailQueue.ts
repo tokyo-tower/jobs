@@ -23,11 +23,13 @@ export function watch(): void {
     mongoose.connect(MONGOLAB_URI);
     let count = 0;
 
-    const INTERVAL_MILLISECONDS = 500;
+    const INTERVAL_MILLISECONDS = 250;
     const MAX_NUMBER_OF_PARALLEL_TASK = 10;
     setInterval(
         async () => {
-            if (count > MAX_NUMBER_OF_PARALLEL_TASK) return;
+            if (count > MAX_NUMBER_OF_PARALLEL_TASK) {
+                return;
+            }
 
             count += 1;
 

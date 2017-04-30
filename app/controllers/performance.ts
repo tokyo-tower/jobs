@@ -22,7 +22,9 @@ export function createFromJson(): void {
     mongoose.connect(MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`, 'utf8', async (readFileErr, data) => {
-        if (readFileErr instanceof Error) throw readFileErr;
+        if (readFileErr instanceof Error) {
+            throw readFileErr;
+        }
         const performances: any[] = JSON.parse(data);
 
         const screens = await Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
@@ -33,7 +35,9 @@ export function createFromJson(): void {
             const screenOfPerformance = screens.find((screen) => {
                 return (screen.get('_id').toString() === performance.screen);
             });
-            if (screenOfPerformance === undefined) throw new Error('screen not found.');
+            if (screenOfPerformance === undefined) {
+                throw new Error('screen not found.');
+            }
 
             performance.screen_name = screenOfPerformance.get('name');
             performance.theater_name = screenOfPerformance.get('theater').get('name');

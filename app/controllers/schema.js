@@ -23,8 +23,9 @@ const debug = createDebug('chevre-api:task:controller:schema');
  */
 function dropCollections() {
     mongodb.MongoClient.connect(process.env.MONGOLAB_URI, (err, db) => __awaiter(this, void 0, void 0, function* () {
-        if (err !== null)
+        if (err !== null) {
             throw err;
+        }
         const collections = yield db.collections();
         yield Promise.all(collections.map((collection) => __awaiter(this, void 0, void 0, function* () {
             // 初めてコレクションを作成の場合、dropに失敗する
@@ -50,8 +51,9 @@ exports.dropCollections = dropCollections;
  */
 function dropIndexes() {
     mongodb.MongoClient.connect(process.env.MONGOLAB_URI, (err, db) => __awaiter(this, void 0, void 0, function* () {
-        if (err !== null)
+        if (err !== null) {
             throw err;
+        }
         const collections = yield db.collections();
         yield Promise.all(collections.map((collection) => __awaiter(this, void 0, void 0, function* () {
             debug('dropping index.', collection.collectionName);

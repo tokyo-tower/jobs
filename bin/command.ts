@@ -5,7 +5,6 @@
  */
 
 import * as program from 'commander';
-import * as AnalysisController from '../app/controllers/analysis';
 import * as EmailQueueController from '../app/controllers/emailQueue';
 import * as FilmController from '../app/controllers/film';
 import * as GMOController from '../app/controllers/gmo';
@@ -28,13 +27,6 @@ program
     .description('テストタスク')
     .action((method) => {
         (<any>TestController)[method]();
-    });
-
-program
-    .command('analysis <method>')
-    .description('分析タスク')
-    .action((method) => {
-        (<any>AnalysisController)[method]();
     });
 
 program

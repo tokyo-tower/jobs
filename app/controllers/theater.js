@@ -40,8 +40,9 @@ const logger = log4js.getLogger('system');
 function createScreensFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error)
+        if (err instanceof Error) {
             throw err;
+        }
         const screens = JSON.parse(data);
         const promises = screens.map((screen) => __awaiter(this, void 0, void 0, function* () {
             // 座席数情報を追加
@@ -84,8 +85,9 @@ exports.createScreensFromJson = createScreensFromJson;
 function createFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error)
+        if (err instanceof Error) {
             throw err;
+        }
         const theaters = JSON.parse(data);
         const promises = theaters.map((theater) => __awaiter(this, void 0, void 0, function* () {
             logger.debug('updating theater...');

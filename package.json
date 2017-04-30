@@ -66,8 +66,8 @@
   "repository": {},
   "scripts": {
     "build": "tsc",
-    "check": "tslint --type-check --project tsconfig.json -c tslint.json app/**/*.ts bin/**/*.ts common/**/*.ts && nsp check && snyk auth && snyk test --ignore-policy",
-    "clean": "rimraf app/**/*.js bin/**/*.js common/**/*.js index.js npm-debug.log* docs/*",
+    "check": "tslint --type-check --project tsconfig.json -c tslint.json app/**/*.ts bin/**/*.ts && nsp check && snyk auth && snyk test --ignore-policy",
+    "clean": "rimraf app/**/*.js bin/**/*.js index.js npm-debug.log* docs/*",
     "jsdoc": "node_modules/.bin/jsdoc -c jsdoc.json",
     "start": "node ./index.js",
     "test": "npm run check && mocha --no-timeouts --recursive",
@@ -75,5 +75,5 @@
     "version": "git add -A",
     "postversion": "git push origin --tags"
   },
-  "version": "3.0.1"
+  "version": "3.0.2"
 }

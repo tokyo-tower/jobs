@@ -37,7 +37,9 @@ export function createFromJson(): void {
     mongoose.connect(MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/staffs.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) throw err;
+        if (err instanceof Error) {
+            throw err;
+        }
         const staffs: any[] = JSON.parse(data);
 
         // あれば更新、なければ追加

@@ -21,7 +21,9 @@ export function createFromJson(): void {
     mongoose.connect(MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) throw err;
+        if (err instanceof Error) {
+            throw err;
+        }
         const ticketTypeGroups: any[] = JSON.parse(data);
 
         const promises = ticketTypeGroups.map(async (ticketTypeGroup) => {

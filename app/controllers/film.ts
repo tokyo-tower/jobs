@@ -8,29 +8,13 @@ import { Models } from '@motionpicture/chevre-domain';
 
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as log4js from 'log4js';
 import * as mongoose from 'mongoose';
 import * as request from 'request';
 
-const debug = createDebug('chevre-api:task:controller:film');
+const debug = createDebug('chevre-jobs:controller:film');
 
 const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const STATUS_CODE_OK = 200;
-
-// todo ログ出力方法考える
-log4js.configure({
-    appenders: [
-        {
-            category: 'system',
-            type: 'console'
-        }
-    ],
-    levels: {
-        system: 'ALL'
-    },
-    replaceConsole: true
-});
-const logger = log4js.getLogger('system');
 
 /**
  * @memberOf FilmController
@@ -39,15 +23,17 @@ export function createTicketTypeGroupsFromJson(): void {
     mongoose.connect(MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) throw err;
+        if (err instanceof Error) {
+            throw err;
+        }
         const groups = JSON.parse(data);
 
-        logger.info('removing all groups...');
+        debug('removing all groups...');
         await Models.TicketTypeGroup.remove({}).exec();
 
-        logger.debug('creating groups...');
+        debug('creating groups...');
         await Models.TicketTypeGroup.create(groups);
-        logger.info('groups created.');
+        debug('groups created.');
         mongoose.disconnect();
         process.exit(0);
     });
@@ -60,11 +46,13 @@ export function createFromJson(): void {
     mongoose.connect(MONGOLAB_URI, {});
 
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/films.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) throw err;
+        if (err instanceof Error) {
+            throw err;
+        }
         const films: any[] = JSON.parse(data);
 
         const promises = films.map(async (film) => {
-            logger.debug('updating film...');
+            debug('updating film...');
             await Models.Film.findOneAndUpdate(
                 {
                     _id: film._id
@@ -75,11 +63,11 @@ export function createFromJson(): void {
                     upsert: true
                 }
             ).exec();
-            logger.debug('film updated');
+            debug('film updated');
         });
 
         await Promise.all(promises);
-        logger.info('promised.');
+        debug('promised.');
         mongoose.disconnect();
         process.exit(0);
     });
@@ -94,7 +82,9 @@ export function getImages() {
     mongoose.connect(MONGOLAB_URI, {});
 
     Models.Film.find({}, 'name', { sort: { _id: 1 } }, (err, films) => {
-        if (err !== null) throw err;
+        if (err !== null) {
+            throw err;
+        }
 
         let i = 0;
 
@@ -120,14 +110,14 @@ export function getImages() {
                         debug('thumbnailUrl:', image);
 
                         request.get({ url: image, encoding: null }, (errorOfImageRequest, responseOfImageRequest, bodyOfImageRequest) => {
-                            logger.debug('image saved.', error);
+                            debug('image saved.', error);
                             if (errorOfImageRequest !== null && responseOfImageRequest.statusCode === STATUS_CODE_OK) {
                                 // tslint:disable-next-line:max-line-length
                                 fs.writeFileSync(`${__dirname}/../../../../public/images/film/${film.get('_id').toString()}.jpg`, bodyOfImageRequest, 'binary');
                             }
 
                             if (i === films.length - 1) {
-                                logger.debug('success!');
+                                debug('success!');
                                 mongoose.disconnect();
                                 process.exit(0);
                             } else {
@@ -141,7 +131,7 @@ export function getImages() {
                     }
                 } else {
                     if (i === films.length - 1) {
-                        logger.debug('success!');
+                        debug('success!');
                         mongoose.disconnect();
                         process.exit(0);
                     } else {

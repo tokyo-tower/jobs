@@ -28,8 +28,9 @@ const debug = createDebug('chevre-jobs:controller:performance');
 function createFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`, 'utf8', (readFileErr, data) => __awaiter(this, void 0, void 0, function* () {
-        if (readFileErr instanceof Error)
+        if (readFileErr instanceof Error) {
             throw readFileErr;
+        }
         const performances = JSON.parse(data);
         const screens = yield chevre_domain_1.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
         // あれば更新、なければ追加
@@ -38,8 +39,9 @@ function createFromJson() {
             const screenOfPerformance = screens.find((screen) => {
                 return (screen.get('_id').toString() === performance.screen);
             });
-            if (screenOfPerformance === undefined)
+            if (screenOfPerformance === undefined) {
                 throw new Error('screen not found.');
+            }
             performance.screen_name = screenOfPerformance.get('name');
             performance.theater_name = screenOfPerformance.get('theater').get('name');
             debug('creating performance...');

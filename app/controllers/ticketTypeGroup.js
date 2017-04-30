@@ -25,8 +25,9 @@ const MONGOLAB_URI = process.env.MONGOLAB_URI;
 function createFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error)
+        if (err instanceof Error) {
             throw err;
+        }
         const ticketTypeGroups = JSON.parse(data);
         const promises = ticketTypeGroups.map((ticketTypeGroup) => __awaiter(this, void 0, void 0, function* () {
             debug('updating ticketTypeGroup...');

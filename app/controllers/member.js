@@ -41,8 +41,9 @@ const logger = log4js.getLogger('system');
 function createFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/members.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error)
+        if (err instanceof Error) {
             throw err;
+        }
         let members = JSON.parse(data);
         // パスワードハッシュ化
         members = members.map((member) => {
@@ -72,8 +73,9 @@ exports.createFromJson = createFromJson;
 function createReservationsFromJson() {
     mongoose.connect(MONGOLAB_URI, {});
     fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/memberReservations.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error)
+        if (err instanceof Error) {
             throw err;
+        }
         const reservations = JSON.parse(data);
         logger.debug('creating reservations...');
         const promises = reservations.map((reservationFromJson) => __awaiter(this, void 0, void 0, function* () {
