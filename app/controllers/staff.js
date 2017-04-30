@@ -54,7 +54,7 @@ exports.createFromJson = createFromJson;
 function createReservationsFromJson() {
     return __awaiter(this, void 0, void 0, function* () {
         // スクリーンごとに内部予約を追加する
-        const screenIds = yield chevre_domain_1.Models.Screen.distinct('_id');
+        const screenIds = yield chevre_domain_1.Models.Screen.distinct('_id').exec();
         yield Promise.all(screenIds.map((screenId) => __awaiter(this, void 0, void 0, function* () {
             debug('createStaffReservationsByScreenId processing...', screenId.toString());
             yield createReservationsByScreenId(screenId.toString());

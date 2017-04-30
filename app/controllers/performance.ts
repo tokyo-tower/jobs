@@ -101,6 +101,6 @@ export async function release(performanceId: string): Promise<void> {
     await Models.Performance.findByIdAndUpdate(
         performanceId,
         { canceled: false }
-    );
+    ).exec();
     debug('performance updated');
 }

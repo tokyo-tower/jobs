@@ -94,7 +94,7 @@ exports.updateStatuses = updateStatuses;
 function release(performanceId) {
     return __awaiter(this, void 0, void 0, function* () {
         debug('updating performance..._id:', performanceId);
-        yield chevre_domain_1.Models.Performance.findByIdAndUpdate(performanceId, { canceled: false });
+        yield chevre_domain_1.Models.Performance.findByIdAndUpdate(performanceId, { canceled: false }).exec();
         debug('performance updated');
     });
 }

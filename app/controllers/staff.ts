@@ -52,7 +52,7 @@ export async function createFromJson(): Promise<void> {
  */
 export async function createReservationsFromJson(): Promise<void> {
     // スクリーンごとに内部予約を追加する
-    const screenIds = await Models.Screen.distinct('_id');
+    const screenIds = await Models.Screen.distinct('_id').exec();
 
     await Promise.all(screenIds.map(async (screenId) => {
         debug('createStaffReservationsByScreenId processing...', screenId.toString());
