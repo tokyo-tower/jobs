@@ -2,7 +2,7 @@
 /**
  * 券種グループタスクコントローラー
  *
- * @namespace TicketTypeGroupController
+ * @namespace controller/ticketTypeGroup
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -16,28 +16,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const debug = createDebug('chevre-api:task:controller:ticketTypeGroup');
+const debug = createDebug('chevre-jobs:controller:ticketTypeGroup');
 /**
- * @memberOf FilmController
+ * @memberOf controller/ticketTypeGroup
  */
 function createFromJson() {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error) {
-            throw err;
-        }
-        const ticketTypeGroups = JSON.parse(data);
-        const promises = ticketTypeGroups.map((ticketTypeGroup) => __awaiter(this, void 0, void 0, function* () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const ticketTypeGroups = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`);
+        yield Promise.all(ticketTypeGroups.map((ticketTypeGroup) => __awaiter(this, void 0, void 0, function* () {
             debug('updating ticketTypeGroup...');
-            yield chevre_domain_1.Models.TicketTypeGroup.findOneAndUpdate({
-                _id: ticketTypeGroup._id
-            }, ticketTypeGroup, {
+            yield chevre_domain_1.Models.TicketTypeGroup.findByIdAndUpdate(ticketTypeGroup._id, ticketTypeGroup, {
                 new: true,
                 upsert: true
             }).exec();
             debug('ticketTypeGroup updated');
-        }));
-        yield Promise.all(promises);
+        })));
         debug('promised.');
-    }));
+    });
 }
 exports.createFromJson = createFromJson;

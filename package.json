@@ -14,7 +14,7 @@
     "commander": "^2.9.0",
     "config": "^1.21.0",
     "debug": "^2.6.6",
-    "fs-extra": "^0.28.0",
+    "fs-extra": "^3.0.0",
     "http-status": "^1.0.1",
     "mocha": "^3.3.0",
     "moment": "^2.18.1",
@@ -33,7 +33,7 @@
     "@types/commander": "^2.9.0",
     "@types/config": "0.0.32",
     "@types/debug": "0.0.29",
-    "@types/fs-extra": "0.0.37",
+    "@types/fs-extra": "^2.1.0",
     "@types/http-status": "^0.2.29",
     "@types/mocha": "^2.2.41",
     "@types/numeral": "0.0.19",
@@ -73,5 +73,5 @@
     "version": "git add -A",
     "postversion": "git push origin --tags"
   },
-  "version": "3.0.4"
+  "version": "3.0.5"
 }

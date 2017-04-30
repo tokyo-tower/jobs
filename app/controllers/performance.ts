@@ -1,7 +1,7 @@
 /**
  * パフォーマンスタスクコントローラー
  *
- * @namespace PerformanceController
+ * @namespace controller/performance
  */
 
 import { Models, PerformanceStatusesModel } from '@motionpicture/chevre-domain';
@@ -14,44 +14,36 @@ const debug = createDebug('chevre-jobs:controller:performance');
 /**
  *
  *
- * @memberOf PerformanceController
+ * @memberOf controller/performance
  */
-export function createFromJson(): void {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`, 'utf8', async (readFileErr, data) => {
-        if (readFileErr instanceof Error) {
-            throw readFileErr;
-        }
-        const performances: any[] = JSON.parse(data);
+export async function createFromJson(): Promise<void> {
+    const performances: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
+    const screens = await Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
 
-        const screens = await Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
-
-        // あれば更新、なければ追加
-        const promises = performances.map(async (performance) => {
-            // 劇場とスクリーン名称を追加
-            const screenOfPerformance = screens.find((screen) => {
-                return (screen.get('_id').toString() === performance.screen);
-            });
-            if (screenOfPerformance === undefined) {
-                throw new Error('screen not found.');
-            }
-
-            performance.screen_name = screenOfPerformance.get('name');
-            performance.theater_name = screenOfPerformance.get('theater').get('name');
-
-            debug('creating performance...');
-            await Models.Performance.create(performance);
-            debug('performance created');
+    // あれば更新、なければ追加
+    await Promise.all(performances.map(async (performance) => {
+        // 劇場とスクリーン名称を追加
+        const screenOfPerformance = screens.find((screen) => {
+            return (screen.get('_id').toString() === performance.screen);
         });
+        if (screenOfPerformance === undefined) {
+            throw new Error('screen not found.');
+        }
 
-        await Promise.all(promises);
-        debug('promised.');
-    });
+        performance.screen_name = screenOfPerformance.get('name');
+        performance.theater_name = screenOfPerformance.get('theater').get('name');
+
+        debug('creating performance...');
+        await Models.Performance.create(performance);
+        debug('performance created');
+    }));
+    debug('promised.');
 }
 
 /**
  * 空席ステータスを更新する
  *
- * @memberOf PerformanceController
+ * @memberOf controller/performance
  */
 export async function updateStatuses() {
     debug('finding performances...');
@@ -102,22 +94,13 @@ export async function updateStatuses() {
 /**
  * ID指定でパフォーマンスを公開する
  *
- * @memberOf PerformanceController
+ * @memberOf controller/performance
  */
-export function release(performanceId: string): void {
+export async function release(performanceId: string): Promise<void> {
     debug('updating performance..._id:', performanceId);
-    Models.Performance.findOneAndUpdate(
-        {
-            _id: performanceId
-        },
-        {
-            canceled: false
-        },
-        {
-            new: true
-        },
-        (err, performance) => {
-            debug('performance updated', err, performance);
-        }
+    await Models.Performance.findByIdAndUpdate(
+        performanceId,
+        { canceled: false }
     );
+    debug('performance updated');
 }

@@ -15,5 +15,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 before(() => __awaiter(this, void 0, void 0, function* () {
+    mongoose.Promise = global.Promise;
     mongoose.connect(process.env.MONGOLAB_URI);
 }));

@@ -2,7 +2,7 @@
 /**
  * パフォーマンスタスクコントローラー
  *
- * @namespace PerformanceController
+ * @namespace controller/performance
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -21,17 +21,14 @@ const debug = createDebug('chevre-jobs:controller:performance');
 /**
  *
  *
- * @memberOf PerformanceController
+ * @memberOf controller/performance
  */
 function createFromJson() {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`, 'utf8', (readFileErr, data) => __awaiter(this, void 0, void 0, function* () {
-        if (readFileErr instanceof Error) {
-            throw readFileErr;
-        }
-        const performances = JSON.parse(data);
+    return __awaiter(this, void 0, void 0, function* () {
+        const performances = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
         const screens = yield chevre_domain_1.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
         // あれば更新、なければ追加
-        const promises = performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
+        yield Promise.all(performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
             // 劇場とスクリーン名称を追加
             const screenOfPerformance = screens.find((screen) => {
                 return (screen.get('_id').toString() === performance.screen);
@@ -44,16 +41,15 @@ function createFromJson() {
             debug('creating performance...');
             yield chevre_domain_1.Models.Performance.create(performance);
             debug('performance created');
-        }));
-        yield Promise.all(promises);
+        })));
         debug('promised.');
-    }));
+    });
 }
 exports.createFromJson = createFromJson;
 /**
  * 空席ステータスを更新する
  *
- * @memberOf PerformanceController
+ * @memberOf controller/performance
  */
 function updateStatuses() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -93,18 +89,13 @@ exports.updateStatuses = updateStatuses;
 /**
  * ID指定でパフォーマンスを公開する
  *
- * @memberOf PerformanceController
+ * @memberOf controller/performance
  */
 function release(performanceId) {
-    debug('updating performance..._id:', performanceId);
-    chevre_domain_1.Models.Performance.findOneAndUpdate({
-        _id: performanceId
-    }, {
-        canceled: false
-    }, {
-        new: true
-    }, (err, performance) => {
-        debug('performance updated', err, performance);
+    return __awaiter(this, void 0, void 0, function* () {
+        debug('updating performance..._id:', performanceId);
+        yield chevre_domain_1.Models.Performance.findByIdAndUpdate(performanceId, { canceled: false });
+        debug('performance updated');
     });
 }
 exports.release = release;

@@ -16,81 +16,63 @@ const debug = createDebug('chevre-jobs:controller:theater');
  *
  * @memberOf TheaterController
  */
-export function createScreensFromJson(): void {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) {
-            throw err;
-        }
-        const screens: any[] = JSON.parse(data);
+export async function createScreensFromJson(): Promise<void> {
+    const screens: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`);
 
-        const promises = screens.map(async (screen) => {
-            // 座席数情報を追加
-            screen.seats_number = screen.sections[0].seats.length;
+    await Promise.all(screens.map(async (screen) => {
+        // 座席数情報を追加
+        screen.seats_number = screen.sections[0].seats.length;
 
-            // 座席グレードごとの座席数情報を追加
-            const seatsNumbersBySeatCode: {
-                [key: string]: number
-            } = {};
-            seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_NORMAL] = 0;
-            seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_PREMIERE_BOX] = 0;
-            seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_PREMIERE_LUXURY] = 0;
-            seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_FRONT_RECLINING] = 0;
-            screen.sections[0].seats.forEach((seat: any) => {
-                seatsNumbersBySeatCode[seat.grade.code] += 1;
-            });
-            screen.seats_numbers_by_seat_grade = Object.keys(seatsNumbersBySeatCode).map((seatGradeCode) => {
-                return {
-                    seat_grade_code: seatGradeCode,
-                    seats_number: seatsNumbersBySeatCode[seatGradeCode]
-                };
-            });
-
-            debug('updating screen...');
-            await Models.Screen.findOneAndUpdate(
-                {
-                    _id: screen._id
-                },
-                screen,
-                {
-                    new: true,
-                    upsert: true
-                }
-            ).exec();
-            debug('screen updated');
+        // 座席グレードごとの座席数情報を追加
+        const seatsNumbersBySeatCode: {
+            [key: string]: number
+        } = {};
+        seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_NORMAL] = 0;
+        seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_PREMIERE_BOX] = 0;
+        seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_PREMIERE_LUXURY] = 0;
+        seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_FRONT_RECLINING] = 0;
+        screen.sections[0].seats.forEach((seat: any) => {
+            seatsNumbersBySeatCode[seat.grade.code] += 1;
+        });
+        screen.seats_numbers_by_seat_grade = Object.keys(seatsNumbersBySeatCode).map((seatGradeCode) => {
+            return {
+                seat_grade_code: seatGradeCode,
+                seats_number: seatsNumbersBySeatCode[seatGradeCode]
+            };
         });
 
-        await Promise.all(promises);
-        debug('promised.');
-    });
+        debug('updating screen...');
+        await Models.Screen.findByIdAndUpdate(
+            screen._id,
+            screen,
+            {
+                new: true,
+                upsert: true
+            }
+        ).exec();
+        debug('screen updated');
+    }));
+    debug('promised.');
 }
 
 /**
  *
  * @memberOf TheaterController
  */
-export function createFromJson(): void {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) {
-            throw err;
-        }
-        const theaters: any[] = JSON.parse(data);
+export async function createFromJson(): Promise<void> {
+    const theaters: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`);
 
-        const promises = theaters.map(async (theater) => {
-            debug('updating theater...');
-            await Models.Theater.findOneAndUpdate(
-                {
-                    _id: theater._id
-                },
-                theater,
-                {
-                    new: true,
-                    upsert: true
-                }
-            ).exec();
-            debug('theater updated');
-        });
-
-        await Promise.all(promises);
-        debug('promised.');
-    });
+    await Promise.all(theaters.map(async (theater) => {
+        debug('updating theater...');
+        await Models.Theater.findByIdAndUpdate(
+            theater._id,
+            theater,
+            {
+                new: true,
+                upsert: true
+            }
+        ).exec();
+        debug('theater updated');
+    }));
+    debug('promised.');
 }

@@ -24,13 +24,10 @@ const debug = createDebug('chevre-jobs:controller:staff');
  * @memberOf StaffController
  */
 function createFromJson() {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/staffs.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error) {
-            throw err;
-        }
-        const staffs = JSON.parse(data);
+    return __awaiter(this, void 0, void 0, function* () {
+        const staffs = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/staffs.json`);
         // あれば更新、なければ追加
-        const promises = staffs.map((staff) => __awaiter(this, void 0, void 0, function* () {
+        yield Promise.all(staffs.map((staff) => __awaiter(this, void 0, void 0, function* () {
             // パスワードハッシュ化
             const SIZE = 64;
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
@@ -44,10 +41,9 @@ function createFromJson() {
                 upsert: true
             }).exec();
             debug('staff updated');
-        }));
-        yield Promise.all(promises);
+        })));
         debug('promised.');
-    }));
+    });
 }
 exports.createFromJson = createFromJson;
 /**
@@ -56,38 +52,20 @@ exports.createFromJson = createFromJson;
  * @memberOf StaffController
  */
 function createReservationsFromJson() {
-    // スクリーンごとに内部予約を追加する
-    chevre_domain_1.Models.Screen.distinct('_id', (err, screenIds) => {
-        if (err !== null) {
-            debug('screen ids found.', err);
-            return;
-        }
-        let i = 0;
-        const next = () => {
-            if (i < screenIds.length) {
-                debug('createStaffReservationsByScreenId processing...', screenIds[i].toString());
-                createReservationsByScreenId(screenIds[i].toString(), (createErr) => {
-                    debug('createStaffReservationsByScreenId processed.', createErr);
-                    i += 1;
-                    next();
-                });
-            }
-            else {
-                debug('end.');
-            }
-        };
-        next();
+    return __awaiter(this, void 0, void 0, function* () {
+        // スクリーンごとに内部予約を追加する
+        const screenIds = yield chevre_domain_1.Models.Screen.distinct('_id');
+        yield Promise.all(screenIds.map((screenId) => __awaiter(this, void 0, void 0, function* () {
+            debug('createStaffReservationsByScreenId processing...', screenId.toString());
+            yield createReservationsByScreenId(screenId.toString());
+            debug('createStaffReservationsByScreenId processed.');
+        })));
     });
 }
 exports.createReservationsFromJson = createReservationsFromJson;
-// tslint:disable-next-line:max-func-body-length
-function createReservationsByScreenId(screenId, cb) {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/staffReservations_${screenId}.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error) {
-            debug('no reservations.');
-            cb(null);
-            return;
-        }
+function createReservationsByScreenId(screenId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const data = fs.readFileSync(`${process.cwd()}/data/${process.env.NODE_ENV}/staffReservations_${screenId}.json`, { encoding: 'utf8' });
         // 内部関係者をすべて取得
         const staffs = yield chevre_domain_1.Models.Staff.find({}).exec();
         const staffsByName = {};
@@ -154,14 +132,7 @@ function createReservationsByScreenId(screenId, cb) {
             reservations = reservations.concat(reservationsByPerformance);
         }
         debug('creating staff reservations...length:', reservations.length);
-        let insertManyError = null;
-        try {
-            yield chevre_domain_1.Models.Reservation.insertMany(reservations);
-        }
-        catch (error) {
-            insertManyError = error;
-        }
+        yield chevre_domain_1.Models.Reservation.insertMany(reservations);
         debug('staff reservations created.');
-        cb(insertManyError);
-    }));
+    });
 }

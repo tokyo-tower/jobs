@@ -16,31 +16,21 @@ const debug = createDebug('chevre-jobs:controller:window');
  *
  * @memberOf WindowController
  */
-export function createFromJson() {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`, 'utf8', (err, data) => {
-        if (err instanceof Error) {
-            throw err;
-        }
-        let windows: any[] = JSON.parse(data);
+export async function createFromJson(): Promise<void> {
+    let windows: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`);
 
-        // パスワードハッシュ化
-        windows = windows.map((window) => {
-            const SIZE = 64;
-            const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
-            window.password_salt = passwordSalt;
-            window.password_hash = CommonUtil.createHash(window.password, passwordSalt);
-            return window;
-        });
-
-        debug('removing all windows...');
-        Models.Window.remove({}, async (removeErr) => {
-            if (removeErr !== null) {
-                throw removeErr;
-            }
-
-            debug('creating windows...');
-            await Models.Window.create(windows);
-            debug('windows created.');
-        });
+    // パスワードハッシュ化
+    windows = windows.map((window) => {
+        const SIZE = 64;
+        const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
+        window.password_salt = passwordSalt;
+        window.password_hash = CommonUtil.createHash(window.password, passwordSalt);
+        return window;
     });
+
+    debug('removing all windows...');
+    await Models.Window.remove({}).exec();
+    debug('creating windows...');
+    await Models.Window.create(windows);
+    debug('windows created.');
 }

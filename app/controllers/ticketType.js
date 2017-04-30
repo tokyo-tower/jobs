@@ -2,7 +2,7 @@
 /**
  * 券種タスクコントローラー
  *
- * @namespace TicketTypeController
+ * @namespace controller/ticketType
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -16,28 +16,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const debug = createDebug('chevre-api:task:controller:ticketType');
+const debug = createDebug('chevre-jobs:controller:ticketType');
 /**
- * @memberOf FilmController
+ * @memberOf controller/ticketType
  */
 function createFromJson() {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypes.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error) {
-            throw err;
-        }
-        const ticketTypes = JSON.parse(data);
-        const promises = ticketTypes.map((ticketType) => __awaiter(this, void 0, void 0, function* () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const ticketTypes = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypes.json`);
+        yield Promise.all(ticketTypes.map((ticketType) => __awaiter(this, void 0, void 0, function* () {
             debug('updating ticketType...');
-            yield chevre_domain_1.Models.TicketType.findOneAndUpdate({
-                _id: ticketType._id
-            }, ticketType, {
+            yield chevre_domain_1.Models.TicketType.findByIdAndUpdate(ticketType._id, ticketType, {
                 new: true,
                 upsert: true
             }).exec();
             debug('ticketType updated');
-        }));
-        yield Promise.all(promises);
+        })));
         debug('promised.');
-    }));
+    });
 }
 exports.createFromJson = createFromJson;

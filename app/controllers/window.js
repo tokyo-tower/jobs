@@ -23,11 +23,8 @@ const debug = createDebug('chevre-jobs:controller:window');
  * @memberOf WindowController
  */
 function createFromJson() {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`, 'utf8', (err, data) => {
-        if (err instanceof Error) {
-            throw err;
-        }
-        let windows = JSON.parse(data);
+    return __awaiter(this, void 0, void 0, function* () {
+        let windows = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`);
         // パスワードハッシュ化
         windows = windows.map((window) => {
             const SIZE = 64;
@@ -37,14 +34,10 @@ function createFromJson() {
             return window;
         });
         debug('removing all windows...');
-        chevre_domain_1.Models.Window.remove({}, (removeErr) => __awaiter(this, void 0, void 0, function* () {
-            if (removeErr !== null) {
-                throw removeErr;
-            }
-            debug('creating windows...');
-            yield chevre_domain_1.Models.Window.create(windows);
-            debug('windows created.');
-        }));
+        yield chevre_domain_1.Models.Window.remove({}).exec();
+        debug('creating windows...');
+        yield chevre_domain_1.Models.Window.create(windows);
+        debug('windows created.');
     });
 }
 exports.createFromJson = createFromJson;

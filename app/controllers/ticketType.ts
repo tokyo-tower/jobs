@@ -1,7 +1,7 @@
 /**
  * 券種タスクコントローラー
  *
- * @namespace TicketTypeController
+ * @namespace controller/ticketType
  */
 
 import { Models } from '@motionpicture/chevre-domain';
@@ -9,34 +9,25 @@ import { Models } from '@motionpicture/chevre-domain';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 
-const debug = createDebug('chevre-api:task:controller:ticketType');
+const debug = createDebug('chevre-jobs:controller:ticketType');
 
 /**
- * @memberOf FilmController
+ * @memberOf controller/ticketType
  */
-export function createFromJson(): void {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypes.json`, 'utf8', async (err, data) => {
-        if (err instanceof Error) {
-            throw err;
-        }
-        const ticketTypes: any[] = JSON.parse(data);
+export async function createFromJson(): Promise<void> {
+    const ticketTypes: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypes.json`);
 
-        const promises = ticketTypes.map(async (ticketType) => {
-            debug('updating ticketType...');
-            await Models.TicketType.findOneAndUpdate(
-                {
-                    _id: ticketType._id
-                },
-                ticketType,
-                {
-                    new: true,
-                    upsert: true
-                }
-            ).exec();
-            debug('ticketType updated');
-        });
-
-        await Promise.all(promises);
-        debug('promised.');
-    });
+    await Promise.all(ticketTypes.map(async (ticketType) => {
+        debug('updating ticketType...');
+        await Models.TicketType.findByIdAndUpdate(
+            ticketType._id,
+            ticketType,
+            {
+                new: true,
+                upsert: true
+            }
+        ).exec();
+        debug('ticketType updated');
+    }));
+    debug('promised.');
 }

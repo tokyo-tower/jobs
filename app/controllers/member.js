@@ -24,11 +24,8 @@ const debug = createDebug('chevre-jobs:controller:member');
  * @memberOf MemberController
  */
 function createFromJson() {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/members.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error) {
-            throw err;
-        }
-        let members = JSON.parse(data);
+    return __awaiter(this, void 0, void 0, function* () {
+        let members = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/members.json`);
         // パスワードハッシュ化
         members = members.map((member) => {
             const SIZE = 64;
@@ -44,7 +41,7 @@ function createFromJson() {
         debug('creating members...');
         yield chevre_domain_1.Models.Member.create(members);
         debug('members created.');
-    }));
+    });
 }
 exports.createFromJson = createFromJson;
 /**
@@ -53,13 +50,10 @@ exports.createFromJson = createFromJson;
  * @memberOf MemberController
  */
 function createReservationsFromJson() {
-    fs.readFile(`${process.cwd()}/data/${process.env.NODE_ENV}/memberReservations.json`, 'utf8', (err, data) => __awaiter(this, void 0, void 0, function* () {
-        if (err instanceof Error) {
-            throw err;
-        }
-        const reservations = JSON.parse(data);
+    return __awaiter(this, void 0, void 0, function* () {
+        const reservations = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/memberReservations.json`);
         debug('creating reservations...');
-        const promises = reservations.map((reservationFromJson) => __awaiter(this, void 0, void 0, function* () {
+        yield Promise.all(reservations.map((reservationFromJson) => __awaiter(this, void 0, void 0, function* () {
             debug('removing reservation...');
             // すでに予約があれば削除してから新規作成
             yield chevre_domain_1.Models.Reservation.remove({
@@ -70,9 +64,8 @@ function createReservationsFromJson() {
             debug('creating reservationFromJson...', reservationFromJson);
             yield chevre_domain_1.Models.Reservation.create(reservationFromJson);
             debug('reservationFromJson created.');
-        }));
-        yield Promise.all(promises);
+        })));
         debug('promised.');
-    }));
+    });
 }
 exports.createReservationsFromJson = createReservationsFromJson;
