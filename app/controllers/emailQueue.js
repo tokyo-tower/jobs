@@ -60,9 +60,8 @@ function sendOne() {
             // 送信済みフラグを立てる
             const status = (sendError instanceof Error) ? chevre_domain_1.EmailQueueUtil.STATUS_UNSENT : chevre_domain_1.EmailQueueUtil.STATUS_SENT;
             debug('setting status...', status);
-            emailQueue.set('status', status);
-            const res = yield emailQueue.save();
-            debug('cue saved.', res);
+            yield chevre_domain_1.Models.EmailQueue.findByIdAndUpdate(emailQueue._id, { status: status }).exec();
+            debug('cue saved');
         }
     });
 }

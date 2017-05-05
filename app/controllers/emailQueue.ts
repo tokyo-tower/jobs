@@ -66,8 +66,7 @@ export async function sendOne() {
         // 送信済みフラグを立てる
         const status = (sendError instanceof Error) ? EmailQueueUtil.STATUS_UNSENT : EmailQueueUtil.STATUS_SENT;
         debug('setting status...', status);
-        emailQueue.set('status', status);
-        const res = await emailQueue.save();
-        debug('cue saved.', res);
+        await Models.EmailQueue.findByIdAndUpdate(emailQueue._id, { status: status }).exec();
+        debug('cue saved');
     }
 }
