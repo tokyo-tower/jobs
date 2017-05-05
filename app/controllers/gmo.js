@@ -84,11 +84,11 @@ function processOne() {
                             case gmo_service_1.Util.STATUS_CVS_PAYSUCCESS:
                                 // 予約完了ステータスへ変更
                                 debug('updating reservations by paymentNo...', notification.get('order_id'));
-                                rawUpdateReservation = yield chevre.Models.Reservation.update({ payment_no: notification.get('order_id') }, {
+                                yield chevre.Models.Reservation.update({ gmo_order_id: notification.get('order_id') }, {
                                     status: chevre.ReservationUtil.STATUS_RESERVED,
                                     updated_user: 'system'
                                 }, { multi: true }).exec();
-                                debug('reservations updated.', rawUpdateReservation);
+                                debug('reservations updated');
                                 // 完了メールキュー追加(あれば更新日時を更新するだけ)
                                 // todo 新メールキュー方式に変更
                                 debug('creating reservationEmailCue...');
