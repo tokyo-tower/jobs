@@ -32,8 +32,9 @@ async function main(): Promise<void> {
     await staffController.createFromJson();
     await windowController.createFromJson();
 
-    await staffController.createReservationsFromJson();
-    await memberController.createReservationsFromJson();
+    // 時間がかかってしまうので、一時的にコメントアウト
+    // await staffController.createReservationsFromJson();
+    // await memberController.createReservationsFromJson();
 
     mongoose.disconnect();
 }

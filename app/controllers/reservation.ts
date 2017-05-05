@@ -70,107 +70,17 @@ export async function tmp2chevre(): Promise<void> {
  *
  * @memberOf ReservationController
  */
-// tslint:disable-next-line:max-func-body-length
-export function releaseSeatsKeptByMembers() {
+export async function releaseSeatsKeptByMembers() {
     if (moment(conf.get<string>('datetimes.reservation_end_members')) < moment()) {
-        // 内部関係者で確保する
-        Models.Staff.findOne(
-            {
-                user_id: '2016sagyo2'
-            },
-            async (err, staff) => {
-                debug('staff found.', err, staff);
-                if (err !== null) {
-                    return;
-                }
-
-                const reservations = await Models.Reservation.find(
-                    {
-                        status: ReservationUtil.STATUS_KEPT_BY_MEMBER
-                    }
-                ).exec();
-
-                const promises = reservations.map(async (reservation, index) => {
-                    debug('finding performance...');
-                    const performance = await Models.Performance.findOne({
-                        _id: reservation.get('performance')
-                    })
-                        .populate('film', 'name is_mx4d copyright')
-                        .populate('screen', 'name')
-                        .populate('theater', 'name address')
-                        .exec();
-
-                    debug('updating reservation...');
-                    // 購入番号発行
-                    const paymentNo = await ReservationUtil.publishPaymentNo(performance.get('day'));
-                    const raw = await reservation.update(
-                        {
-                            status: ReservationUtil.STATUS_RESERVED,
-                            staff: staff.get('_id'),
-                            staff_user_id: staff.get('user_id'),
-                            staff_email: staff.get('email'),
-                            staff_name: staff.get('name'),
-                            staff_signature: 'system',
-                            entered: false,
-                            updated_user: 'system',
-                            purchased_at: Date.now(),
-                            watcher_name_updated_at: null,
-                            watcher_name: '',
-                            film_copyright: performance.get('film').get('copyright'),
-                            film_is_mx4d: performance.get('film').get('is_mx4d'),
-                            film_image: `${process.env.FRONTEND_ENDPOINT}/images/film/${performance.get('film').get('_id')}.jpg`,
-                            film_name_en: performance.get('film').get('name.en'),
-                            film_name_ja: performance.get('film').get('name.ja'),
-                            film: performance.get('film').get('_id'),
-                            screen_name_en: performance.get('screen').get('name.en'),
-                            screen_name_ja: performance.get('screen').get('name.ja'),
-                            screen: performance.get('screen').get('_id'),
-                            theater_name_en: performance.get('theater').get('name.en'),
-                            theater_name_ja: performance.get('theater').get('name.ja'),
-                            theater_address_en: performance.get('theater').get('address.en'),
-                            theater_address_ja: performance.get('theater').get('address.ja'),
-                            theater: performance.get('theater').get('_id'),
-                            performance_canceled: performance.get('canceled'),
-                            performance_end_time: performance.get('end_time'),
-                            performance_start_time: performance.get('start_time'),
-                            performance_open_time: performance.get('open_time'),
-                            performance_day: performance.get('day'),
-                            purchaser_group: ReservationUtil.PURCHASER_GROUP_STAFF,
-                            payment_no: paymentNo,
-                            payment_seat_index: index,
-                            charge: 0,
-                            ticket_type_charge: 0,
-                            ticket_type_name_en: 'Free',
-                            ticket_type_name_ja: '無料',
-                            ticket_type_code: '00',
-                            seat_grade_additional_charge: 0,
-                            seat_grade_name_en: 'Normal Seat',
-                            seat_grade_name_ja: 'ノーマルシート'
-                        }
-                    ).exec();
-                    debug('reservation updated.', raw);
-                });
-
-                await Promise.all(promises);
-                debug('promised.', err);
-            }
-        );
-
         // 空席にする場合はこちら
-        // debug('releasing reservations kept by members...');
-        // Models.Reservation.remove(
-        //     {
-        //         status: ReservationUtil.STATUS_KEPT_BY_MEMBER
-        //     },
-        //     (err) => {
-        //         // 失敗しても、次のタスクにまかせる(気にしない)
-        //         if (err) {
-        //         } else {
-        //         }
-        //     }
-        // );
-    } else {
-        process.exit(0);
+        debug('releasing reservations kept by members...');
+        await Models.Reservation.remove(
+            {
+                status: ReservationUtil.STATUS_KEPT_BY_MEMBER
+            }
+        ).exec();
+
+        // 失敗しても、次のタスクにまかせる(気にしない)
     }
 }
 
@@ -204,7 +114,7 @@ export async function releaseGarbages(): Promise<void> {
                 form: {
                     ShopID: process.env.GMO_SHOP_ID,
                     ShopPass: process.env.GMO_SHOP_PASS,
-                    OrderID: reservation.get('payment_no'),
+                    OrderID: reservation.get('gmo_order_id'),
                     PayType: reservation.get('payment_method')
                 }
             },
@@ -244,37 +154,11 @@ export async function releaseGarbages(): Promise<void> {
         return;
     }
 
-    // 内部で確保する仕様の場合
-    const staff = await Models.Staff.findOne({ user_id: '2016sagyo2' }).exec();
-    debug('staff found.', staff);
-
+    // 予約削除
     debug('updating reservations...');
-    await Models.Reservation.update(
+    await Models.Reservation.remove(
         {
             payment_no: { $in: paymentNos4release }
-        },
-        {
-            status: ReservationUtil.STATUS_RESERVED,
-            purchaser_group: ReservationUtil.PURCHASER_GROUP_STAFF,
-
-            charge: 0,
-            ticket_type_charge: 0,
-            ticket_type_name_en: 'Free',
-            ticket_type_name_ja: '無料',
-            ticket_type_code: '00',
-
-            staff: staff.get('_id'),
-            staff_user_id: staff.get('user_id'),
-            staff_email: staff.get('email'),
-            staff_name: staff.get('name'),
-            staff_signature: 'system',
-            updated_user: 'system',
-            // "purchased_at": Date.now(), // 購入日更新しない
-            watcher_name_updated_at: null,
-            watcher_name: ''
-        },
-        {
-            multi: true
         }
     ).exec();
 }

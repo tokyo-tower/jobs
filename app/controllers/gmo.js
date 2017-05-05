@@ -171,8 +171,10 @@ function processOne() {
                                     purchaser_group: chevre.ReservationUtil.PURCHASER_GROUP_STAFF,
                                     charge: 0,
                                     ticket_type_charge: 0,
-                                    ticket_type_name_en: 'Free',
-                                    ticket_type_name_ja: '無料',
+                                    ticket_type_name: {
+                                        en: 'Free',
+                                        ja: '無料'
+                                    },
                                     ticket_type_code: '00',
                                     staff: staff.get('_id'),
                                     staff_user_id: staff.get('user_id'),

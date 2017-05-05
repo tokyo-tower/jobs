@@ -37,8 +37,9 @@ function main() {
         yield memberController.createFromJson();
         yield staffController.createFromJson();
         yield windowController.createFromJson();
-        yield staffController.createReservationsFromJson();
-        yield memberController.createReservationsFromJson();
+        // 時間がかかってしまうので、一時的にコメントアウト
+        // await staffController.createReservationsFromJson();
+        // await memberController.createReservationsFromJson();
         mongoose.disconnect();
     });
 }

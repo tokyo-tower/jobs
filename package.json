@@ -9,7 +9,7 @@
     }
   ],
   "dependencies": {
-    "@motionpicture/chevre-domain": "^7.0.2",
+    "@motionpicture/chevre-domain": "^8.0.1",
     "@motionpicture/gmo-service": "^3.0.4",
     "config": "^1.25.1",
     "debug": "^2.6.6",
@@ -67,5 +67,5 @@
     "version": "git add -A",
     "postversion": "git push origin --tags"
   },
-  "version": "3.0.6"
+  "version": "4.0.0"
 }

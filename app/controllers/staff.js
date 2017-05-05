@@ -101,16 +101,12 @@ function createReservationsByScreenId(screenId) {
                     film_copyright: performance.get('film').get('copyright'),
                     film_is_mx4d: performance.get('film').get('is_mx4d'),
                     film_image: `${process.env.FRONTEND_ENDPOINT}/images/film/${performance.get('film').get('_id')}.jpg`,
-                    film_name_en: performance.get('film').get('name.en'),
-                    film_name_ja: performance.get('film').get('name.ja'),
+                    film_name: performance.get('film').get('name'),
                     film: performance.get('film').get('_id'),
-                    screen_name_en: performance.get('screen').get('name.en'),
-                    screen_name_ja: performance.get('screen').get('name.ja'),
+                    screen_name: performance.get('screen').get('name'),
                     screen: performance.get('screen').get('_id'),
-                    theater_name_en: performance.get('theater').get('name.en'),
-                    theater_name_ja: performance.get('theater').get('name.ja'),
-                    theater_address_en: performance.get('theater').get('address.en'),
-                    theater_address_ja: performance.get('theater').get('address.ja'),
+                    theater_name: performance.get('theater').get('name'),
+                    theater_address: performance.get('theater').get('address'),
                     theater: performance.get('theater').get('_id'),
                     performance_canceled: performance.get('canceled'),
                     performance_end_time: performance.get('end_time'),
@@ -122,11 +118,15 @@ function createReservationsByScreenId(screenId) {
                     payment_seat_index: index,
                     charge: 0,
                     ticket_type_charge: 0,
-                    ticket_type_name_en: 'Free',
-                    ticket_type_name_ja: '無料',
+                    ticket_type_name: {
+                        en: 'Free',
+                        ja: '無料'
+                    },
                     seat_grade_additional_charge: 0,
-                    seat_grade_name_en: 'Normal Seat',
-                    seat_grade_name_ja: 'ノーマルシート'
+                    seat_grade_name: {
+                        en: 'Normal Seat',
+                        ja: 'ノーマルシート'
+                    }
                 };
             });
             reservations = reservations.concat(reservationsByPerformance);

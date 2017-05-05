@@ -1,5 +1,5 @@
 [
-    {"user_id":"motionpicture","password":"e&2|G#TuMiMY","name":"内部関係者モーションピクチャー","email":"hello@motionpicture.jp","is_admin":true},
+    {"user_id":"motionpicture","password":"motionpicture","name":"内部関係者モーションピクチャー","email":"hello@motionpicture.jp","is_admin":true},
     {"user_id":"seat_tiff2016","password":"7_ifuH48bNDN","name":"座席確認","email":"hello@motionpicture.jp","is_admin":false},
     {"user_id":"kizai2016","password":"tiff2016","name":"機材デッド","email":"hello@motionpicture.jp","is_admin":false},
     {"user_id":"jiko2016","password":"tiff2016","name":"事故","email":"hello@motionpicture.jp","is_admin":false},

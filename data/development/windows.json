@@ -1,5 +1,5 @@
 [
-    {"user_id": "motionpicture","password": "e&2|G#TuMiMY","name": "当日窓口モーションピクチャー"},
+    {"user_id": "motionpicture","password": "motionpicture","name": "当日窓口モーションピクチャー"},
 
     {"user_id": "window_staff_01","password": "d49kh3vb","name": "当日窓口チケットカウンタースタッフ1"},
     {"user_id": "window_staff_02","password": "n486amgk","name": "当日窓口チケットカウンタースタッフ2"},
