@@ -168,6 +168,17 @@ export async function processOne() {
                         case GMOUtil.STATUS_CVS_PAYFAIL: // 決済失敗
                         case GMOUtil.STATUS_CVS_CANCEL: // 支払い停止
                             // 空席に戻す
+                            debug('removing reservations...gmo_order_id:', notification.get('order_id'));
+                            await Promise.all(reservations.map(async (reservation) => {
+                                debug('removing reservation...', reservation.get('_id'));
+                                await reservation.remove();
+                                debug('reservation removed.', reservation.get('_id'));
+                            }));
+
+                            break;
+
+                        case GMOUtil.STATUS_CVS_EXPIRED: // 期限切れ
+                            // 空席に戻す
                             debug('removing reservations...payment_no:', notification.get('order_id'));
                             const promises = reservations.map(async (reservation) => {
                                 debug('removing reservation...', reservation.get('_id'));
@@ -176,50 +187,6 @@ export async function processOne() {
                             });
 
                             await Promise.all(promises);
-
-                            break;
-
-                        case GMOUtil.STATUS_CVS_EXPIRED: // 期限切れ
-                            // 内部で確保する仕様の場合
-                            const staff = await chevre.Models.Staff.findOne(
-                                {
-                                    user_id: '2016sagyo2'
-                                }
-                            ).exec();
-                            debug('staff found.', staff);
-
-                            debug('updating reservations...');
-                            rawUpdateReservation = await chevre.Models.Reservation.update(
-                                {
-                                    payment_no: notification.get('order_id')
-                                },
-                                {
-                                    status: chevre.ReservationUtil.STATUS_RESERVED,
-                                    purchaser_group: chevre.ReservationUtil.PURCHASER_GROUP_STAFF,
-
-                                    charge: 0,
-                                    ticket_type_charge: 0,
-                                    ticket_type_name: {
-                                        en: 'Free',
-                                        ja: '無料'
-                                    },
-                                    ticket_type_code: '00',
-
-                                    staff: staff.get('_id'),
-                                    staff_user_id: staff.get('user_id'),
-                                    staff_email: staff.get('email'),
-                                    staff_name: staff.get('name'),
-                                    staff_signature: 'system',
-                                    updated_user: 'system',
-                                    // "purchased_at": Date.now(), // 購入日更新しない
-                                    watcher_name_updated_at: null,
-                                    watcher_name: ''
-                                },
-                                {
-                                    multi: true
-                                }
-                            ).exec();
-                            debug('updated.', rawUpdateReservation);
 
                             break;
 

@@ -1,0 +1,22 @@
+[
+    {
+        "username": "motionpicture",
+        "password": "motionpicture",
+        "name": {
+            "ja": "内部関係者モーションピクチャー",
+            "en": "staff motionpicture"
+        },
+        "email": "hello@motionpicture.jp",
+        "group": "STAFF"
+    },
+    {
+        "username": "window-motionpicture",
+        "password": "motionpicture",
+        "name": {
+            "ja": "当日窓口モーションピクチャー",
+            "en": "window staff motionpicture"
+        },
+        "email": "hello@motionpicture.jp",
+        "group": "WINDOW_STAFF"
+    }
+]

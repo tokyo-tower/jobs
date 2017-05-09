@@ -7,15 +7,15 @@
 
 import * as mongoose from 'mongoose';
 
+import * as clientController from '../../app/controllers/client';
 import * as filmController from '../../app/controllers/film';
-import * as memberController from '../../app/controllers/member';
+import * as ownerController from '../../app/controllers/owner';
 import * as performanceController from '../../app/controllers/performance';
 import * as schemaController from '../../app/controllers/schema';
-import * as staffController from '../../app/controllers/staff';
+// import * as staffController from '../../app/controllers/staff';
 import * as theaterController from '../../app/controllers/theater';
 import * as ticketTypeController from '../../app/controllers/ticketType';
 import * as ticketTypeGroupController from '../../app/controllers/ticketTypeGroup';
-import * as windowController from '../../app/controllers/window';
 
 async function main(): Promise<void> {
     mongoose.connect(process.env.MONGOLAB_URI);
@@ -28,9 +28,8 @@ async function main(): Promise<void> {
     await theaterController.createScreensFromJson();
     await performanceController.createFromJson();
 
-    await memberController.createFromJson();
-    await staffController.createFromJson();
-    await windowController.createFromJson();
+    await clientController.createFromJson();
+    await ownerController.createFromJson();
 
     // 時間がかかってしまうので、一時的にコメントアウト
     // await staffController.createReservationsFromJson();

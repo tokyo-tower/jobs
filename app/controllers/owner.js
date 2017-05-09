@@ -1,8 +1,8 @@
 "use strict";
 /**
- * 当日窓口アカウントタスクコントローラー
+ * オーナータスクコントローラー
  *
- * @namespace WindowController
+ * @namespace controller/owner
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,31 +13,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre_domain_1 = require("@motionpicture/chevre-domain");
+const chevre = require("@motionpicture/chevre-domain");
 const crypto = require("crypto");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const debug = createDebug('chevre-jobs:controller:window');
+const debug = createDebug('chevre-jobs:controller:staff');
 /**
  *
- * @memberOf WindowController
+ * @memberOf controller/owner
  */
 function createFromJson() {
     return __awaiter(this, void 0, void 0, function* () {
-        let windows = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/windows.json`);
-        // パスワードハッシュ化
-        windows = windows.map((window) => {
+        const owners = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/owners.json`);
+        // あれば更新、なければ追加
+        yield Promise.all(owners.map((owner) => __awaiter(this, void 0, void 0, function* () {
+            // パスワードハッシュ化
             const SIZE = 64;
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
-            window.password_salt = passwordSalt;
-            window.password_hash = chevre_domain_1.CommonUtil.createHash(window.password, passwordSalt);
-            return window;
-        });
-        debug('removing all windows...');
-        yield chevre_domain_1.Models.Window.remove({}).exec();
-        debug('creating windows...');
-        yield chevre_domain_1.Models.Window.create(windows);
-        debug('windows created.');
+            owner.password_salt = passwordSalt;
+            owner.password_hash = chevre.CommonUtil.createHash(owner.password, passwordSalt);
+            debug('updating owner...');
+            yield chevre.Models.Owner.findOneAndUpdate({
+                username: owner.username
+            }, owner, {
+                new: true,
+                upsert: true
+            }).exec();
+            debug('owner updated');
+        })));
+        debug('promised.');
     });
 }
 exports.createFromJson = createFromJson;

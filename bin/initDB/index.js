@@ -15,15 +15,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
+const clientController = require("../../app/controllers/client");
 const filmController = require("../../app/controllers/film");
-const memberController = require("../../app/controllers/member");
+const ownerController = require("../../app/controllers/owner");
 const performanceController = require("../../app/controllers/performance");
 const schemaController = require("../../app/controllers/schema");
-const staffController = require("../../app/controllers/staff");
+// import * as staffController from '../../app/controllers/staff';
 const theaterController = require("../../app/controllers/theater");
 const ticketTypeController = require("../../app/controllers/ticketType");
 const ticketTypeGroupController = require("../../app/controllers/ticketTypeGroup");
-const windowController = require("../../app/controllers/window");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         mongoose.connect(process.env.MONGOLAB_URI);
@@ -34,9 +34,8 @@ function main() {
         yield theaterController.createFromJson();
         yield theaterController.createScreensFromJson();
         yield performanceController.createFromJson();
-        yield memberController.createFromJson();
-        yield staffController.createFromJson();
-        yield windowController.createFromJson();
+        yield clientController.createFromJson();
+        yield ownerController.createFromJson();
         // 時間がかかってしまうので、一時的にコメントアウト
         // await staffController.createReservationsFromJson();
         // await memberController.createReservationsFromJson();
