@@ -13,11 +13,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre = require("@motionpicture/chevre-domain");
+const TTTS = require("@motionpicture/ttts-domain");
 const crypto = require("crypto");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const debug = createDebug('chevre-jobs:controller:staff');
+const debug = createDebug('ttts-jobs:controller:staff');
 /**
  *
  * @memberOf controller/client
@@ -31,9 +31,9 @@ function createFromJson() {
             const SIZE = 64;
             const secretSalt = crypto.randomBytes(SIZE).toString('hex');
             client.secret_salt = secretSalt;
-            client.secret_hash = chevre.CommonUtil.createHash(client.secret, secretSalt);
+            client.secret_hash = TTTS.CommonUtil.createHash(client.secret, secretSalt);
             debug('updating client...');
-            yield chevre.Models.Client.findOneAndUpdate({
+            yield TTTS.Models.Client.findOneAndUpdate({
                 _id: client.id
             }, client, {
                 new: true,

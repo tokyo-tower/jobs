@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre = require("@motionpicture/chevre-domain");
+const TTTS = require("@motionpicture/ttts-domain");
 const assert = require("assert");
 const mongoose = require("mongoose");
 const emailQueueController = require("../../app/controllers/emailQueue");
@@ -20,11 +20,11 @@ describe('メールキューコントローラー 送信', () => {
     before(() => __awaiter(this, void 0, void 0, function* () {
         connection = mongoose.createConnection(process.env.MONGOLAB_URI);
         // 全削除
-        const emailQueueModel = connection.model(chevre.Models.EmailQueue.modelName, chevre.Models.EmailQueue.schema);
+        const emailQueueModel = connection.model(TTTS.Models.EmailQueue.modelName, TTTS.Models.EmailQueue.schema);
         yield emailQueueModel.remove({}).exec();
     }));
     it('ok', () => __awaiter(this, void 0, void 0, function* () {
-        const emailQueueModel = connection.model(chevre.Models.EmailQueue.modelName, chevre.Models.EmailQueue.schema);
+        const emailQueueModel = connection.model(TTTS.Models.EmailQueue.modelName, TTTS.Models.EmailQueue.schema);
         // テストデータ作成
         const emailQueue = {
             from: {
@@ -40,13 +40,13 @@ describe('メールキューコントローラー 送信', () => {
                 mimetype: 'text/plain',
                 text: 'test content'
             },
-            status: chevre.EmailQueueUtil.STATUS_UNSENT
+            status: TTTS.EmailQueueUtil.STATUS_UNSENT
         };
         const emailQueueDoc = yield emailQueueModel.create(emailQueue);
         yield emailQueueController.sendOne();
         // 送信済みになっていることを確認
         const sentEmailQueueDoc = yield emailQueueModel.findById(emailQueueDoc._id).exec();
-        assert.equal(sentEmailQueueDoc.get('status'), chevre.EmailQueueUtil.STATUS_SENT);
+        assert.equal(sentEmailQueueDoc.get('status'), TTTS.EmailQueueUtil.STATUS_SENT);
         // テストデータ削除
         yield emailQueueDoc.remove();
     }));

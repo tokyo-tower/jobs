@@ -4,12 +4,12 @@
  * @namespace controller/performance
  */
 
-import { Models, PerformanceStatusesModel } from '@motionpicture/chevre-domain';
+import { Models, PerformanceStatusesModel } from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 
 const DEFAULT_RADIX = 10;
-const debug = createDebug('chevre-jobs:controller:performance');
+const debug = createDebug('ttts-jobs:controller:performance');
 
 /**
  *

@@ -1,2 +1,2 @@
 cd D:\home\site\wwwroot
-node bin/tmp2chevre/index
+node bin/tmp2ttts/index

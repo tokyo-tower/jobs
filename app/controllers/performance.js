@@ -13,11 +13,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre_domain_1 = require("@motionpicture/chevre-domain");
+const ttts_domain_1 = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
 const DEFAULT_RADIX = 10;
-const debug = createDebug('chevre-jobs:controller:performance');
+const debug = createDebug('ttts-jobs:controller:performance');
 /**
  *
  *
@@ -26,7 +26,7 @@ const debug = createDebug('chevre-jobs:controller:performance');
 function createFromJson() {
     return __awaiter(this, void 0, void 0, function* () {
         const performances = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
-        const screens = yield chevre_domain_1.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
+        const screens = yield ttts_domain_1.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
         // あれば更新、なければ追加
         yield Promise.all(performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
             // 劇場とスクリーン名称を追加
@@ -39,7 +39,7 @@ function createFromJson() {
             performance.screen_name = screenOfPerformance.get('name');
             performance.theater_name = screenOfPerformance.get('theater').get('name');
             debug('creating performance...');
-            yield chevre_domain_1.Models.Performance.create(performance);
+            yield ttts_domain_1.Models.Performance.create(performance);
             debug('performance created');
         })));
         debug('promised.');
@@ -54,11 +54,11 @@ exports.createFromJson = createFromJson;
 function updateStatuses() {
     return __awaiter(this, void 0, void 0, function* () {
         debug('finding performances...');
-        const performances = yield chevre_domain_1.Models.Performance.find({}, 'day start_time screen').populate('screen', 'seats_number').exec();
+        const performances = yield ttts_domain_1.Models.Performance.find({}, 'day start_time screen').populate('screen', 'seats_number').exec();
         debug('performances found.');
-        const performanceStatusesModel = chevre_domain_1.PerformanceStatusesModel.create();
+        const performanceStatusesModel = ttts_domain_1.PerformanceStatusesModel.create();
         debug('aggregating...');
-        const results = yield chevre_domain_1.Models.Reservation.aggregate([
+        const results = yield ttts_domain_1.Models.Reservation.aggregate([
             {
                 $group: {
                     _id: '$performance',
@@ -81,7 +81,7 @@ function updateStatuses() {
             performanceStatusesModel.setStatus(performance._id.toString(), status);
         });
         debug('saving performanceStatusesModel...', performanceStatusesModel);
-        yield chevre_domain_1.PerformanceStatusesModel.store(performanceStatusesModel);
+        yield ttts_domain_1.PerformanceStatusesModel.store(performanceStatusesModel);
         debug('performanceStatusesModel saved.');
     });
 }
@@ -94,7 +94,7 @@ exports.updateStatuses = updateStatuses;
 function release(performanceId) {
     return __awaiter(this, void 0, void 0, function* () {
         debug('updating performance..._id:', performanceId);
-        yield chevre_domain_1.Models.Performance.findByIdAndUpdate(performanceId, { canceled: false }).exec();
+        yield ttts_domain_1.Models.Performance.findByIdAndUpdate(performanceId, { canceled: false }).exec();
         debug('performance updated');
     });
 }

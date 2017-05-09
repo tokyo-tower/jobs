@@ -4,12 +4,12 @@
  * @namespace controller/gmo
  */
 
-import * as chevre from '@motionpicture/chevre-domain';
 import { Util as GMOUtil } from '@motionpicture/gmo-service';
+import * as TTTS from '@motionpicture/ttts-domain';
 
 import * as createDebug from 'debug';
 
-const debug = createDebug('chevre-jobs:controller:gmo');
+const debug = createDebug('ttts-jobs:controller:gmo');
 
 /**
  * GMO結果通知を処理する
@@ -19,12 +19,12 @@ const debug = createDebug('chevre-jobs:controller:gmo');
 // tslint:disable-next-line:max-func-body-length cyclomatic-complexity
 export async function processOne() {
     // 最終的に通知にセットする処理ステータス
-    let notificationProcessStatus: string = chevre.GMONotificationUtil.PROCESS_STATUS_UNPROCESSED;
+    let notificationProcessStatus: string = TTTS.GMONotificationUtil.PROCESS_STATUS_UNPROCESSED;
 
     debug('finding notification...');
-    const notification = await chevre.Models.GMONotification.findOneAndUpdate(
-        { process_status: chevre.GMONotificationUtil.PROCESS_STATUS_UNPROCESSED },
-        { process_status: chevre.GMONotificationUtil.PROCESS_STATUS_PROCESSING },
+    const notification = await TTTS.Models.GMONotification.findOneAndUpdate(
+        { process_status: TTTS.GMONotificationUtil.PROCESS_STATUS_UNPROCESSED },
+        { process_status: TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSING },
         { new: true }
     ).exec();
     debug('notification found.', notification);
@@ -33,8 +33,8 @@ export async function processOne() {
         try {
             // 内容の整合性チェック
             debug('finding reservations...payment_no:', notification.get('order_id'));
-            const parsedOrderId = chevre.ReservationUtil.parseGMOOrderId(notification.get('order_id'));
-            const reservations = await chevre.Models.Reservation.find(
+            const parsedOrderId = TTTS.ReservationUtil.parseGMOOrderId(notification.get('order_id'));
+            const reservations = await TTTS.Models.Reservation.find(
                 {
                     performance_day: parsedOrderId.performanceDay,
                     payment_no: parsedOrderId.paymentNo
@@ -88,10 +88,10 @@ export async function processOne() {
                         case GMOUtil.STATUS_CVS_PAYSUCCESS:
                             // 予約完了ステータスへ変更
                             debug('updating reservations by paymentNo...', notification.get('order_id'));
-                            await chevre.Models.Reservation.update(
+                            await TTTS.Models.Reservation.update(
                                 { gmo_order_id: notification.get('order_id') },
                                 {
-                                    status: chevre.ReservationUtil.STATUS_RESERVED,
+                                    status: TTTS.ReservationUtil.STATUS_RESERVED,
                                     updated_user: 'system'
                                 },
                                 { multi: true }
@@ -123,7 +123,7 @@ export async function processOne() {
                         case GMOUtil.STATUS_CVS_REQSUCCESS:
                             // GMOパラメータを予約に追加
                             debug('updating reservations by paymentNo...', notification.get('order_id'));
-                            rawUpdateReservation = await chevre.Models.Reservation.update(
+                            rawUpdateReservation = await TTTS.Models.Reservation.update(
                                 { payment_no: notification.get('order_id') },
                                 {
                                     gmo_shop_id: notification.get('shop_id'),
@@ -199,13 +199,13 @@ export async function processOne() {
             }
 
             // 処理済みに
-            notificationProcessStatus = chevre.GMONotificationUtil.PROCESS_STATUS_PROCESSED;
+            notificationProcessStatus = TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSED;
         } catch (error) {
             console.error(error);
         }
 
         // 処理ステータス変更
-        await chevre.Models.GMONotification.findByIdAndUpdate(
+        await TTTS.Models.GMONotification.findByIdAndUpdate(
             notification.get('_id'),
             { process_status: notificationProcessStatus }
         ).exec();

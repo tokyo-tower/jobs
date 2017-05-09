@@ -4,13 +4,13 @@
  * @namespace controller/owner
  */
 
-import * as chevre from '@motionpicture/chevre-domain';
+import * as TTTS from '@motionpicture/ttts-domain';
 
 import * as crypto from 'crypto';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 
-const debug = createDebug('chevre-jobs:controller:staff');
+const debug = createDebug('ttts-jobs:controller:staff');
 
 /**
  *
@@ -25,10 +25,10 @@ export async function createFromJson(): Promise<void> {
         const SIZE = 64;
         const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
         owner.password_salt = passwordSalt;
-        owner.password_hash = chevre.CommonUtil.createHash(owner.password, passwordSalt);
+        owner.password_hash = TTTS.CommonUtil.createHash(owner.password, passwordSalt);
 
         debug('updating owner...');
-        await chevre.Models.Owner.findOneAndUpdate(
+        await TTTS.Models.Owner.findOneAndUpdate(
             {
                 username: owner.username
             },

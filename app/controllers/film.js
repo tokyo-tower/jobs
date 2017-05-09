@@ -13,10 +13,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre_domain_1 = require("@motionpicture/chevre-domain");
+const ttts_domain_1 = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const debug = createDebug('chevre-jobs:controller:film');
+const debug = createDebug('ttts-jobs:controller:film');
 /**
  * @memberOf FilmController
  */
@@ -27,9 +27,9 @@ function createTicketTypeGroupsFromJson() {
         }
         const groups = JSON.parse(data);
         debug('removing all groups...');
-        yield chevre_domain_1.Models.TicketTypeGroup.remove({}).exec();
+        yield ttts_domain_1.Models.TicketTypeGroup.remove({}).exec();
         debug('creating groups...');
-        yield chevre_domain_1.Models.TicketTypeGroup.create(groups);
+        yield ttts_domain_1.Models.TicketTypeGroup.create(groups);
         debug('groups created.');
     }));
 }
@@ -42,7 +42,7 @@ function createFromJson() {
         const films = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/films.json`);
         yield Promise.all(films.map((film) => __awaiter(this, void 0, void 0, function* () {
             debug('updating film...');
-            yield chevre_domain_1.Models.Film.findByIdAndUpdate(film._id, film, {
+            yield ttts_domain_1.Models.Film.findByIdAndUpdate(film._id, film, {
                 new: true,
                 upsert: true
             }).exec();

@@ -18,7 +18,7 @@ const reservationController = require("../../app/controllers/reservation");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         mongoose.connect(process.env.MONGOLAB_URI);
-        yield reservationController.tmp2chevre();
+        yield reservationController.tmp2ttts();
         mongoose.disconnect();
     });
 }

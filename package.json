@@ -9,8 +9,8 @@
     }
   ],
   "dependencies": {
-    "@motionpicture/chevre-domain": "^9.0.1",
     "@motionpicture/gmo-service": "^3.0.4",
+    "@motionpicture/ttts-domain": "^3.0.0",
     "config": "^1.26.1",
     "debug": "^2.6.6",
     "fs-extra": "^3.0.1",
@@ -25,7 +25,7 @@
     "underscore": "^1.8.3",
     "validator": "^7.0.0"
   },
-  "description": "This is a repogitory for CHEVRE jobs.",
+  "description": "This is a repogitory for TTTS jobs.",
   "devDependencies": {
     "@types/config": "0.0.32",
     "@types/debug": "0.0.29",
@@ -54,7 +54,7 @@
   },
   "keywords": [],
   "license": "UNLICENSED",
-  "name": "chevre-jobs",
+  "name": "ttts-jobs",
   "private": true,
   "repository": {},
   "scripts": {
@@ -68,5 +68,5 @@
     "version": "git add -A",
     "postversion": "git push origin --tags"
   },
-  "version": "5.0.0"
+  "version": "5.0.1"
 }

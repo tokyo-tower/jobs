@@ -13,10 +13,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre = require("@motionpicture/chevre-domain");
 const gmo_service_1 = require("@motionpicture/gmo-service");
+const TTTS = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
-const debug = createDebug('chevre-jobs:controller:gmo');
+const debug = createDebug('ttts-jobs:controller:gmo');
 /**
  * GMO結果通知を処理する
  *
@@ -26,16 +26,16 @@ const debug = createDebug('chevre-jobs:controller:gmo');
 function processOne() {
     return __awaiter(this, void 0, void 0, function* () {
         // 最終的に通知にセットする処理ステータス
-        let notificationProcessStatus = chevre.GMONotificationUtil.PROCESS_STATUS_UNPROCESSED;
+        let notificationProcessStatus = TTTS.GMONotificationUtil.PROCESS_STATUS_UNPROCESSED;
         debug('finding notification...');
-        const notification = yield chevre.Models.GMONotification.findOneAndUpdate({ process_status: chevre.GMONotificationUtil.PROCESS_STATUS_UNPROCESSED }, { process_status: chevre.GMONotificationUtil.PROCESS_STATUS_PROCESSING }, { new: true }).exec();
+        const notification = yield TTTS.Models.GMONotification.findOneAndUpdate({ process_status: TTTS.GMONotificationUtil.PROCESS_STATUS_UNPROCESSED }, { process_status: TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSING }, { new: true }).exec();
         debug('notification found.', notification);
         if (notification !== null) {
             try {
                 // 内容の整合性チェック
                 debug('finding reservations...payment_no:', notification.get('order_id'));
-                const parsedOrderId = chevre.ReservationUtil.parseGMOOrderId(notification.get('order_id'));
-                const reservations = yield chevre.Models.Reservation.find({
+                const parsedOrderId = TTTS.ReservationUtil.parseGMOOrderId(notification.get('order_id'));
+                const reservations = yield TTTS.Models.Reservation.find({
                     performance_day: parsedOrderId.performanceDay,
                     payment_no: parsedOrderId.paymentNo
                 }).exec();
@@ -84,8 +84,8 @@ function processOne() {
                             case gmo_service_1.Util.STATUS_CVS_PAYSUCCESS:
                                 // 予約完了ステータスへ変更
                                 debug('updating reservations by paymentNo...', notification.get('order_id'));
-                                yield chevre.Models.Reservation.update({ gmo_order_id: notification.get('order_id') }, {
-                                    status: chevre.ReservationUtil.STATUS_RESERVED,
+                                yield TTTS.Models.Reservation.update({ gmo_order_id: notification.get('order_id') }, {
+                                    status: TTTS.ReservationUtil.STATUS_RESERVED,
                                     updated_user: 'system'
                                 }, { multi: true }).exec();
                                 debug('reservations updated');
@@ -112,7 +112,7 @@ function processOne() {
                             case gmo_service_1.Util.STATUS_CVS_REQSUCCESS:
                                 // GMOパラメータを予約に追加
                                 debug('updating reservations by paymentNo...', notification.get('order_id'));
-                                rawUpdateReservation = yield chevre.Models.Reservation.update({ payment_no: notification.get('order_id') }, {
+                                rawUpdateReservation = yield TTTS.Models.Reservation.update({ payment_no: notification.get('order_id') }, {
                                     gmo_shop_id: notification.get('shop_id'),
                                     gmo_amount: notification.get('amount'),
                                     gmo_tax: notification.get('tax'),
@@ -175,13 +175,13 @@ function processOne() {
                     }
                 }
                 // 処理済みに
-                notificationProcessStatus = chevre.GMONotificationUtil.PROCESS_STATUS_PROCESSED;
+                notificationProcessStatus = TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSED;
             }
             catch (error) {
                 console.error(error);
             }
             // 処理ステータス変更
-            yield chevre.Models.GMONotification.findByIdAndUpdate(notification.get('_id'), { process_status: notificationProcessStatus }).exec();
+            yield TTTS.Models.GMONotification.findByIdAndUpdate(notification.get('_id'), { process_status: notificationProcessStatus }).exec();
         }
     });
 }

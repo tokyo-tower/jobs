@@ -4,14 +4,14 @@
  * @namespace controller/test
  */
 
-import { CommonUtil } from '@motionpicture/chevre-domain';
+import { CommonUtil } from '@motionpicture/ttts-domain';
 
 import * as conf from 'config';
 import * as createDebug from 'debug';
 import * as querystring from 'querystring';
 import * as request from 'request';
 
-const debug = createDebug('chevre-jobs:controller:test');
+const debug = createDebug('ttts-jobs:controller:test');
 
 /**
  *

@@ -4,12 +4,12 @@
  * @namespace controller/ticketType
  */
 
-import { Models } from '@motionpicture/chevre-domain';
+import { Models } from '@motionpicture/ttts-domain';
 
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 
-const debug = createDebug('chevre-jobs:controller:ticketType');
+const debug = createDebug('ttts-jobs:controller:ticketType');
 
 /**
  * @memberOf controller/ticketType

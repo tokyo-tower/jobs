@@ -13,14 +13,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre_domain_1 = require("@motionpicture/chevre-domain");
 const gmo_service_1 = require("@motionpicture/gmo-service");
+const ttts_domain_1 = require("@motionpicture/ttts-domain");
 const conf = require("config");
 const createDebug = require("debug");
 const moment = require("moment");
 const querystring = require("querystring");
 const request = require("request");
-const debug = createDebug('chevre-jobs:controller:reservation');
+const debug = createDebug('ttts-jobs:controller:reservation');
 /**
  * 仮予約ステータスで、一定時間過ぎた予約を空席にする
  *
@@ -30,8 +30,8 @@ function removeTmps() {
     return __awaiter(this, void 0, void 0, function* () {
         const BUFFER_PERIOD_SECONDS = -60;
         debug('removing temporary reservations...');
-        yield chevre_domain_1.Models.Reservation.remove({
-            status: chevre_domain_1.ReservationUtil.STATUS_TEMPORARY,
+        yield ttts_domain_1.Models.Reservation.remove({
+            status: ttts_domain_1.ReservationUtil.STATUS_TEMPORARY,
             expired_at: {
                 // 念のため、仮予約有効期間より1分長めにしておく
                 $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
@@ -43,28 +43,26 @@ function removeTmps() {
 }
 exports.removeTmps = removeTmps;
 /**
- * CHEVRE確保上の仮予約をCHEVRE確保へ戻す
+ * TTTS確保上の仮予約をTTTS確保へ戻す
  *
  * @memberOf ReservationController
  */
-function tmp2chevre() {
+function tmp2ttts() {
     return __awaiter(this, void 0, void 0, function* () {
         const BUFFER_PERIOD_SECONDS = -60;
-        const ids = yield chevre_domain_1.Models.Reservation.distinct('_id', {
-            status: chevre_domain_1.ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_CHEVRE,
+        const ids = yield ttts_domain_1.Models.Reservation.distinct('_id', {
+            status: ttts_domain_1.ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_TTTS,
             expired_at: {
                 // 念のため、仮予約有効期間より1分長めにしておく
                 $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
             }
         }).exec();
         yield Promise.all(ids.map((id) => __awaiter(this, void 0, void 0, function* () {
-            debug('updating to STATUS_KEPT_BY_CHEVRE...id:', id);
-            yield chevre_domain_1.Models.Reservation.findByIdAndUpdate(id, { status: chevre_domain_1.ReservationUtil.STATUS_KEPT_BY_CHEVRE }).exec();
-            debug('updated to STATUS_KEPT_BY_CHEVRE. id:', id);
+            yield ttts_domain_1.Models.Reservation.findByIdAndUpdate(id, { status: ttts_domain_1.ReservationUtil.STATUS_KEPT_BY_TTTS }).exec();
         })));
     });
 }
-exports.tmp2chevre = tmp2chevre;
+exports.tmp2ttts = tmp2ttts;
 /**
  * 固定日時を経過したら、空席ステータスにするバッチ
  *
@@ -75,8 +73,8 @@ function releaseSeatsKeptByMembers() {
         if (moment(conf.get('datetimes.reservation_end_members')) < moment()) {
             // 空席にする場合はこちら
             debug('releasing reservations kept by members...');
-            yield chevre_domain_1.Models.Reservation.remove({
-                status: chevre_domain_1.ReservationUtil.STATUS_KEPT_BY_MEMBER
+            yield ttts_domain_1.Models.Reservation.remove({
+                status: ttts_domain_1.ReservationUtil.STATUS_KEPT_BY_MEMBER
             }).exec();
             // 失敗しても、次のタスクにまかせる(気にしない)
         }
@@ -93,8 +91,8 @@ function releaseGarbages() {
     return __awaiter(this, void 0, void 0, function* () {
         // 一定期間WAITING_SETTLEMENTの予約を抽出
         const WAITING_PERIOD_HOURS = -2;
-        const reservations = yield chevre_domain_1.Models.Reservation.find({
-            status: chevre_domain_1.ReservationUtil.STATUS_WAITING_SETTLEMENT,
+        const reservations = yield ttts_domain_1.Models.Reservation.find({
+            status: ttts_domain_1.ReservationUtil.STATUS_WAITING_SETTLEMENT,
             updated_at: { $lt: moment().add(WAITING_PERIOD_HOURS, 'hours').toISOString() }
         }).exec();
         const paymentNos4release = [];
@@ -145,7 +143,7 @@ function releaseGarbages() {
         }
         // 予約削除
         debug('updating reservations...');
-        yield chevre_domain_1.Models.Reservation.remove({
+        yield ttts_domain_1.Models.Reservation.remove({
             payment_no: { $in: paymentNos4release }
         }).exec();
     });

@@ -3,12 +3,12 @@
  *
  * @namespace StaffController
  */
-// import { Models } from '@motionpicture/chevre-domain';
-// import { ReservationUtil } from '@motionpicture/chevre-domain';
+// import { Models } from '@motionpicture/ttts-domain';
+// import { ReservationUtil } from '@motionpicture/ttts-domain';
 // import * as createDebug from 'debug';
 // import * as fs from 'fs-extra';
 // import * as mongoose from 'mongoose';
-// const debug = createDebug('chevre-jobs:controller:staff');
+// const debug = createDebug('ttts-jobs:controller:staff');
 /**
  * スクリーン指定で内部関係者の先抑えを実行する
  *

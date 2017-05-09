@@ -5,12 +5,12 @@
  * @namespace controller/test
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre_domain_1 = require("@motionpicture/chevre-domain");
+const ttts_domain_1 = require("@motionpicture/ttts-domain");
 const conf = require("config");
 const createDebug = require("debug");
 const querystring = require("querystring");
 const request = require("request");
-const debug = createDebug('chevre-jobs:controller:test');
+const debug = createDebug('ttts-jobs:controller:test');
 /**
  *
  * @memberOf controller/test
@@ -18,7 +18,7 @@ const debug = createDebug('chevre-jobs:controller:test');
 function checkFullWidthLetter() {
     // tslint:disable-next-line:max-line-length
     const filmName = '作家性の萌芽　1999-2003 （細田守監督短編集）『劇場版デジモンアドベンチャー』『劇場版デジモンアドベンチャー　ぼくらのウォーゲーム！』『村上隆作品　SUPERFLAT MONOGRAM』『村上隆作品　The Creatures From Planet 66 ～Roppongi Hills Story～』『おジャ魔女どれみドッカ～ン！（40話）』『明日のナージャ（OP、ED）』';
-    const filmNameFullWidth = chevre_domain_1.CommonUtil.toFullWidth(filmName);
+    const filmNameFullWidth = ttts_domain_1.CommonUtil.toFullWidth(filmName);
     let registerDisp1 = '';
     // tslint:disable-next-line:prefer-for-of no-increment-decrement
     for (let i = 0; i < filmNameFullWidth.length; i++) {

@@ -13,11 +13,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre = require("@motionpicture/chevre-domain");
+const TTTS = require("@motionpicture/ttts-domain");
 const crypto = require("crypto");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const debug = createDebug('chevre-jobs:controller:staff');
+const debug = createDebug('ttts-jobs:controller:staff');
 /**
  *
  * @memberOf controller/owner
@@ -31,9 +31,9 @@ function createFromJson() {
             const SIZE = 64;
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
             owner.password_salt = passwordSalt;
-            owner.password_hash = chevre.CommonUtil.createHash(owner.password, passwordSalt);
+            owner.password_hash = TTTS.CommonUtil.createHash(owner.password, passwordSalt);
             debug('updating owner...');
-            yield chevre.Models.Owner.findOneAndUpdate({
+            yield TTTS.Models.Owner.findOneAndUpdate({
                 username: owner.username
             }, owner, {
                 new: true,

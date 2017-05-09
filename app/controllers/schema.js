@@ -15,7 +15,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const createDebug = require("debug");
 const mongodb = require("mongodb");
-const debug = createDebug('chevre-jobs:controller:schema');
+const debug = createDebug('ttts-jobs:controller:schema');
 /**
  * 全コレクションを削除する
  *

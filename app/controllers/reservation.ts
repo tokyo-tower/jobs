@@ -4,8 +4,8 @@
  * @namespace ReservationController
  */
 
-import { Models, ReservationUtil } from '@motionpicture/chevre-domain';
 import { Util as GMOUtil } from '@motionpicture/gmo-service';
+import { Models, ReservationUtil } from '@motionpicture/ttts-domain';
 
 import * as conf from 'config';
 import * as createDebug from 'debug';
@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import * as querystring from 'querystring';
 import * as request from 'request';
 
-const debug = createDebug('chevre-jobs:controller:reservation');
+const debug = createDebug('ttts-jobs:controller:reservation');
 
 /**
  * 仮予約ステータスで、一定時間過ぎた予約を空席にする
@@ -38,16 +38,16 @@ export async function removeTmps(): Promise<void> {
 }
 
 /**
- * CHEVRE確保上の仮予約をCHEVRE確保へ戻す
+ * TTTS確保上の仮予約をTTTS確保へ戻す
  *
  * @memberOf ReservationController
  */
-export async function tmp2chevre(): Promise<void> {
+export async function tmp2ttts(): Promise<void> {
     const BUFFER_PERIOD_SECONDS = -60;
     const ids = await Models.Reservation.distinct(
         '_id',
         {
-            status: ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_CHEVRE,
+            status: ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_TTTS,
             expired_at: {
                 // 念のため、仮予約有効期間より1分長めにしておく
                 $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
@@ -56,12 +56,10 @@ export async function tmp2chevre(): Promise<void> {
     ).exec();
 
     await Promise.all(ids.map(async (id) => {
-        debug('updating to STATUS_KEPT_BY_CHEVRE...id:', id);
         await Models.Reservation.findByIdAndUpdate(
             id,
-            { status: ReservationUtil.STATUS_KEPT_BY_CHEVRE }
+            { status: ReservationUtil.STATUS_KEPT_BY_TTTS }
         ).exec();
-        debug('updated to STATUS_KEPT_BY_CHEVRE. id:', id);
     }));
 }
 

@@ -13,12 +13,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevre_domain_1 = require("@motionpicture/chevre-domain");
+const ttts_domain_1 = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const httpStatus = require("http-status");
 const sendgrid = require("sendgrid");
 const util = require("util");
-const debug = createDebug('chevre-jobs:controller:emailQueue');
+const debug = createDebug('ttts-jobs:controller:emailQueue');
 /**
  * メールをひとつ送信する
  *
@@ -28,7 +28,7 @@ function sendOne() {
     return __awaiter(this, void 0, void 0, function* () {
         let sendError = null;
         debug('finding emailQueue...');
-        const emailQueue = yield chevre_domain_1.Models.EmailQueue.findOneAndUpdate({ status: chevre_domain_1.EmailQueueUtil.STATUS_UNSENT }, { status: chevre_domain_1.EmailQueueUtil.STATUS_SENDING }, { new: true }).exec();
+        const emailQueue = yield ttts_domain_1.Models.EmailQueue.findOneAndUpdate({ status: ttts_domain_1.EmailQueueUtil.STATUS_UNSENT }, { status: ttts_domain_1.EmailQueueUtil.STATUS_SENDING }, { new: true }).exec();
         debug('emailQueue found.', emailQueue);
         if (emailQueue !== null) {
             try {
@@ -58,9 +58,9 @@ function sendOne() {
                 sendError = error;
             }
             // 送信済みフラグを立てる
-            const status = (sendError instanceof Error) ? chevre_domain_1.EmailQueueUtil.STATUS_UNSENT : chevre_domain_1.EmailQueueUtil.STATUS_SENT;
+            const status = (sendError instanceof Error) ? ttts_domain_1.EmailQueueUtil.STATUS_UNSENT : ttts_domain_1.EmailQueueUtil.STATUS_SENT;
             debug('setting status...', status);
-            yield chevre_domain_1.Models.EmailQueue.findByIdAndUpdate(emailQueue._id, { status: status }).exec();
+            yield ttts_domain_1.Models.EmailQueue.findByIdAndUpdate(emailQueue._id, { status: status }).exec();
             debug('cue saved');
         }
     });

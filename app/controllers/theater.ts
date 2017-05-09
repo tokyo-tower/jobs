@@ -4,13 +4,13 @@
  * @namespace TheaterController
  */
 
-import { Models } from '@motionpicture/chevre-domain';
-import { ScreenUtil } from '@motionpicture/chevre-domain';
+import { Models } from '@motionpicture/ttts-domain';
+import { ScreenUtil } from '@motionpicture/ttts-domain';
 
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 
-const debug = createDebug('chevre-jobs:controller:theater');
+const debug = createDebug('ttts-jobs:controller:theater');
 
 /**
  *

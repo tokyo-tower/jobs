@@ -7,7 +7,7 @@
 import * as createDebug from 'debug';
 import * as mongodb from 'mongodb';
 
-const debug = createDebug('chevre-jobs:controller:schema');
+const debug = createDebug('ttts-jobs:controller:schema');
 
 /**
  * 全コレクションを削除する

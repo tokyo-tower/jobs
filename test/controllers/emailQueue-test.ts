@@ -2,7 +2,7 @@
  * メールキューコントローラーテスト
  */
 
-import * as chevre from '@motionpicture/chevre-domain';
+import * as TTTS from '@motionpicture/ttts-domain';
 import * as assert from 'assert';
 import * as mongoose from 'mongoose';
 
@@ -13,12 +13,12 @@ describe('メールキューコントローラー 送信', () => {
     before(async () => {
         connection = mongoose.createConnection(process.env.MONGOLAB_URI);
         // 全削除
-        const emailQueueModel = connection.model(chevre.Models.EmailQueue.modelName, chevre.Models.EmailQueue.schema);
+        const emailQueueModel = connection.model(TTTS.Models.EmailQueue.modelName, TTTS.Models.EmailQueue.schema);
         await emailQueueModel.remove({}).exec();
     });
 
     it('ok', async () => {
-        const emailQueueModel = connection.model(chevre.Models.EmailQueue.modelName, chevre.Models.EmailQueue.schema);
+        const emailQueueModel = connection.model(TTTS.Models.EmailQueue.modelName, TTTS.Models.EmailQueue.schema);
 
         // テストデータ作成
         const emailQueue = {
@@ -35,7 +35,7 @@ describe('メールキューコントローラー 送信', () => {
                 mimetype: 'text/plain',
                 text: 'test content'
             },
-            status: chevre.EmailQueueUtil.STATUS_UNSENT
+            status: TTTS.EmailQueueUtil.STATUS_UNSENT
         };
 
         const emailQueueDoc = await emailQueueModel.create(emailQueue);
@@ -44,7 +44,7 @@ describe('メールキューコントローラー 送信', () => {
 
         // 送信済みになっていることを確認
         const sentEmailQueueDoc = await emailQueueModel.findById(emailQueueDoc._id).exec();
-        assert.equal(sentEmailQueueDoc.get('status'), chevre.EmailQueueUtil.STATUS_SENT);
+        assert.equal(sentEmailQueueDoc.get('status'), TTTS.EmailQueueUtil.STATUS_SENT);
 
         // テストデータ削除
         await emailQueueDoc.remove();

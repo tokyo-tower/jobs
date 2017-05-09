@@ -4,13 +4,13 @@
  * @namespace controller/client
  */
 
-import * as chevre from '@motionpicture/chevre-domain';
+import * as TTTS from '@motionpicture/ttts-domain';
 
 import * as crypto from 'crypto';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 
-const debug = createDebug('chevre-jobs:controller:staff');
+const debug = createDebug('ttts-jobs:controller:staff');
 
 /**
  *
@@ -25,10 +25,10 @@ export async function createFromJson(): Promise<void> {
         const SIZE = 64;
         const secretSalt = crypto.randomBytes(SIZE).toString('hex');
         client.secret_salt = secretSalt;
-        client.secret_hash = chevre.CommonUtil.createHash(client.secret, secretSalt);
+        client.secret_hash = TTTS.CommonUtil.createHash(client.secret, secretSalt);
 
         debug('updating client...');
-        await chevre.Models.Client.findOneAndUpdate(
+        await TTTS.Models.Client.findOneAndUpdate(
             {
                 _id: client.id
             },

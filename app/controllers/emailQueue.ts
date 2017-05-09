@@ -4,13 +4,13 @@
  * @namespace controller/emailQueue
  */
 
-import { EmailQueueUtil, Models } from '@motionpicture/chevre-domain';
+import { EmailQueueUtil, Models } from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
 import * as httpStatus from 'http-status';
 import * as sendgrid from 'sendgrid';
 import * as util from 'util';
 
-const debug = createDebug('chevre-jobs:controller:emailQueue');
+const debug = createDebug('ttts-jobs:controller:emailQueue');
 
 /**
  * メールをひとつ送信する
