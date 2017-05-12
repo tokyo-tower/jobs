@@ -76,9 +76,14 @@ function updateStatuses() {
             if (!reservationNumbers.hasOwnProperty(performance.get('_id').toString())) {
                 reservationNumbers[performance.get('_id').toString()] = 0;
             }
+            // 空席ステータス変更(空席数をそのままセット)
             // TODO anyで逃げているが、型定義をちゃんとかけばもっとよく書ける
-            const status = performance.getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
-            performanceStatusesModel.setStatus(performance._id.toString(), status);
+            //const status = (<any>performance).getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
+            //performanceStatusesModel.setStatus(performance._id.toString(), status);
+            const reservationNumber = reservationNumbers[performance.get('_id')];
+            const availableSeatNum = performance.screen.seats_number - reservationNumber;
+            performanceStatusesModel.setStatus(performance._id.toString(), availableSeatNum.toString());
+            //---
         });
         debug('saving performanceStatusesModel...', performanceStatusesModel);
         yield ttts_domain_1.PerformanceStatusesModel.store(performanceStatusesModel);

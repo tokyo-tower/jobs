@@ -81,9 +81,14 @@ export async function updateStatuses() {
             reservationNumbers[performance.get('_id').toString()] = 0;
         }
 
+        // 空席ステータス変更(空席数をそのままセット)
         // TODO anyで逃げているが、型定義をちゃんとかけばもっとよく書ける
-        const status = (<any>performance).getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
-        performanceStatusesModel.setStatus(performance._id.toString(), status);
+        //const status = (<any>performance).getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
+        //performanceStatusesModel.setStatus(performance._id.toString(), status);
+        const reservationNumber: number = reservationNumbers[performance.get('_id')];
+        const availableSeatNum = (<any>performance).screen.seats_number - reservationNumber;
+        performanceStatusesModel.setStatus(performance._id.toString(), availableSeatNum.toString());
+        //---
     });
 
     debug('saving performanceStatusesModel...', performanceStatusesModel);
