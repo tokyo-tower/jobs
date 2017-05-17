@@ -54,7 +54,7 @@ export async function createFromSetting(): Promise<void> {
     });
     // パフォーマンス登録
     const performance: any = {};
-    const performanceIds: any = [];
+    const savePerformances: any = [];
     performance.screen_name = screenOfPerformance.get('name');
     performance.theater_name = screenOfPerformance.get('theater').get('name');
     performance.theater = setting.theater;
@@ -92,30 +92,31 @@ export async function createFromSetting(): Promise<void> {
         );
         debug('performance created');
         if (result !== null) {
-            performanceIds.push((<any>result)._id);
+            performance._id = (<any>result)._id;
+            savePerformances.push(result);
         }
     }));
     await Promise.all(promises);
 
     // 予約登録
     const STATUS_AVAILABLE: string = 'AVAILABLE';
-    const promisesR = ((<any>performanceIds).map(async (id: any) => {
+    const promisesR = ((<any>savePerformances).map(async (savePerformance: any) => {
         const promisesS = ((<any>screenOfPerformance).get('sections')[0].seats.map(async (seat: any) => {
             const reservation: any = {};
-            reservation.performance = id;
+            reservation.performance = savePerformance._id;
             reservation.seat_code = seat.code;
             reservation.status = STATUS_AVAILABLE;
             reservation.performance_canceled = false;
-            reservation.performance_day = performance.day;
-            reservation.performance_open_time = performance.open_time;
-            reservation.performance_start_time = performance.start_time;
-            reservation.performance_end_time = performance.end_time;
-            reservation.theater = performance.theater;
-            reservation.theater_name = performance.theater_name;
+            reservation.performance_day = savePerformance.day;
+            reservation.performance_open_time = savePerformance.open_time;
+            reservation.performance_start_time = savePerformance.start_time;
+            reservation.performance_end_time = savePerformance.end_time;
+            reservation.theater = savePerformance.theater;
+            reservation.theater_name = savePerformance.theater_name;
             reservation.theater_address = screenOfPerformance.get('theater').get('address');
-            reservation.screen = performance.screen;
-            reservation.screen_name = performance.screen_name;
-            reservation.film = performance.film;
+            reservation.screen = savePerformance.screen;
+            reservation.screen_name = savePerformance.screen_name;
+            reservation.film = savePerformance.film;
             reservation.film_name = (<any>film).name;
             //const result = await Models.Reservation.create(reservation);
             const result = await Models.Reservation.findOneAndUpdate(
