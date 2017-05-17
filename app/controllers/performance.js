@@ -23,6 +23,137 @@ const debug = createDebug('ttts-jobs:controller:performance');
  *
  * @memberOf controller/performance
  */
+// tslint:disable-next-line:max-func-body-length
+function createFromSetting() {
+    return __awaiter(this, void 0, void 0, function* () {
+        //const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
+        const setting = {
+            film: '000999',
+            day: '20180101',
+            theater: '001',
+            screen: '00901',
+            ticket_type_group: '01'
+        };
+        // 劇場とスクリーン情報取得
+        const screenOfPerformance = yield ttts_domain_1.Models.Screen.findById(setting.screen, 'name theater sections')
+            .populate('theater', 'name address')
+            .exec();
+        if (screenOfPerformance === undefined) {
+            throw new Error('screen not found.');
+        }
+        // 作品情報取得
+        const film = yield ttts_domain_1.Models.Film.findById({ _id: setting.film }).exec();
+        if (film === undefined) {
+            throw new Error('film not found.');
+        }
+        // 展開する時間をセット
+        const hours = ['09', '10', '11', '12', '13', '14'];
+        const minutes = ['00', '15', '30', '45'];
+        const duration = 14;
+        const times = [];
+        hours.forEach((hour) => {
+            minutes.forEach((minute) => {
+                times.push({
+                    open_time: hour + minute,
+                    start_time: hour + minute,
+                    end_time: hour + (Number(minute) + duration).toString()
+                });
+            });
+        });
+        // パフォーマンス登録
+        const performance = {};
+        const performanceIds = [];
+        performance.screen_name = screenOfPerformance.get('name');
+        performance.theater_name = screenOfPerformance.get('theater').get('name');
+        performance.theater = setting.theater;
+        performance.screen = setting.screen;
+        performance.film = setting.film;
+        performance.day = setting.day;
+        performance.canceled = false;
+        performance.ticket_type_group = setting.ticket_type_group;
+        const promises = (times.map((time) => __awaiter(this, void 0, void 0, function* () {
+            // パフォーマンス時間情報セット
+            performance.open_time = time.open_time;
+            performance.start_time = time.start_time;
+            performance.end_time = time.end_time;
+            // パフォーマンス登録
+            debug('creating performance...');
+            //const result = await Models.Performance.create(performance);
+            //スクリーン、作品、上映日、開始時間
+            const result = yield ttts_domain_1.Models.Performance.findOneAndUpdate({
+                screen: performance.screen,
+                film: performance.film,
+                day: performance.day,
+                start_time: performance.start_time
+            }, {
+                // 初回は $setと$setOnInsertがセットされ2回目以降は$setのみセット
+                // created_atは更新されない
+                $set: performance
+                //$setOnInsert: performance
+            }, {
+                upsert: true,
+                new: true
+            });
+            debug('performance created');
+            if (result !== null) {
+                performanceIds.push(result._id);
+            }
+        })));
+        yield Promise.all(promises);
+        // 予約登録
+        const STATUS_AVAILABLE = 'AVAILABLE';
+        const promisesR = (performanceIds.map((id) => __awaiter(this, void 0, void 0, function* () {
+            const promisesS = (screenOfPerformance.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
+                const reservation = {};
+                reservation.performance = id;
+                reservation.seat_code = seat.code;
+                reservation.status = STATUS_AVAILABLE;
+                reservation.performance_canceled = false;
+                reservation.performance_day = performance.day;
+                reservation.performance_open_time = performance.open_time;
+                reservation.performance_start_time = performance.start_time;
+                reservation.performance_end_time = performance.end_time;
+                reservation.theater = performance.theater;
+                reservation.theater_name = performance.theater_name;
+                reservation.theater_address = screenOfPerformance.get('theater').get('address');
+                reservation.screen = performance.screen;
+                reservation.screen_name = performance.screen_name;
+                reservation.film = performance.film;
+                reservation.film_name = film.name;
+                //const result = await Models.Reservation.create(reservation);
+                const result = yield ttts_domain_1.Models.Reservation.findOneAndUpdate({
+                    performance: reservation.performance,
+                    seat_code: reservation.seat_code
+                }, {
+                    //なければ作成あれば更新：値は常にあと勝ちで更新
+                    $set: reservation
+                    // 新規作成時のみセットしたいカラムは$setOnInsertに設定
+                    // 項目が重なっていると、
+                    // MongoError: Cannot update 'film' and 'film' at the same time
+                    //$setOnInsert: reservation
+                }, {
+                    upsert: true,
+                    new: true
+                });
+                if (result === null) {
+                    debug('error.');
+                }
+                else {
+                    debug('ok.');
+                }
+            })));
+            yield Promise.all(promisesS);
+        })));
+        yield Promise.all(promisesR);
+        debug('promised.');
+    });
+}
+exports.createFromSetting = createFromSetting;
+/**
+ *
+ *
+ * @memberOf controller/performance
+ */
 function createFromJson() {
     return __awaiter(this, void 0, void 0, function* () {
         const performances = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
