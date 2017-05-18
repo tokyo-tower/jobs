@@ -22,6 +22,7 @@ function main() {
         mongoose.disconnect();
     });
 }
+// tslint:disable-next-line:no-floating-promises
 main().then(() => {
     process.exit(0);
 }).catch((err) => {
