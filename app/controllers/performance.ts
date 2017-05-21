@@ -89,7 +89,7 @@ export async function createFromSetting(): Promise<void> {
                 upsert: true,
                 new: true
             }
-        );
+        ).exec();
         debug('performance created');
         if (result !== null) {
             performance._id = (<any>result)._id;
@@ -136,7 +136,7 @@ export async function createFromSetting(): Promise<void> {
                     upsert: true,
                     new: true
                 }
-            );
+            ).exec();
             if (result === null) {
                 debug('error.');
             } else {

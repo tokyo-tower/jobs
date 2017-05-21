@@ -93,7 +93,7 @@ function createFromSetting() {
             }, {
                 upsert: true,
                 new: true
-            });
+            }).exec();
             debug('performance created');
             if (result !== null) {
                 performance._id = result._id;
@@ -135,7 +135,7 @@ function createFromSetting() {
                 }, {
                     upsert: true,
                     new: true
-                });
+                }).exec();
                 if (result === null) {
                     debug('error.');
                 }
