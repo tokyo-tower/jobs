@@ -36,6 +36,36 @@ export async function removeTmps(): Promise<void> {
 
     // 失敗しても、次のタスクにまかせる(気にしない)
 }
+/**
+ * 仮予約ステータスで、一定時間過ぎた予約を空席にする
+ * (2017/05/23 削除→statusを"AVAILABLE"戻す、に変更)
+ * removeTmpsは未使用になります。
+ *
+ * @memberOf ReservationController
+ */
+export async function resetTmps(): Promise<void> {
+    const BUFFER_PERIOD_SECONDS = -60;
+    const STATUS_AVAILABLE: string = 'AVAILABLE';
+    debug('resetting temporary reservations...');
+    await Models.Reservation.findOneAndUpdate(
+        {
+            status: ReservationUtil.STATUS_TEMPORARY,
+            expired_at: {
+                // 念のため、仮予約有効期間より1分長めにしておく
+                $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
+            }
+        },
+        {
+            status: STATUS_AVAILABLE,
+            payment_no: null,
+            ticket_type: null,
+            expired_at: null
+        }
+    ).exec();
+    debug('temporary reservations reset.');
+
+    // 失敗しても、次のタスクにまかせる(気にしない)
+}
 
 /**
  * TTTS確保上の仮予約をTTTS確保へ戻す

@@ -125,12 +125,13 @@ export async function createFromSetting(): Promise<void> {
                     seat_code: reservation.seat_code
                 },
                 {
-                    //なければ作成あれば更新：値は常にあと勝ちで更新
-                    $set: reservation
+                    //なければ作成あれば更新：値は先勝ちで作成
+                    //間違って同じ日の予約を流した時、すでに予約に進んでいるデータを壊さないため。
+                    //$set: reservation
                     // 新規作成時のみセットしたいカラムは$setOnInsertに設定
                     // 項目が重なっていると、
                     // MongoError: Cannot update 'film' and 'film' at the same time
-                    //$setOnInsert: reservation
+                    $setOnInsert: reservation
                 },
                 {
                     upsert: true,
