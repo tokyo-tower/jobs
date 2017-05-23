@@ -110,18 +110,20 @@ function createFromSetting() {
                 reservation.seat_code = seat.code;
                 reservation.status = STATUS_AVAILABLE;
                 reservation.performance_canceled = false;
-                reservation.performance_day = savePerformance.day;
-                reservation.performance_open_time = savePerformance.open_time;
-                reservation.performance_start_time = savePerformance.start_time;
-                reservation.performance_end_time = savePerformance.end_time;
-                reservation.theater = savePerformance.theater;
-                reservation.theater_name = savePerformance.theater_name;
-                reservation.theater_address = screenOfPerformance.get('theater').get('address');
-                reservation.screen = savePerformance.screen;
-                reservation.screen_name = savePerformance.screen_name;
-                reservation.film = savePerformance.film;
-                reservation.film_name = film.name;
-                //const result = await Models.Reservation.create(reservation);
+                reservation.checkins = [];
+                // 2017/05/23 chevreの"TEMPORARY"データに項目を合わせるため削除
+                // reservation.performance_day = savePerformance.day;
+                // reservation.performance_open_time = savePerformance.open_time;
+                // reservation.performance_start_time = savePerformance.start_time;
+                // reservation.performance_end_time = savePerformance.end_time;
+                // reservation.theater = savePerformance.theater;
+                // reservation.theater_name = savePerformance.theater_name;
+                // reservation.theater_address = screenOfPerformance.get('theater').get('address');
+                // reservation.screen = savePerformance.screen;
+                // reservation.screen_name = savePerformance.screen_name;
+                // reservation.film = savePerformance.film;
+                // reservation.film_name = (<any>film).name;
+                //---
                 const result = yield ttts_domain_1.Models.Reservation.findOneAndUpdate({
                     performance: reservation.performance,
                     seat_code: reservation.seat_code
