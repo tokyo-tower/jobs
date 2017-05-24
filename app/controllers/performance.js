@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ttts_domain_1 = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
+const STATUS_AVAILABLE = 'AVAILABLE';
 const DEFAULT_RADIX = 10;
 const debug = createDebug('ttts-jobs:controller:performance');
 /**
@@ -102,7 +103,6 @@ function createFromSetting() {
         })));
         yield Promise.all(promises);
         // 予約登録
-        const STATUS_AVAILABLE = 'AVAILABLE';
         const promisesR = (savePerformances.map((savePerformance) => __awaiter(this, void 0, void 0, function* () {
             const promisesS = (screenOfPerformance.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
                 const reservation = {};
@@ -195,6 +195,11 @@ function updateStatuses() {
         debug('aggregating...');
         const results = yield ttts_domain_1.Models.Reservation.aggregate([
             {
+                $match: {
+                    status: STATUS_AVAILABLE
+                }
+            },
+            {
                 $group: {
                     _id: '$performance',
                     count: { $sum: 1 }
@@ -211,13 +216,14 @@ function updateStatuses() {
             if (!reservationNumbers.hasOwnProperty(performance.get('_id').toString())) {
                 reservationNumbers[performance.get('_id').toString()] = 0;
             }
-            // 空席ステータス変更(空席数をそのままセット)
+            // 空席ステータス変更(空席数("予約可能"な予約データ数)をそのままセット)
             // TODO anyで逃げているが、型定義をちゃんとかけばもっとよく書ける
             //const status = (<any>performance).getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
             //performanceStatusesModel.setStatus(performance._id.toString(), status);
             const reservationNumber = reservationNumbers[performance.get('_id')];
-            const availableSeatNum = performance.screen.seats_number - reservationNumber;
-            performanceStatusesModel.setStatus(performance._id.toString(), availableSeatNum.toString());
+            //const availableSeatNum = (<any>performance).screen.seats_number - reservationNumber;
+            //performanceStatusesModel.setStatus(performance._id.toString(), availableSeatNum.toString());
+            performanceStatusesModel.setStatus(performance._id.toString(), reservationNumber.toString());
             //---
         });
         debug('saving performanceStatusesModel...', performanceStatusesModel);

@@ -8,6 +8,7 @@ import { Models, PerformanceStatusesModel } from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 
+const STATUS_AVAILABLE: string = 'AVAILABLE';
 const DEFAULT_RADIX = 10;
 const debug = createDebug('ttts-jobs:controller:performance');
 /**
@@ -99,7 +100,6 @@ export async function createFromSetting(): Promise<void> {
     await Promise.all(promises);
 
     // 予約登録
-    const STATUS_AVAILABLE: string = 'AVAILABLE';
     const promisesR = ((<any>savePerformances).map(async (savePerformance: any) => {
         const promisesS = ((<any>screenOfPerformance).get('sections')[0].seats.map(async (seat: any) => {
             const reservation: any = {};
@@ -199,6 +199,11 @@ export async function updateStatuses() {
     const results: any[] = await Models.Reservation.aggregate(
         [
             {
+                $match: {
+                    status: STATUS_AVAILABLE
+                }
+            },
+            {
                 $group: {
                     _id: '$performance',
                     count: { $sum: 1 }
@@ -221,13 +226,14 @@ export async function updateStatuses() {
             reservationNumbers[performance.get('_id').toString()] = 0;
         }
 
-        // 空席ステータス変更(空席数をそのままセット)
+        // 空席ステータス変更(空席数("予約可能"な予約データ数)をそのままセット)
         // TODO anyで逃げているが、型定義をちゃんとかけばもっとよく書ける
         //const status = (<any>performance).getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
         //performanceStatusesModel.setStatus(performance._id.toString(), status);
         const reservationNumber: number = reservationNumbers[performance.get('_id')];
-        const availableSeatNum = (<any>performance).screen.seats_number - reservationNumber;
-        performanceStatusesModel.setStatus(performance._id.toString(), availableSeatNum.toString());
+        //const availableSeatNum = (<any>performance).screen.seats_number - reservationNumber;
+        //performanceStatusesModel.setStatus(performance._id.toString(), availableSeatNum.toString());
+        performanceStatusesModel.setStatus(performance._id.toString(), reservationNumber.toString());
         //---
     });
 
