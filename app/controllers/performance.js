@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ttts_domain_1 = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
+const moment = require("moment");
 const STATUS_AVAILABLE = 'AVAILABLE';
 const DEFAULT_RADIX = 10;
 const debug = createDebug('ttts-jobs:controller:performance');
@@ -24,17 +25,14 @@ const debug = createDebug('ttts-jobs:controller:performance');
  *
  * @memberOf controller/performance
  */
-// tslint:disable-next-line:max-func-body-length
 function createFromSetting() {
     return __awaiter(this, void 0, void 0, function* () {
-        //const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
-        const setting = {
-            film: '000999',
-            day: '20180101',
-            theater: '001',
-            screen: '00901',
-            ticket_type_group: '01'
-        };
+        // 引数情報取得
+        const targetInfo = getTargetInfoForCreateFromSetting();
+        const times = targetInfo.times;
+        const days = targetInfo.days;
+        // 作成情報取得
+        const setting = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
         // 劇場とスクリーン情報取得
         const screenOfPerformance = yield ttts_domain_1.Models.Screen.findById(setting.screen, 'name theater sections')
             .populate('theater', 'name address')
@@ -47,20 +45,6 @@ function createFromSetting() {
         if (film === undefined) {
             throw new Error('film not found.');
         }
-        // 展開する時間をセット
-        const hours = ['09', '10', '11', '12', '13', '14'];
-        const minutes = ['00', '15', '30', '45'];
-        const duration = 14;
-        const times = [];
-        hours.forEach((hour) => {
-            minutes.forEach((minute) => {
-                times.push({
-                    open_time: hour + minute,
-                    start_time: hour + minute,
-                    end_time: hour + (Number(minute) + duration).toString()
-                });
-            });
-        });
         // パフォーマンス登録
         const performance = {};
         const savePerformances = [];
@@ -69,90 +53,93 @@ function createFromSetting() {
         performance.theater = setting.theater;
         performance.screen = setting.screen;
         performance.film = setting.film;
-        performance.day = setting.day;
         performance.canceled = false;
         performance.ticket_type_group = setting.ticket_type_group;
-        const promises = (times.map((time) => __awaiter(this, void 0, void 0, function* () {
-            // パフォーマンス時間情報セット
-            performance.open_time = time.open_time;
-            performance.start_time = time.start_time;
-            performance.end_time = time.end_time;
-            // パフォーマンス登録
-            debug('creating performance...');
-            //const result = await Models.Performance.create(performance);
-            //スクリーン、作品、上映日、開始時間
-            const result = yield ttts_domain_1.Models.Performance.findOneAndUpdate({
-                screen: performance.screen,
-                film: performance.film,
-                day: performance.day,
-                start_time: performance.start_time
-            }, {
-                // 初回は $setと$setOnInsertがセットされ2回目以降は$setのみセット
-                // created_atは更新されない
-                $set: performance
-                //$setOnInsert: performance
-            }, {
-                upsert: true,
-                new: true
-            }).exec();
-            debug('performance created');
-            if (result !== null) {
-                performance._id = result._id;
-                savePerformances.push(result);
-            }
-        })));
-        yield Promise.all(promises);
-        // 予約登録
-        const promisesR = (savePerformances.map((savePerformance) => __awaiter(this, void 0, void 0, function* () {
-            const promisesS = (screenOfPerformance.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
-                const reservation = {};
-                reservation.performance = savePerformance._id;
-                reservation.seat_code = seat.code;
-                reservation.status = STATUS_AVAILABLE;
-                reservation.performance_canceled = false;
-                reservation.checkins = [];
-                // 2017/05/23 chevreの"TEMPORARY"データに項目を合わせるため削除
-                // reservation.performance_day = savePerformance.day;
-                // reservation.performance_open_time = savePerformance.open_time;
-                // reservation.performance_start_time = savePerformance.start_time;
-                // reservation.performance_end_time = savePerformance.end_time;
-                // reservation.theater = savePerformance.theater;
-                // reservation.theater_name = savePerformance.theater_name;
-                // reservation.theater_address = screenOfPerformance.get('theater').get('address');
-                // reservation.screen = savePerformance.screen;
-                // reservation.screen_name = savePerformance.screen_name;
-                // reservation.film = savePerformance.film;
-                // reservation.film_name = (<any>film).name;
-                //---
-                const result = yield ttts_domain_1.Models.Reservation.findOneAndUpdate({
-                    performance: reservation.performance,
-                    seat_code: reservation.seat_code
+        // 7日分Loop
+        const promisesDay = (days.map((day) => __awaiter(this, void 0, void 0, function* () {
+            performance.day = day;
+            // 開始時間分Loop
+            const promisesTime = (times.map((time) => __awaiter(this, void 0, void 0, function* () {
+                // パフォーマンス時間情報セット
+                performance.open_time = time.open_time;
+                performance.start_time = time.start_time;
+                performance.end_time = time.end_time;
+                // パフォーマンス登録
+                debug('creating performance...');
+                //スクリーン、作品、上映日、開始時間
+                const result = yield ttts_domain_1.Models.Performance.findOneAndUpdate({
+                    screen: performance.screen,
+                    film: performance.film,
+                    day: performance.day,
+                    start_time: performance.start_time
                 }, {
-                    //なければ作成あれば更新：値は先勝ちで作成
-                    //間違って同じ日の予約を流した時、すでに予約に進んでいるデータを壊さないため。
-                    //$set: reservation
-                    // 新規作成時のみセットしたいカラムは$setOnInsertに設定
-                    // 項目が重なっていると、
-                    // MongoError: Cannot update 'film' and 'film' at the same time
-                    $setOnInsert: reservation
+                    // 初回は $setと$setOnInsertがセットされ2回目以降は$setのみセット
+                    // created_atは更新されない
+                    $set: performance
+                    //$setOnInsert: performance
                 }, {
                     upsert: true,
                     new: true
                 }).exec();
-                if (result === null) {
-                    debug('error.');
-                }
-                else {
-                    debug('ok.');
+                debug('performance created');
+                if (result !== null) {
+                    performance._id = result._id;
+                    savePerformances.push(result);
                 }
             })));
-            yield Promise.all(promisesS);
+            yield Promise.all(promisesTime);
         })));
-        yield Promise.all(promisesR);
-        debug('promised.');
+        yield Promise.all(promisesDay);
     });
 }
 exports.createFromSetting = createFromSetting;
+/**
+ * パフォーマンス作成・作成対象情報取得
+ *
+ * @memberOf controller/performance
+ */
+function getTargetInfoForCreateFromSetting() {
+    const info = {};
+    info.days = [];
+    info.times = [];
+    // 引数から作成対象時間と作成日数を取得
+    const argvLength = 5;
+    if (process.argv.length < argvLength) {
+        throw new Error('argv \'time\' or \'days\' not found.');
+    }
+    const indexTargetHours = 2;
+    const indexStartDay = 3;
+    const indexTargetDays = 4;
+    // 作成対象時間: 9,10,11など
+    const hours = process.argv[indexTargetHours].split(',');
+    // 作成開始が今日から何日後か: 30
+    const start = Number(process.argv[indexStartDay]);
+    // 何日分作成するか: 7
+    const days = Number(process.argv[indexTargetDays]);
+    // 本日日付+開始日までの日数から作成開始日セット
+    const today = moment().add(start - 1, 'days');
+    // 作成日数分の作成対象日付作成
+    for (let index = 0; index < days; index = index + 1) {
+        const dateWk = today.add(1, 'days').format('YYYYMMDD');
+        info.days.push(dateWk);
+    }
+    //const hours: string[] = ['09', '10', '11', '12', '13', '14'];
+    const minutes = ['00', '15', '30', '45'];
+    const duration = 14;
+    const hourLength = 2;
+    hours.forEach((hour) => {
+        // 2桁でない時は'0'詰め
+        hour = (hour.length < hourLength) ? '0' + hour : hour;
+        minutes.forEach((minute) => {
+            info.times.push({
+                open_time: hour + minute,
+                start_time: hour + minute,
+                end_time: hour + (Number(minute) + duration).toString()
+            });
+        });
+    });
+    return info;
+}
 /**
  *
  *

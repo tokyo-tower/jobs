@@ -9,11 +9,128 @@ import { Models, ReservationUtil } from '@motionpicture/ttts-domain';
 
 import * as conf from 'config';
 import * as createDebug from 'debug';
+import * as fs from 'fs-extra';
 import * as moment from 'moment';
 import * as querystring from 'querystring';
 import * as request from 'request';
 
 const debug = createDebug('ttts-jobs:controller:reservation');
+
+const STATUS_AVAILABLE: string = 'AVAILABLE';
+/**
+ *
+ *
+ * @memberOf controller/performance
+ */
+export async function createFromSetting(): Promise<void> {
+    // 引数情報取得
+    const targetInfo = getTargetInfoForCreateFromSetting();
+    const times = targetInfo.startTimes;
+    const days = targetInfo.days;
+
+    // 作成情報取得(作品、スクリーン、作成日(引数の日数より)、開始時刻(引数の時刻より))
+    const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
+    const performances = await Models.Performance.find(
+        {
+            film: setting.film,
+            screen: setting.screen,
+            day: {$in: days},
+            start_time: {$in: times}
+        },
+        '_id'
+    ).exec();
+    // 劇場とスクリーン情報取得
+    const screenOfPerformance = await Models.Screen.findById(setting.screen, 'name theater sections')
+                                       .populate('theater', 'name address')
+                                       .exec();
+    if (screenOfPerformance === undefined) {
+        throw new Error('screen not found.');
+    }
+
+    // 予約登録・パフォーマンス分Loop
+    const promisesR = ((<any>performances).map(async (performance: any) => {
+        // tslint:disable-next-line:no-console
+        console.info(performance._id);
+        // 座席分Loop
+        const promisesS = ((<any>screenOfPerformance).get('sections')[0].seats.map(async (seat: any) => {
+            const reservation: any = {};
+            reservation.performance = performance._id;
+            reservation.seat_code = seat.code;
+            reservation.status = STATUS_AVAILABLE;
+            reservation.performance_canceled = false;
+            reservation.checkins = [];
+            const result = await Models.Reservation.findOneAndUpdate(
+                {
+                    performance: reservation.performance,
+                    seat_code: reservation.seat_code
+                },
+                {
+                    //なければ作成あれば更新：値は先勝ちで作成
+                    //間違って同じ日の予約を流した時、すでに予約に進んでいるデータを壊さないため。
+                    //$set: reservation
+                    // 新規作成時のみセットしたいカラムは$setOnInsertに設定
+                    // 項目が重なっているとエラーになる↓
+                    // MongoError: Cannot update 'film' and 'film' at the same time
+                    $setOnInsert: reservation
+                },
+                {
+                    upsert: true,
+                    new: true
+                }
+            ).exec();
+            if (result === null) {
+                debug('error.');
+            } else {
+                debug('ok.');
+            }
+        }));
+        await Promise.all(promisesS);
+    }));
+    await Promise.all(promisesR);
+}
+/**
+ * パフォーマンス作成・作成対象情報取得
+ *
+ * @memberOf controller/performance
+ */
+function getTargetInfoForCreateFromSetting(): any {
+    const info: any = {};
+    info.days = [];
+    info.startTimes = [];
+
+    // 引数から作成対象時間と作成日数を取得
+    const argvLength: number = 5;
+    if (process.argv.length < argvLength) {
+         throw new Error('argv \'time\' or \'days\' not found.');
+    }
+    const indexTargetHours: number = 2;
+    const indexStartDay: number = 3;
+    const indexTargetDays: number = 4;
+    // 作成対象時間: 9,10,11など
+    const hours: string[] = process.argv[indexTargetHours].split(',');
+    // 作成開始が今日から何日後か: 30
+    const start: number = Number(process.argv[indexStartDay]);
+    // 何日分作成するか: 7
+    const days: number = Number(process.argv[indexTargetDays]);
+
+    // 本日日付+開始日までの日数から作成開始日セット
+    const today = moment().add(start - 1, 'days');
+    // 作成日数分の作成対象日付作成
+    for (let index = 0; index < days; index = index + 1) {
+        const dateWk: string = today.add(1, 'days').format('YYYYMMDD');
+        info.days.push(dateWk);
+    }
+    const minutes: string[] = ['00', '15', '30', '45'];
+    const hourLength: number = 2;
+    hours.forEach( (hour) => {
+        // 2桁でない時は'0'詰め
+        hour = (hour.length < hourLength) ? '0' + hour : hour;
+        minutes.forEach( (minute) => {
+            info.startTimes.push(hour + minute);
+        });
+    });
+    return info;
+}
 
 /**
  * 仮予約ステータスで、一定時間過ぎた予約を空席にする
@@ -45,7 +162,6 @@ export async function removeTmps(): Promise<void> {
  */
 export async function resetTmps(): Promise<void> {
     const BUFFER_PERIOD_SECONDS = -60;
-    const STATUS_AVAILABLE: string = 'AVAILABLE';
     debug('resetting temporary reservations...');
     await Models.Reservation.findOneAndUpdate(
         {
