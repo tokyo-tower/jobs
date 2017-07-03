@@ -1,11 +1,12 @@
 [
     {
-        "username": "motionpicture",
-        "password": "motionpicture",
+        "username": "",
+        "password": "",
         "name": {
             "ja": "内部関係者モーションピクチャー",
             "en": "staff motionpicture"
         },
+        "notes":"0",
         "email": "hello@motionpicture.jp",
         "group": "STAFF"
     },
@@ -16,7 +17,44 @@
             "ja": "当日窓口モーションピクチャー",
             "en": "window staff motionpicture"
         },
+        "notes":"0",
         "email": "hello@motionpicture.jp",
         "group": "WINDOW_STAFF"
+    },
+    {
+        "username": "1F-ELEVATOR",
+        "password": "motionpicture",
+        "name": {
+            "ja": "フットタウン1F",
+            "en": "1F-ELEVATOR-staff1"
+        },
+        "description":"大展望台",
+        "notes":"1",
+        "email": "hello@motionpicture.jp",
+        "group": "DAITEN_AUTH"
+    },
+    {
+        "username": "RF-STAIRS-ELEVATOR",
+        "password": "motionpicture",
+        "name": {
+            "ja": "フットタウンRF階段",
+            "en": "RF-STAIRS-ELEVATOR-staff1"
+        },
+        "description":"大展望台",
+        "notes":"1",
+        "email": "hello@motionpicture.jp",
+        "group": "DAITEN_AUTH"
+    },
+    {
+        "username": "TOPDECK-ELEVATOR",
+        "password": "motionpicture",
+        "name": {
+            "ja": "TOP DECKエレベータ",
+            "en": "TOPDECK-ELEVATOR"
+        },
+        "description":"TOP DECK",
+        "notes":"1",
+        "email": "hello@motionpicture.jp",
+        "group": "TOPDECK_AUTH"
     }
 ]

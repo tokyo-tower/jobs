@@ -26,7 +26,7 @@ async function main(): Promise<void> {
     await filmController.createFromJson();
     await theaterController.createFromJson();
     await theaterController.createScreensFromJson();
-    await performanceController.createFromJson();
+    //await performanceController.createFromJson();
 
     await clientController.createFromJson();
     await ownerController.createFromJson();

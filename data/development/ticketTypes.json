@@ -2,82 +2,49 @@
     {
         "_id": "000001",
         "name": {
-            "ja": "一般",
-            "en": "Adults"
+            "ja": "TOP DECKセット券(大人)",
+            "en": "TOP DECK set(General)"
         },
-        "charge": 2000,
-        "is_on_the_day": false
+        "charge": 2000
     },
     {
         "_id": "000002",
         "name": {
-            "ja": "一般",
-            "en": "Adults"
+            "ja": "TOP DECKセット券(小・中学生)",
+            "en": "TOP DECK set(Under 16 years old)"
         },
-        "charge": 1800,
-        "is_on_the_day": false
+        "charge": 1500
     },
     {
         "_id": "000003",
         "name": {
-            "ja": "一般",
-            "en": "Adults"
+            "ja": "TOP DECKセット券(幼児)",
+            "en": "TOP DECK set(Children under 7 years old)"
         },
-        "charge": 1500,
-        "is_on_the_day": false
+        "charge": 500
     },
     {
         "_id": "000004",
         "name": {
-            "ja": "一般",
-            "en": "Adults"
+            "ja": "TOP DECKセット券 車椅子(大人)",
+            "en": "TOP DECK set wheelchair(General)"
         },
-        "charge": 1300,
-        "is_on_the_day": false
+        "charge": 2000
     },
     {
         "_id": "000005",
         "name": {
-            "ja": "一般",
-            "en": "Adults"
+            "ja": "TOP DECKセット券 車椅子(小・中学生)",
+            "en": "TOP DECK set wheelchair(Under 16 years old)"
         },
-        "charge": 1000,
-        "is_on_the_day": false
+        "charge": 1500
     },
     {
         "_id": "000006",
         "name": {
-            "ja": "学生",
-            "en": "Students"
+            "ja": "TOP DECKセット券 車椅子(幼児)",
+            "en": "TOP DECK set wheelchair(Children under 7 years old)"
         },
-        "charge": 1500,
-        "is_on_the_day": false
-    },
-    {
-        "_id": "000007",
-        "name": {
-            "ja": "学生",
-            "en": "Students"
-        },
-        "charge": 1000,
-        "is_on_the_day": false
-    },
-    {
-        "_id": "000008",
-        "name": {
-            "ja": "学生",
-            "en": "Students"
-        },
-        "charge": 500,
-        "is_on_the_day": false
-    },
-    {
-        "_id": "000009",
-        "name": {
-            "ja": "学生当日",
-            "en": "Students on the day"
-        },
-        "charge": 500,
-        "is_on_the_day": true
+        "charge": 500
     }
 ]

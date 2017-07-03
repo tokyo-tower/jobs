@@ -1,6 +1,6 @@
 {
-    "film" : "000999",
+    "film" : "000001",
     "theater" : "001",
-    "screen" : "00901",
+    "screen" : "00101",
     "ticket_type_group" : "01"
 }
