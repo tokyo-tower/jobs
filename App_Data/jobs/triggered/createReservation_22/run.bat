@@ -1,3 +1,2 @@
-rem cd D:\home\site\wwwroot
-cd C:\NodeApp\TTTS\jobs
+cd D:\home\site\wwwroot
 node bin/createReservation/index 22 30 7
