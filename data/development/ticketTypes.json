@@ -5,7 +5,8 @@
             "ja": "TOP DECKセット券(大人)",
             "en": "TOP DECK set(General)"
         },
-        "charge": 2000
+        "charge": 2000,
+        "description":"0"
     },
     {
         "_id": "000002",
@@ -13,7 +14,8 @@
             "ja": "TOP DECKセット券(小・中学生)",
             "en": "TOP DECK set(Under 16 years old)"
         },
-        "charge": 1500
+        "charge": 1500,
+        "description":"0"
     },
     {
         "_id": "000003",
@@ -21,7 +23,8 @@
             "ja": "TOP DECKセット券(幼児)",
             "en": "TOP DECK set(Children under 7 years old)"
         },
-        "charge": 500
+        "charge": 500,
+        "description":"0"
     },
     {
         "_id": "000004",
@@ -29,7 +32,8 @@
             "ja": "TOP DECKセット券 車椅子(大人)",
             "en": "TOP DECK set wheelchair(General)"
         },
-        "charge": 2000
+        "charge": 2000,
+        "description":"1"
     },
     {
         "_id": "000005",
@@ -37,7 +41,8 @@
             "ja": "TOP DECKセット券 車椅子(小・中学生)",
             "en": "TOP DECK set wheelchair(Under 16 years old)"
         },
-        "charge": 1500
+        "charge": 1500,
+        "description":"1"
     },
     {
         "_id": "000006",
@@ -45,6 +50,7 @@
             "ja": "TOP DECKセット券 車椅子(幼児)",
             "en": "TOP DECK set wheelchair(Children under 7 years old)"
         },
-        "charge": 500
+        "charge": 500,
+        "description":"1"
     }
 ]
