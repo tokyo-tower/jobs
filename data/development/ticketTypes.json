@@ -6,7 +6,8 @@
             "en": "TOP DECK set(General)"
         },
         "charge": 2000,
-        "description":"0"
+        "description":"0",
+        "notes":"0000000000211"
     },
     {
         "_id": "000002",
@@ -15,7 +16,8 @@
             "en": "TOP DECK set(Under 16 years old)"
         },
         "charge": 1500,
-        "description":"0"
+        "description":"0",
+        "notes":"0000000000231"
     },
     {
         "_id": "000003",
@@ -24,7 +26,8 @@
             "en": "TOP DECK set(Children under 7 years old)"
         },
         "charge": 500,
-        "description":"0"
+        "description":"0",
+        "notes":"0000000000241"
     },
     {
         "_id": "000004",
@@ -33,7 +36,8 @@
             "en": "TOP DECK set wheelchair(General)"
         },
         "charge": 2000,
-        "description":"1"
+        "description":"1",
+        "notes":"0000000000211"
     },
     {
         "_id": "000005",
@@ -42,7 +46,8 @@
             "en": "TOP DECK set wheelchair(Under 16 years old)"
         },
         "charge": 1500,
-        "description":"1"
+        "description":"1",
+        "notes":"0000000000231"
     },
     {
         "_id": "000006",
@@ -51,6 +56,7 @@
             "en": "TOP DECK set wheelchair(Children under 7 years old)"
         },
         "charge": 500,
-        "description":"1"
+        "description":"1",
+        "notes":"0000000000241"
     }
 ]
