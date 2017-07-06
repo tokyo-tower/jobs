@@ -10,7 +10,7 @@ import * as mongoose from 'mongoose';
 import * as clientController from '../../app/controllers/client';
 import * as filmController from '../../app/controllers/film';
 import * as ownerController from '../../app/controllers/owner';
-import * as performanceController from '../../app/controllers/performance';
+//import * as performanceController from '../../app/controllers/performance';
 import * as schemaController from '../../app/controllers/schema';
 // import * as staffController from '../../app/controllers/staff';
 import * as theaterController from '../../app/controllers/theater';

@@ -46,7 +46,9 @@ describe('メールキューコントローラー 送信', () => {
         yield emailQueueController.sendOne();
         // 送信済みになっていることを確認
         const sentEmailQueueDoc = yield emailQueueModel.findById(emailQueueDoc._id).exec();
-        assert.equal(sentEmailQueueDoc.get('status'), TTTS.EmailQueueUtil.STATUS_SENT);
+        if (sentEmailQueueDoc !== null) {
+            assert.equal(sentEmailQueueDoc.get('status'), TTTS.EmailQueueUtil.STATUS_SENT);
+        }
         // テストデータ削除
         yield emailQueueDoc.remove();
     }));

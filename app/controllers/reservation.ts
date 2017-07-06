@@ -20,7 +20,7 @@ const STATUS_AVAILABLE: string = 'AVAILABLE';
 /**
  *
  *
- * @memberOf controller/performance
+ * @memberOf controller/reservation
  */
 export async function createFromSetting(): Promise<void> {
     // 引数情報取得
@@ -124,11 +124,13 @@ function getTargetInfoForCreateFromSetting(): any {
     const hourLength: number = 2;
     hours.forEach( (hour) => {
         // 2桁でない時は'0'詰め
-        hour = (hour.length < hourLength) ? '0' + hour : hour;
+        //hour = (hour.length < hourLength) ? '0' + hour : hour;
+        hour = (hour.length < hourLength) ? `0${hour}` : hour;
         minutes.forEach( (minute) => {
             info.startTimes.push(hour + minute);
         });
     });
+
     return info;
 }
 

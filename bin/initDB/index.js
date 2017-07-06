@@ -18,7 +18,7 @@ const mongoose = require("mongoose");
 const clientController = require("../../app/controllers/client");
 const filmController = require("../../app/controllers/film");
 const ownerController = require("../../app/controllers/owner");
-const performanceController = require("../../app/controllers/performance");
+//import * as performanceController from '../../app/controllers/performance';
 const schemaController = require("../../app/controllers/schema");
 // import * as staffController from '../../app/controllers/staff';
 const theaterController = require("../../app/controllers/theater");
@@ -33,7 +33,7 @@ function main() {
         yield filmController.createFromJson();
         yield theaterController.createFromJson();
         yield theaterController.createScreensFromJson();
-        yield performanceController.createFromJson();
+        //await performanceController.createFromJson();
         yield clientController.createFromJson();
         yield ownerController.createFromJson();
         // 時間がかかってしまうので、一時的にコメントアウト

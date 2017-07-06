@@ -26,7 +26,7 @@ const STATUS_AVAILABLE = 'AVAILABLE';
 /**
  *
  *
- * @memberOf controller/performance
+ * @memberOf controller/reservation
  */
 function createFromSetting() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -123,7 +123,8 @@ function getTargetInfoForCreateFromSetting() {
     const hourLength = 2;
     hours.forEach((hour) => {
         // 2桁でない時は'0'詰め
-        hour = (hour.length < hourLength) ? '0' + hour : hour;
+        //hour = (hour.length < hourLength) ? '0' + hour : hour;
+        hour = (hour.length < hourLength) ? `0${hour}` : hour;
         minutes.forEach((minute) => {
             info.startTimes.push(hour + minute);
         });

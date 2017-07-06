@@ -48,8 +48,8 @@ function createFromSetting() {
         // パフォーマンス登録
         const performance = {};
         const savePerformances = [];
-        performance.screen_name = screenOfPerformance.get('name');
-        performance.theater_name = screenOfPerformance.get('theater').get('name');
+        performance.screen_name = (screenOfPerformance !== null) ? screenOfPerformance.get('name') : '';
+        performance.theater_name = (screenOfPerformance !== null) ? screenOfPerformance.get('theater').get('name') : '';
         performance.theater = setting.theater;
         performance.screen = setting.screen;
         performance.film = setting.film;
@@ -129,7 +129,8 @@ function getTargetInfoForCreateFromSetting() {
     const hourLength = 2;
     hours.forEach((hour) => {
         // 2桁でない時は'0'詰め
-        hour = (hour.length < hourLength) ? '0' + hour : hour;
+        //hour = (hour.length < hourLength) ? '0' + hour : hour;
+        hour = (hour.length < hourLength) ? `0${hour}` : hour;
         minutes.forEach((minute) => {
             info.times.push({
                 open_time: hour + minute,
@@ -204,7 +205,6 @@ function updateStatuses() {
                 reservationNumbers[performance.get('_id').toString()] = 0;
             }
             // 空席ステータス変更(空席数("予約可能"な予約データ数)をそのままセット)
-            // TODO anyで逃げているが、型定義をちゃんとかけばもっとよく書ける
             //const status = (<any>performance).getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
             //performanceStatusesModel.setStatus(performance._id.toString(), status);
             const reservationNumber = reservationNumbers[performance.get('_id')];
