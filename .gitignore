@@ -17,3 +17,6 @@ docs/
 
 # GCP
 app.yaml
+
+*.js.map
+

@@ -165,23 +165,31 @@ export async function removeTmps(): Promise<void> {
 export async function resetTmps(): Promise<void> {
     const BUFFER_PERIOD_SECONDS = -60;
     debug('resetting temporary reservations...');
-    await Models.Reservation.findOneAndUpdate(
+    await Models.Reservation.update(
         {
-            status: ReservationUtil.STATUS_TEMPORARY,
+            status: { $in: [ReservationUtil.STATUS_TEMPORARY,
+                            ReservationUtil.STATUS_TEMPORARY_FOR_SECURE_EXTRA]
+            },
             expired_at: {
                 // 念のため、仮予約有効期間より1分長めにしておく
                 $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
             }
         },
         {
-            status: STATUS_AVAILABLE,
-            payment_no: null,
-            ticket_type: null,
-            expired_at: null
+            $set: {
+                status: STATUS_AVAILABLE
+            },
+            $unset: {
+                payment_no: 1,
+                ticket_type: 1,
+                expired_at: 1
+            }
+        },
+        {
+            multi: true
         }
     ).exec();
     debug('temporary reservations reset.');
-
     // 失敗しても、次のタスクにまかせる(気にしない)
 }
 
