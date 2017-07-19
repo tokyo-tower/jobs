@@ -2,8 +2,12 @@
     {
         "_id": "000001",
         "name": {
-            "ja": "TOP DECKセット券(大人)",
-            "en": "TOP DECK set(General)"
+            "ja": "TOP DECKチケット(大人)",
+            "en": "TOP DECK TICKET(General)",
+            "kr":"TOP DECK 티켓 (성인)",
+            "sc":"顶层甲板票（成人）",
+            "tc":"頂層甲板票（成人）",
+            "fr":"billet TOP PONT (adulte)"
         },
         "charge": 2000,
         "description":"0",
@@ -12,8 +16,13 @@
     {
         "_id": "000002",
         "name": {
-            "ja": "TOP DECKセット券(小・中学生)",
-            "en": "TOP DECK set(Under 16 years old)"
+            "ja": "TOP DECKチケット(小・中学生)",
+            "en": "TOP DECK TICKET(Under 16 years old)",
+            "kr":"TOP DECK 티켓 (초 · 중학생)",
+            "sc":"顶层甲板票（小学和初中学生）",
+            "tc":"頂層甲板票（小學和初中學生）",
+            "fr":"billet TOP PONT (élèves primaire et secondaire)"
+
         },
         "charge": 1500,
         "description":"0",
@@ -22,18 +31,24 @@
     {
         "_id": "000003",
         "name": {
-            "ja": "TOP DECKセット券(幼児)",
-            "en": "TOP DECK set(Children under 7 years old)"
+            "ja": "TOP DECKチケット(幼児)",
+            "en": "TOP DECK TICKET(Children under 7 years old)",
+            "kr":"TOP DECK 티켓 (유아)",
+            "sc":"顶层甲板票（婴儿）",
+            "tc":"頂層甲板票（嬰兒）",
+            "fr":"billet TOP PONT (infantile)"
+
         },
         "charge": 500,
         "description":"0",
         "notes":"0000000000241"
-    },
+    }
+    /*,
     {
         "_id": "000004",
         "name": {
-            "ja": "TOP DECKセット券 車椅子(大人)",
-            "en": "TOP DECK set wheelchair(General)"
+            "ja": "TOP DECKチケット 車椅子(大人)",
+            "en": "TOP DECK TICKET wheelchair(General)"
         },
         "charge": 2000,
         "description":"1",
@@ -42,8 +57,8 @@
     {
         "_id": "000005",
         "name": {
-            "ja": "TOP DECKセット券 車椅子(小・中学生)",
-            "en": "TOP DECK set wheelchair(Under 16 years old)"
+            "ja": "TOP DECKチケット 車椅子(小・中学生)",
+            "en": "TOP DECK TICKET wheelchair(Under 16 years old)"
         },
         "charge": 1500,
         "description":"1",
@@ -52,11 +67,12 @@
     {
         "_id": "000006",
         "name": {
-            "ja": "TOP DECKセット券 車椅子(幼児)",
-            "en": "TOP DECK set wheelchair(Children under 7 years old)"
+            "ja": "TOP DECKチケット 車椅子(幼児)",
+            "en": "TOP DECK TICKET wheelchair(Children under 7 years old)"
         },
         "charge": 500,
         "description":"1",
         "notes":"0000000000241"
     }
+    */
 ]
