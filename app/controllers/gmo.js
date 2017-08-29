@@ -71,7 +71,7 @@ function processOne() {
                             case gmo_service_1.Util.STATUS_CREDIT_SAUTH:
                                 // 何もしない
                                 break;
-                            case gmo_service_1.Util.STATUS_CREDIT_VOID:
+                            case gmo_service_1.Util.STATUS_CREDIT_VOID:// 取消し
                                 // 空席に戻さない(つくったけれども、連動しない方向で仕様決定)
                                 break;
                             default:
@@ -147,7 +147,7 @@ function processOne() {
                                 // 何もしない
                                 break;
                             case gmo_service_1.Util.STATUS_CVS_PAYFAIL: // 決済失敗
-                            case gmo_service_1.Util.STATUS_CVS_CANCEL:
+                            case gmo_service_1.Util.STATUS_CVS_CANCEL:// 支払い停止
                                 // 空席に戻す
                                 debug('removing reservations...gmo_order_id:', notification.get('order_id'));
                                 yield Promise.all(reservations.map((reservation) => __awaiter(this, void 0, void 0, function* () {
@@ -156,7 +156,7 @@ function processOne() {
                                     debug('reservation removed.', reservation.get('_id'));
                                 })));
                                 break;
-                            case gmo_service_1.Util.STATUS_CVS_EXPIRED:
+                            case gmo_service_1.Util.STATUS_CVS_EXPIRED:// 期限切れ
                                 // 空席に戻す
                                 debug('removing reservations...payment_no:', notification.get('order_id'));
                                 const promises = reservations.map((reservation) => __awaiter(this, void 0, void 0, function* () {

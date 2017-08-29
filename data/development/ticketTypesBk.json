@@ -11,16 +11,7 @@
         },
         "charge": 2000,
         "description":"0",
-        "notes":"0000000000211",
-        "cancel_charge" : [
-            {"days": 3, "charge": 1000},
-            {"days": 10, "charge": 200}
-        ],
-        "ttts_extension" : {
-            "category": "0",
-            "required_seat_num": 1,
-            "csv_code": "0000000000211"
-        }
+        "notes":"0000000000211"
     },
     {
         "_id": "000002",
@@ -35,16 +26,7 @@
         },
         "charge": 1500,
         "description":"0",
-        "notes":"0000000000231",
-        "cancel_charge" : [
-            {"days": 3, "charge": 750},
-            {"days": 10, "charge": 150}
-        ],
-        "ttts_extension" : {
-            "category": "0",
-            "required_seat_num": 1,
-            "csv_code": "0000000000231"
-        }
+        "notes":"0000000000231"
     },
     {
         "_id": "000003",
@@ -59,16 +41,7 @@
         },
         "charge": 500,
         "description":"0",
-        "notes":"0000000000241",
-        "cancel_charge" : [
-            {"days": 3, "charge": 250},
-            {"days": 10, "charge": 50}
-        ],
-        "ttts_extension" : {
-            "category": "0",
-            "required_seat_num": 1,
-            "csv_code": "0000000000241"
-        }
+        "notes":"0000000000241"
     },
     {
         "_id": "000004",
@@ -78,16 +51,7 @@
         },
         "charge": 2000,
         "description":"1",
-        "notes":"0000000000211",
-        "cancel_charge" : [
-            {"days": 3, "charge": 1000},
-            {"days": 10, "charge": 200}
-        ],
-        "ttts_extension" : {
-            "category": "1",
-            "required_seat_num": 4,
-            "csv_code": "0000000000211"
-        }
+        "notes":"0000000000211"
     },
     {
         "_id": "000005",
@@ -97,16 +61,7 @@
         },
         "charge": 1500,
         "description":"1",
-        "notes":"0000000000231",
-        "cancel_charge" : [
-            {"days": 3, "charge": 750},
-            {"days": 10, "charge": 150}
-        ],
-        "ttts_extension" : {
-            "category": "1",
-            "required_seat_num": 4,
-            "csv_code": "0000000000231"
-        }
+        "notes":"0000000000231"
     },
     {
         "_id": "000006",
@@ -116,15 +71,6 @@
         },
         "charge": 500,
         "description":"1",
-        "notes":"0000000000241",
-        "cancel_charge" : [
-            {"days": 3, "charge": 250},
-            {"days": 10, "charge": 50}
-        ],
-        "ttts_extension" : {
-            "category": "1",
-            "required_seat_num": 4,
-            "csv_code": "0000000000241"
-        }
+        "notes":"0000000000241"
     }
 ]
