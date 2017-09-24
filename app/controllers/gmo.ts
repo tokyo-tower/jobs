@@ -5,9 +5,11 @@
  */
 
 import { Util as GMOUtil } from '@motionpicture/gmo-service';
+import * as GMO from '@motionpicture/gmo-service';
 import * as TTTS from '@motionpicture/ttts-domain';
 
 import * as createDebug from 'debug';
+import moment = require('moment');
 
 const debug = createDebug('ttts-jobs:controller:gmo');
 
@@ -208,6 +210,70 @@ export async function processOne() {
         await TTTS.Models.GMONotification.findByIdAndUpdate(
             notification.get('_id'),
             { process_status: notificationProcessStatus }
+        ).exec();
+    }
+}
+
+/**
+ *GMO実売上
+ */
+// tslint:disable-next-line:max-func-body-length cyclomatic-complexity
+export async function settleGMOAuth() {
+    const reservation = await TTTS.Models.Reservation.findOneAndUpdate({
+        status: TTTS.ReservationUtil.STATUS_RESERVED,
+        gmo_status: GMOUtil.STATUS_CREDIT_AUTH,
+        payment_method: GMOUtil.PAY_TYPE_CREDIT,
+        payment_seat_index: 0
+    },
+        {gmo_status: TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSING}
+    ).exec();
+    
+    if(reservation !== null){
+        let searchArgin : GMO.services.credit.ISearchTradeArgs = {
+            shopId: <string>process.env.GMO_SHOP_ID,
+            shopPass: <string>process.env.GMO_SHOP_PASS,
+            orderId: reservation.get('gmo_order_id')
+        };
+        // 取引状態参照
+        const searchTradeResult = await GMO.CreditService.searchTrade(searchArgin);
+
+        if (searchTradeResult.jobCd === GMOUtil.JOB_CD_SALES) {
+            // すでに実売上済み
+            return;
+        }
+
+        // チェック文字列
+        let shopPassString = GMOUtil.createShopPassString({
+            shopId: <string>process.env.GMO_SHOP_ID,
+            orderId: reservation.get('gmo_order_id'),
+            amount: +searchTradeResult.amount,
+            shopPass: <string>process.env.GMO_SHOP_PASS,
+            dateTime: moment(reservation.get('purchased_at')).format('YYYYMMDDHHmmss')
+        });
+
+        if (shopPassString !== reservation.get('gmo_shop_pass_string')) {
+            // TODO
+            return;
+        }
+        try {
+            await GMO.CreditService.alterTran({
+                shopId: <string>process.env.GMO_SHOP_ID,
+                shopPass: <string>process.env.GMO_SHOP_PASS,
+                accessId: searchTradeResult.accessId,
+                accessPass: searchTradeResult.accessPass,
+                jobCd: GMOUtil.JOB_CD_SALES,
+                amount: parseInt(searchTradeResult.amount)
+            });
+        } catch (error) {
+            console.log(error)
+            return;
+        }
+
+        await TTTS.Models.Reservation.findOneAndUpdate(
+            { _id: reservation._id },
+            {
+                $set: { gmo_status: GMOUtil.STATUS_CREDIT_SALES }
+            }
         ).exec();
     }
 }

@@ -14,8 +14,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const gmo_service_1 = require("@motionpicture/gmo-service");
+const GMO = require("@motionpicture/gmo-service");
 const TTTS = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
+const moment = require("moment");
 const debug = createDebug('ttts-jobs:controller:gmo');
 /**
  * GMO結果通知を処理する
@@ -186,3 +188,60 @@ function processOne() {
     });
 }
 exports.processOne = processOne;
+/**
+ *GMO実売上
+ */
+// tslint:disable-next-line:max-func-body-length cyclomatic-complexity
+function settleGMOAuth() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const reservation = yield TTTS.Models.Reservation.findOneAndUpdate({
+            status: TTTS.ReservationUtil.STATUS_RESERVED,
+            gmo_status: gmo_service_1.Util.STATUS_CREDIT_AUTH,
+            payment_method: gmo_service_1.Util.PAY_TYPE_CREDIT,
+            payment_seat_index: 0
+        }, { gmo_status: TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSING }).exec();
+        if (reservation !== null) {
+            let searchArgin = {
+                shopId: process.env.GMO_SHOP_ID,
+                shopPass: process.env.GMO_SHOP_PASS,
+                orderId: reservation.get('gmo_order_id')
+            };
+            // 取引状態参照
+            const searchTradeResult = yield GMO.CreditService.searchTrade(searchArgin);
+            if (searchTradeResult.jobCd === gmo_service_1.Util.JOB_CD_SALES) {
+                // すでに実売上済み
+                return;
+            }
+            // チェック文字列
+            let shopPassString = gmo_service_1.Util.createShopPassString({
+                shopId: process.env.GMO_SHOP_ID,
+                orderId: reservation.get('gmo_order_id'),
+                amount: +searchTradeResult.amount,
+                shopPass: process.env.GMO_SHOP_PASS,
+                dateTime: moment(reservation.get('purchased_at')).format('YYYYMMDDHHmmss')
+            });
+            if (shopPassString !== reservation.get('gmo_shop_pass_string')) {
+                // TODO
+                return;
+            }
+            try {
+                yield GMO.CreditService.alterTran({
+                    shopId: process.env.GMO_SHOP_ID,
+                    shopPass: process.env.GMO_SHOP_PASS,
+                    accessId: searchTradeResult.accessId,
+                    accessPass: searchTradeResult.accessPass,
+                    jobCd: gmo_service_1.Util.JOB_CD_SALES,
+                    amount: parseInt(searchTradeResult.amount)
+                });
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+            yield TTTS.Models.Reservation.findOneAndUpdate({ _id: reservation._id }, {
+                $set: { gmo_status: gmo_service_1.Util.STATUS_CREDIT_SALES }
+            }).exec();
+        }
+    });
+}
+exports.settleGMOAuth = settleGMOAuth;
