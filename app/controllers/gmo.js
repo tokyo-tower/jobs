@@ -239,7 +239,8 @@ function settleGMOAuth() {
                 return;
             }
             yield TTTS.Models.Reservation.findOneAndUpdate({ _id: reservation._id }, {
-                $set: { gmo_status: gmo_service_1.Util.STATUS_CREDIT_SALES }
+                $set: { gmo_status: gmo_service_1.Util.STATUS_CREDIT_SALES,
+                    gmo_tran_date: moment().format('YYYYMMDD') }
             }).exec();
         }
     });

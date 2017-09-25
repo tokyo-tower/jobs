@@ -272,7 +272,8 @@ export async function settleGMOAuth() {
         await TTTS.Models.Reservation.findOneAndUpdate(
             { _id: reservation._id },
             {
-                $set: { gmo_status: GMOUtil.STATUS_CREDIT_SALES }
+                $set: { gmo_status: GMOUtil.STATUS_CREDIT_SALES,
+                        gmo_tran_date: moment().format('YYYYMMDD') }
             }
         ).exec();
     }
