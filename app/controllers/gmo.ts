@@ -9,9 +9,11 @@ import * as GMO from '@motionpicture/gmo-service';
 import * as TTTS from '@motionpicture/ttts-domain';
 
 import * as createDebug from 'debug';
+// tslint:disable-next-line:no-require-imports
 import moment = require('moment');
 
 const debug = createDebug('ttts-jobs:controller:gmo');
+const DEFAULT_RADIX = 10;
 
 /**
  * GMO結果通知を処理する
@@ -215,7 +217,7 @@ export async function processOne() {
 }
 
 /**
- *GMO実売上
+ * GMO実売上
  */
 // tslint:disable-next-line:max-func-body-length cyclomatic-complexity
 export async function settleGMOAuth() {
@@ -225,11 +227,11 @@ export async function settleGMOAuth() {
         payment_method: GMOUtil.PAY_TYPE_CREDIT,
         payment_seat_index: 0
     },
+        // tslint:disable-next-line:align
         {gmo_status: TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSING}
     ).exec();
-    
-    if(reservation !== null){
-        let searchArgin : GMO.services.credit.ISearchTradeArgs = {
+    if (reservation !== null) {
+        const searchArgin : GMO.services.credit.ISearchTradeArgs = {
             shopId: <string>process.env.GMO_SHOP_ID,
             shopPass: <string>process.env.GMO_SHOP_PASS,
             orderId: reservation.get('gmo_order_id')
@@ -243,7 +245,7 @@ export async function settleGMOAuth() {
         }
 
         // チェック文字列
-        let shopPassString = GMOUtil.createShopPassString({
+        const shopPassString = GMOUtil.createShopPassString({
             shopId: <string>process.env.GMO_SHOP_ID,
             orderId: reservation.get('gmo_order_id'),
             amount: +searchTradeResult.amount,
@@ -252,6 +254,7 @@ export async function settleGMOAuth() {
         });
 
         if (shopPassString !== reservation.get('gmo_shop_pass_string')) {
+            // tslint:disable-next-line:no-suspicious-comment
             // TODO
             return;
         }
@@ -262,10 +265,12 @@ export async function settleGMOAuth() {
                 accessId: searchTradeResult.accessId,
                 accessPass: searchTradeResult.accessPass,
                 jobCd: GMOUtil.JOB_CD_SALES,
-                amount: parseInt(searchTradeResult.amount)
+                amount: parseInt(searchTradeResult.amount, DEFAULT_RADIX)
             });
         } catch (error) {
-            console.log(error)
+            // tslint:disable-next-line:no-console
+            console.log(error);
+
             return;
         }
 

@@ -17,8 +17,10 @@ const gmo_service_1 = require("@motionpicture/gmo-service");
 const GMO = require("@motionpicture/gmo-service");
 const TTTS = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
+// tslint:disable-next-line:no-require-imports
 const moment = require("moment");
 const debug = createDebug('ttts-jobs:controller:gmo');
+const DEFAULT_RADIX = 10;
 /**
  * GMO結果通知を処理する
  *
@@ -189,7 +191,7 @@ function processOne() {
 }
 exports.processOne = processOne;
 /**
- *GMO実売上
+ * GMO実売上
  */
 // tslint:disable-next-line:max-func-body-length cyclomatic-complexity
 function settleGMOAuth() {
@@ -199,9 +201,11 @@ function settleGMOAuth() {
             gmo_status: gmo_service_1.Util.STATUS_CREDIT_AUTH,
             payment_method: gmo_service_1.Util.PAY_TYPE_CREDIT,
             payment_seat_index: 0
-        }, { gmo_status: TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSING }).exec();
+        }, 
+        // tslint:disable-next-line:align
+        { gmo_status: TTTS.GMONotificationUtil.PROCESS_STATUS_PROCESSING }).exec();
         if (reservation !== null) {
-            let searchArgin = {
+            const searchArgin = {
                 shopId: process.env.GMO_SHOP_ID,
                 shopPass: process.env.GMO_SHOP_PASS,
                 orderId: reservation.get('gmo_order_id')
@@ -213,7 +217,7 @@ function settleGMOAuth() {
                 return;
             }
             // チェック文字列
-            let shopPassString = gmo_service_1.Util.createShopPassString({
+            const shopPassString = gmo_service_1.Util.createShopPassString({
                 shopId: process.env.GMO_SHOP_ID,
                 orderId: reservation.get('gmo_order_id'),
                 amount: +searchTradeResult.amount,
@@ -221,6 +225,7 @@ function settleGMOAuth() {
                 dateTime: moment(reservation.get('purchased_at')).format('YYYYMMDDHHmmss')
             });
             if (shopPassString !== reservation.get('gmo_shop_pass_string')) {
+                // tslint:disable-next-line:no-suspicious-comment
                 // TODO
                 return;
             }
@@ -231,10 +236,11 @@ function settleGMOAuth() {
                     accessId: searchTradeResult.accessId,
                     accessPass: searchTradeResult.accessPass,
                     jobCd: gmo_service_1.Util.JOB_CD_SALES,
-                    amount: parseInt(searchTradeResult.amount)
+                    amount: parseInt(searchTradeResult.amount, DEFAULT_RADIX)
                 });
             }
             catch (error) {
+                // tslint:disable-next-line:no-console
                 console.log(error);
                 return;
             }
