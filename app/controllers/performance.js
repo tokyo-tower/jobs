@@ -64,6 +64,9 @@ function createFromSetting() {
                 performance.open_time = time.open_time;
                 performance.start_time = time.start_time;
                 performance.end_time = time.end_time;
+                performance.ttts_extension = {
+                    tour_number: time.tour_number
+                };
                 // パフォーマンス登録
                 debug('creating performance...');
                 //スクリーン、作品、上映日、開始時間
@@ -125,18 +128,22 @@ function getTargetInfoForCreateFromSetting() {
     }
     //const hours: string[] = ['09', '10', '11', '12', '13', '14'];
     const minutes = ['00', '15', '30', '45'];
+    const tours = ['A', 'B', 'C', 'D'];
     const duration = 14;
     const hourLength = 2;
     hours.forEach((hour) => {
         // 2桁でない時は'0'詰め
         //hour = (hour.length < hourLength) ? '0' + hour : hour;
         hour = (hour.length < hourLength) ? `0${hour}` : hour;
+        let index = 0;
         minutes.forEach((minute) => {
             info.times.push({
                 open_time: hour + minute,
                 start_time: hour + minute,
-                end_time: hour + (Number(minute) + duration).toString()
+                end_time: hour + (Number(minute) + duration).toString(),
+                tour_number: `${hour}-${tours[index]}`
             });
+            index += 1;
         });
     });
     return info;
