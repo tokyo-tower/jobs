@@ -35,26 +35,36 @@ function createFromSetting() {
         const times = targetInfo.startTimes;
         const days = targetInfo.days;
         // 作成情報取得(作品、スクリーン、作成日(引数の日数より)、開始時刻(引数の時刻より))
+        // 2017/10 検索条件からスクリーン削除
+        // screen: setting.screen,
         const setting = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
         const performances = yield ttts_domain_1.Models.Performance.find({
             film: setting.film,
-            screen: setting.screen,
             day: { $in: days },
             start_time: { $in: times }
-        }, '_id').exec();
+        }, '_id start_time screen').exec();
         // 劇場とスクリーン情報取得
-        const screenOfPerformance = yield ttts_domain_1.Models.Screen.findById(setting.screen, 'name theater sections')
+        // const screenOfPerformance = await Models.Screen.findById(setting.screen, 'name theater sections')
+        //                                    .populate('theater', 'name address')
+        //                                    .exec();
+        // if (screenOfPerformance === undefined) {
+        //     throw new Error('screen not found.');
+        // }
+        const screenOfPerformances = yield ttts_domain_1.Models.Screen.find({}, 'name theater sections')
             .populate('theater', 'name address')
             .exec();
-        if (screenOfPerformance === undefined) {
-            throw new Error('screen not found.');
-        }
+        const screens = {};
+        screenOfPerformances.map((screen) => {
+            const id = screen._id;
+            screens[id] = screen;
+        });
         // 予約登録・パフォーマンス分Loop
         const promisesR = (performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
-            // tslint:disable-next-line:no-console
-            console.info(performance._id);
+            // 2017/10 2次 予約枠、時間の変更対応
+            const screen = screens[performance.screen];
             // 座席分Loop
-            const promisesS = (screenOfPerformance.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
+            //const promisesS = ((<any>screenOfPerformance).get('sections')[0].seats.map(async (seat: any) => {
+            const promisesS = (screen.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
                 const reservation = {};
                 reservation.performance = performance._id;
                 reservation.seat_code = seat.code;

@@ -46,7 +46,7 @@ export async function createFromSetting(): Promise<void> {
     performance.screen_name = (screenOfPerformance !== null) ? screenOfPerformance.get('name') : '';
     performance.theater_name = (screenOfPerformance !== null) ? screenOfPerformance.get('theater').get('name') : '';
     performance.theater = setting.theater;
-    performance.screen = setting.screen;
+    //performance.screen = setting.screen;
     performance.film = setting.film;
     performance.canceled = false;
     performance.ticket_type_group = setting.ticket_type_group;
@@ -63,6 +63,11 @@ export async function createFromSetting(): Promise<void> {
             performance.ttts_extension = {
                 tour_number : time.tour_number
             };
+            // 2017/10 2次 予約枠、時間の変更対応
+            performance.screen =
+                setting.special_screens.hasOwnProperty(performance.start_time) ?
+                setting.special_screens[performance.start_time] : setting.screen;
+
             // パフォーマンス登録
             debug('creating performance...');
             //スクリーン、作品、上映日、開始時間

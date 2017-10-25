@@ -6,9 +6,5 @@
     },
     "datetimes": {
         "reservation_end_members": "2017-12-31T23:59:59+09:00"
-    },
-    "special_screens": {
-        "09:00":"00102",
-        "10:15":"00103"
     }
 }
