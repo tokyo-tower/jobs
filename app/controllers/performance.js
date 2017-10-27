@@ -27,12 +27,12 @@ const debug = createDebug('ttts-jobs:controller:performance');
  */
 function createFromSetting() {
     return __awaiter(this, void 0, void 0, function* () {
-        // 引数情報取得
-        const targetInfo = getTargetInfoForCreateFromSetting();
-        const times = targetInfo.times;
-        const days = targetInfo.days;
         // 作成情報取得
         const setting = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
+        // 引数情報取得
+        const targetInfo = getTargetInfoForCreateFromSetting(setting.performance_duration);
+        const times = targetInfo.times;
+        const days = targetInfo.days;
         // 劇場とスクリーン情報取得
         const screenOfPerformance = yield ttts_domain_1.Models.Screen.findById(setting.screen, 'name theater sections')
             .populate('theater', 'name address')
@@ -105,7 +105,7 @@ exports.createFromSetting = createFromSetting;
  *
  * @memberOf controller/performance
  */
-function getTargetInfoForCreateFromSetting() {
+function getTargetInfoForCreateFromSetting(duration) {
     const info = {};
     info.days = [];
     info.times = [];
@@ -130,21 +130,25 @@ function getTargetInfoForCreateFromSetting() {
         const dateWk = today.add(1, 'days').format('YYYYMMDD');
         info.days.push(dateWk);
     }
-    //const hours: string[] = ['09', '10', '11', '12', '13', '14'];
     const minutes = ['00', '15', '30', '45'];
     const tours = ['A', 'B', 'C', 'D'];
-    const duration = 14;
     const hourLength = 2;
+    // 終了時刻取得
+    const getEndTime = (startTime) => {
+        const startMoment = moment(startTime, 'HHmm');
+        return moment(startMoment.add(duration, 'minutes'), 'HHmm').format('HHmm');
+    };
     hours.forEach((hour) => {
         // 2桁でない時は'0'詰め
-        //hour = (hour.length < hourLength) ? '0' + hour : hour;
         hour = (hour.length < hourLength) ? `0${hour}` : hour;
         let index = 0;
         minutes.forEach((minute) => {
+            const startTime = hour + minute;
             info.times.push({
-                open_time: hour + minute,
-                start_time: hour + minute,
-                end_time: hour + (Number(minute) + duration).toString(),
+                open_time: startTime,
+                start_time: startTime,
+                end_time: getEndTime(startTime),
+                //end_time: hour + (Number(minute) + duration).toString(),
                 tour_number: `${hour}-${tours[index]}`
             });
             index += 1;

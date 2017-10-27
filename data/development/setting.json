@@ -6,5 +6,6 @@
     "special_screens" : {
         "0900":"00102",
         "1015":"00103"
-    }
+    },
+    "performance_duration": 15
 }
