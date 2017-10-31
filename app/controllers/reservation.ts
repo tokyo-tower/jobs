@@ -192,7 +192,9 @@ export async function resetTmps(): Promise<void> {
             $unset: {
                 payment_no: 1,
                 ticket_type: 1,
-                expired_at: 1
+                expired_at: 1,
+                ticket_ttts_extension: 1,
+                reservation_ttts_extension: 1
             }
         },
         {
