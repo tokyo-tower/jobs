@@ -1,9 +1,4 @@
 "use strict";
-/**
- * task name
- *
- * @ignore
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -13,14 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * create reservations
+ *
+ * @ignore
+ */
 const mongoose = require("mongoose");
-const reservationController = require("../../app/controllers/reservation");
 const reservationPerHourController = require("../../app/controllers/reservationPerHour");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         mongoose.connect(process.env.MONGOLAB_URI);
-        yield reservationController.resetTmps();
-        yield reservationPerHourController.resetTmps();
+        yield reservationPerHourController.createFromSetting();
         mongoose.disconnect();
     });
 }
@@ -29,4 +27,5 @@ main().then(() => {
     process.exit(0);
 }).catch((err) => {
     console.error(err);
+    process.exit(-1);
 });
