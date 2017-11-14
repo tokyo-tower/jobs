@@ -9,12 +9,11 @@
             "ct":"頂層甲板票（成人）",
             "fr":"billet TOP PONT (adulte)"
         },
-        "charge": 2000,
+        "charge": 2800,
         "description":"0",
         "notes":"0000000000211",
         "cancel_charge" : [
-            {"days": 3, "charge": 1000},
-            {"days": 10, "charge": 200}
+            {"days": 3, "charge": 1000}
         ],
         "ttts_extension" : {
             "category": "0",
@@ -33,12 +32,11 @@
             "fr":"billet TOP PONT (élèves primaire et secondaire)"
 
         },
-        "charge": 1500,
+        "charge": 1800,
         "description":"0",
         "notes":"0000000000231",
         "cancel_charge" : [
-            {"days": 3, "charge": 750},
-            {"days": 10, "charge": 150}
+            {"days": 3, "charge": 1000}
         ],
         "ttts_extension" : {
             "category": "0",
@@ -57,12 +55,11 @@
             "fr":"billet TOP PONT (infantile)"
 
         },
-        "charge": 500,
+        "charge": 1200,
         "description":"0",
         "notes":"0000000000241",
         "cancel_charge" : [
-            {"days": 3, "charge": 250},
-            {"days": 10, "charge": 50}
+            {"days": 3, "charge": 1000}
         ],
         "ttts_extension" : {
             "category": "0",
@@ -76,12 +73,11 @@
             "ja": "TOP DECKチケット 車椅子(大人)",
             "en": "TOP DECK TICKET wheelchair(General)"
         },
-        "charge": 2000,
+        "charge": 2800,
         "description":"1",
         "notes":"0000000000211",
         "cancel_charge" : [
-            {"days": 3, "charge": 1000},
-            {"days": 10, "charge": 200}
+            {"days": 3, "charge": 1000}
         ],
         "ttts_extension" : {
             "category": "1",
@@ -95,12 +91,11 @@
             "ja": "TOP DECKチケット 車椅子(小・中学生)",
             "en": "TOP DECK TICKET wheelchair(Under 16 years old)"
         },
-        "charge": 1500,
+        "charge": 1800,
         "description":"1",
         "notes":"0000000000231",
         "cancel_charge" : [
-            {"days": 3, "charge": 750},
-            {"days": 10, "charge": 150}
+            {"days": 3, "charge": 1000}
         ],
         "ttts_extension" : {
             "category": "1",
@@ -114,12 +109,11 @@
             "ja": "TOP DECKチケット 車椅子(幼児)",
             "en": "TOP DECK TICKET wheelchair(Children under 7 years old)"
         },
-        "charge": 500,
+        "charge": 1200,
         "description":"1",
         "notes":"0000000000241",
         "cancel_charge" : [
-            {"days": 3, "charge": 250},
-            {"days": 10, "charge": 50}
+            {"days": 3, "charge": 1000}
         ],
         "ttts_extension" : {
             "category": "1",

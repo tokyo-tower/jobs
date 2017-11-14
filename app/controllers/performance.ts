@@ -132,7 +132,7 @@ function getTargetInfoForCreateFromSetting(duration: number ): any {
         info.days.push(dateWk);
     }
     const minutes: string[] = ['00', '15', '30', '45'];
-    const tours: string[] = ['A', 'B', 'C', 'D'];
+    const tours: string[] = ['1', '2', '3', '4'];
     const hourLength: number = 2;
     // 終了時刻取得
     const getEndTime = (startTime: string) => {
@@ -150,8 +150,7 @@ function getTargetInfoForCreateFromSetting(duration: number ): any {
                 open_time: startTime,
                 start_time: startTime,
                 end_time: getEndTime(startTime),
-                //end_time: hour + (Number(minute) + duration).toString(),
-                tour_number: `${hour}-${tours[index]}`
+                tour_number: `${hour}${tours[index]}`
             });
             index += 1;
         });
