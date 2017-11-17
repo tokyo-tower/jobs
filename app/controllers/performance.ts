@@ -63,7 +63,9 @@ export async function createFromSetting(): Promise<void> {
             performance.ttts_extension = {
                 tour_number : time.tour_number,
                 ev_service_status: PerformanceUtil.EV_SERVICE_STATUS.NORMAL,
-                online_sales_status: PerformanceUtil.ONLINE_SALES_STATUS.NORMAL
+                ev_service_update_user: '',
+                online_sales_status: PerformanceUtil.ONLINE_SALES_STATUS.NORMAL,
+                online_sales_update_user: ''
             };
             // 2017/10 2次 予約枠、時間の変更対応
             performance.screen =
