@@ -4,7 +4,7 @@
  * @namespace controller/performance
  */
 
-import { Models, PerformanceStatusesModel } from '@motionpicture/ttts-domain';
+import { Models, PerformanceStatusesModel, PerformanceUtil } from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 import * as moment from 'moment';
@@ -61,7 +61,9 @@ export async function createFromSetting(): Promise<void> {
             performance.start_time = time.start_time;
             performance.end_time = time.end_time;
             performance.ttts_extension = {
-                tour_number : time.tour_number
+                tour_number : time.tour_number,
+                ev_service_status: PerformanceUtil.EV_SERVICE_STATUS.NORMAL,
+                online_sales_status: PerformanceUtil.ONLINE_SALES_STATUS.NORMAL
             };
             // 2017/10 2次 予約枠、時間の変更対応
             performance.screen =
