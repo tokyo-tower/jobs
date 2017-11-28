@@ -69,7 +69,10 @@ function createFromSetting() {
                     ev_service_status: ttts_domain_1.PerformanceUtil.EV_SERVICE_STATUS.NORMAL,
                     ev_service_update_user: '',
                     online_sales_status: ttts_domain_1.PerformanceUtil.ONLINE_SALES_STATUS.NORMAL,
-                    online_sales_update_user: ''
+                    online_sales_update_user: '',
+                    refund_status: ttts_domain_1.PerformanceUtil.REFUND_STATUS.NONE,
+                    refund_update_user: '',
+                    refunded_count: 0
                 };
                 // 2017/10 2次 予約枠、時間の変更対応
                 performance.screen =
