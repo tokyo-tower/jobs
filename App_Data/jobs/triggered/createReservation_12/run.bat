@@ -1,2 +1,2 @@
 cd D:\home\site\wwwroot
-node bin/createReservation/index 12 30 7
+node bin/createReservationPerHour/index 12 30 7
