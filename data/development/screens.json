@@ -43,13 +43,7 @@
     {"code":"A-41","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
     {"code":"A-42","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
     {"code":"A-43","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-44","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-45","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-46","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-47","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-48","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-49","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-50","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}}
+    {"code":"A-44","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}}
 ]}]},
 {"_id":"00102","theater":"002","name":{"ja":"東京タワー TOP DECK","en":"TokyoTower TOP DECK"},"sections":[{"code":"","name":{},"seats":[
     {"code":"A-01","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
@@ -84,8 +78,6 @@
     {"code":"A-30","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
     {"code":"A-31","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
     {"code":"A-32","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-33","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-34","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-35","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}}
+    {"code":"A-33","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}}
 ]}]}
 ]
