@@ -46,7 +46,8 @@ function createFromSetting() {
                     performance_day: reservationPerHour.performance_day,
                     performance_hour: reservationPerHour.performance_hour
                 }, {
-                    $set: reservationPerHour
+                    //$set: reservationPerHour
+                    $setOnInsert: reservationPerHour
                 }, {
                     upsert: true,
                     new: true

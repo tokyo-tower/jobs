@@ -40,7 +40,8 @@ export async function createFromSetting(): Promise<void> {
                     performance_hour : reservationPerHour.performance_hour
                 },
                 {
-                    $set: reservationPerHour
+                    //$set: reservationPerHour
+                    $setOnInsert: reservationPerHour
                 },
                 {
                     upsert: true,
