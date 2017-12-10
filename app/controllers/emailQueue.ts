@@ -39,7 +39,7 @@ export async function sendOne() {
             // todo customargs追加(DBの情報と連携させるため)
 
             debug('sending an email...email:', mail);
-            const sg = sendgrid(process.env.SENDGRID_API_KEY);
+            const sg = sendgrid(<string>process.env.SENDGRID_API_KEY);
             const request = sg.emptyRequest({
                 host: 'api.sendgrid.com',
                 method: 'POST',

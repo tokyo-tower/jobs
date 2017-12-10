@@ -7,7 +7,7 @@ import * as mongoose from 'mongoose';
 import * as gmoController from '../../app/controllers/gmo';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    mongoose.connect(<string>process.env.MONGOLAB_URI);
     await gmoController.refundForSuspend();
     mongoose.disconnect();
 }

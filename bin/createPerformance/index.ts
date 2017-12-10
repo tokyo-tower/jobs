@@ -7,7 +7,7 @@ import * as mongoose from 'mongoose';
 import * as performanceController from '../../app/controllers/performance';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    mongoose.connect(<string>process.env.MONGOLAB_URI);
     await performanceController.createFromSetting();
     mongoose.disconnect();
 }

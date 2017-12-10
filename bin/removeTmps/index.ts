@@ -8,7 +8,7 @@ import * as mongoose from 'mongoose';
 import * as reservationController from '../../app/controllers/reservation';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    mongoose.connect(<string>process.env.MONGOLAB_URI);
     await reservationController.removeTmps();
     mongoose.disconnect();
 }

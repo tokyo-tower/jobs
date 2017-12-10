@@ -18,7 +18,7 @@ import * as ticketTypeController from '../../app/controllers/ticketType';
 import * as ticketTypeGroupController from '../../app/controllers/ticketTypeGroup';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    mongoose.connect(<string>process.env.MONGOLAB_URI);
 
     await schemaController.dropCollections();
     await ticketTypeController.createFromJson();

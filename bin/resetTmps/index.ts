@@ -9,7 +9,7 @@ import * as reservationController from '../../app/controllers/reservation';
 import * as reservationPerHourController from '../../app/controllers/reservationPerHour';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    mongoose.connect(<string>process.env.MONGOLAB_URI);
     await reservationController.resetTmps();
     await reservationPerHourController.resetTmps();
     mongoose.disconnect();

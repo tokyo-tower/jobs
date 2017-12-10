@@ -13,7 +13,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const gmo_service_1 = require("@motionpicture/gmo-service");
 const ttts_domain_1 = require("@motionpicture/ttts-domain");
 const conf = require("config");
 const createDebug = require("debug");
@@ -174,7 +173,8 @@ function resetTmps() {
         const BUFFER_PERIOD_SECONDS = -60;
         debug('resetting temporary reservations...');
         yield ttts_domain_1.Models.Reservation.update({
-            status: { $in: [ttts_domain_1.ReservationUtil.STATUS_TEMPORARY,
+            status: {
+                $in: [ttts_domain_1.ReservationUtil.STATUS_TEMPORARY,
                     ttts_domain_1.ReservationUtil.STATUS_TEMPORARY_FOR_SECURE_EXTRA]
             },
             expired_at: {
@@ -287,8 +287,7 @@ function releaseGarbages() {
                     }
                 }
                 else {
-                    if (searchTradeResult.Status === gmo_service_1.Util.STATUS_CVS_UNPROCESSED ||
-                        searchTradeResult.Status === gmo_service_1.Util.STATUS_CREDIT_UNPROCESSED) {
+                    if (searchTradeResult.Status === ttts_domain_1.GMO.utils.util.Status.Unprocessed) {
                         paymentNos4release.push(reservation.get('payment_no'));
                     }
                 }

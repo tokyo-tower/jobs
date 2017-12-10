@@ -11,7 +11,7 @@ import * as emailQueueController from '../../app/controllers/emailQueue';
 describe('メールキューコントローラー 送信', () => {
     let connection: mongoose.Connection;
     before(async () => {
-        connection = mongoose.createConnection(process.env.MONGOLAB_URI);
+        connection = mongoose.createConnection(<string>process.env.MONGOLAB_URI);
         // 全削除
         const emailQueueModel = connection.model(TTTS.Models.EmailQueue.modelName, TTTS.Models.EmailQueue.schema);
         await emailQueueModel.remove({}).exec();

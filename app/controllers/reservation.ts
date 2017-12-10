@@ -4,8 +4,7 @@
  * @namespace ReservationController
  */
 
-import { Util as GMOUtil } from '@motionpicture/gmo-service';
-import { Models, ReservationUtil } from '@motionpicture/ttts-domain';
+import { GMO, Models, ReservationUtil } from '@motionpicture/ttts-domain';
 
 import * as conf from 'config';
 import * as createDebug from 'debug';
@@ -35,8 +34,8 @@ export async function createFromSetting(): Promise<void> {
     const performances = await Models.Performance.find(
         {
             film: setting.film,
-            day: {$in: days},
-            start_time: {$in: times}
+            day: { $in: days },
+            start_time: { $in: times }
         },
         '_id start_time screen'
     ).exec();
@@ -48,13 +47,13 @@ export async function createFromSetting(): Promise<void> {
     //     throw new Error('screen not found.');
     // }
     const screenOfPerformances = await Models.Screen.find({}, 'name theater sections')
-                                    .populate('theater', 'name address')
-                                    .exec();
+        .populate('theater', 'name address')
+        .exec();
     const screens: any = {};
     (<any>screenOfPerformances).map((screen: any) => {
         const id: string = screen._id;
         screens[id] = screen;
-     });
+    });
 
     // 予約登録・パフォーマンス分Loop
     const promisesR = ((<any>performances).map(async (performance: any) => {
@@ -111,7 +110,7 @@ function getTargetInfoForCreateFromSetting(): any {
     // 引数から作成対象時間と作成日数を取得
     const argvLength: number = 5;
     if (process.argv.length < argvLength) {
-         throw new Error('argv \'time\' or \'days\' not found.');
+        throw new Error('argv \'time\' or \'days\' not found.');
     }
     const indexTargetHours: number = 2;
     const indexStartDay: number = 3;
@@ -132,11 +131,11 @@ function getTargetInfoForCreateFromSetting(): any {
     }
     const minutes: string[] = ['00', '15', '30', '45'];
     const hourLength: number = 2;
-    hours.forEach( (hour) => {
+    hours.forEach((hour) => {
         // 2桁でない時は'0'詰め
         //hour = (hour.length < hourLength) ? '0' + hour : hour;
         hour = (hour.length < hourLength) ? `0${hour}` : hour;
-        minutes.forEach( (minute) => {
+        minutes.forEach((minute) => {
             info.startTimes.push(hour + minute);
         });
     });
@@ -177,8 +176,9 @@ export async function resetTmps(): Promise<void> {
     debug('resetting temporary reservations...');
     await Models.Reservation.update(
         {
-            status: { $in: [ReservationUtil.STATUS_TEMPORARY,
-                            ReservationUtil.STATUS_TEMPORARY_FOR_SECURE_EXTRA]
+            status: {
+                $in: [ReservationUtil.STATUS_TEMPORARY,
+                ReservationUtil.STATUS_TEMPORARY_FOR_SECURE_EXTRA]
             },
             expired_at: {
                 // 念のため、仮予約有効期間より1分長めにしておく
@@ -304,8 +304,7 @@ export async function releaseGarbages(): Promise<void> {
                         paymentNos4release.push(reservation.get('payment_no'));
                     }
                 } else {
-                    if (searchTradeResult.Status === GMOUtil.STATUS_CVS_UNPROCESSED ||
-                        searchTradeResult.Status === GMOUtil.STATUS_CREDIT_UNPROCESSED) {
+                    if (searchTradeResult.Status === GMO.utils.util.Status.Unprocessed) {
                         paymentNos4release.push(reservation.get('payment_no'));
                     }
                 }

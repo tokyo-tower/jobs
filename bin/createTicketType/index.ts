@@ -9,7 +9,7 @@ import * as mongoose from 'mongoose';
 import * as ticketTypeController from '../../app/controllers/ticketType';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    mongoose.connect(<string>process.env.MONGOLAB_URI);
     await ticketTypeController.createFromJson();
     mongoose.disconnect();
 }

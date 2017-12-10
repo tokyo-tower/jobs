@@ -7,7 +7,7 @@ import * as mongoose from 'mongoose';
 import * as screenController from '../../app/controllers/screen';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    mongoose.connect(<string>process.env.MONGOLAB_URI);
     await screenController.createFromJson();
     mongoose.disconnect();
 }

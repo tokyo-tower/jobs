@@ -7,7 +7,7 @@
 import * as mongoose from 'mongoose';
 import * as gmoController from '../../app/controllers/gmo';
 
-mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.connect(<string>process.env.MONGOLAB_URI);
 let count = 0;
 
 const INTERVAL_MILLISECONDS = 250;
