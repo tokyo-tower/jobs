@@ -59,13 +59,13 @@
   "scripts": {
     "build": "tsc",
     "check": "npm run tslint && nsp check",
-    "clean": "rimraf app/**/*.js bin/**/*.js test/**/*.js index.js npm-debug.log* docs/*",
-    "jsdoc": "node_modules/.bin/jsdoc -c jsdoc.json",
+    "clean": "rimraf app/**/*.js bin/**/*.js test/**/*.js index.js npm-debug.log* doc/*",
+    "doc": "jsdoc -c jsdoc.json",
     "mocha": "mocha --no-timeouts --recursive",
-    "snyk": "snyk auth && snyk test --ignore-policy",
+    "snyk": "snyk wizard",
     "start": "node ./index.js",
     "test": "npm run check && npm run mocha",
-    "tslint": "tslint --type-check --project tsconfig.json -c tslint.json app/**/*.ts bin/**/*.ts test/**/*.ts",
+    "tslint": "tslint --project tsconfig.json -c tslint.json app/**/*.ts bin/**/*.ts test/**/*.ts",
     "preversion": "npm run clean && npm run build && npm test",
     "version": "git add -A",
     "postversion": "git push origin --tags"

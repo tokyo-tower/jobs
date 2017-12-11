@@ -101,35 +101,3 @@ function getTargetInfoForCreateFromSetting() {
     });
     return info;
 }
-/**
- * 仮予約ステータスで、一定時間過ぎた予約を空席にする
- * (statusを"AVAILABLE"戻す)
- *
- * @memberof reservationPerHour
- */
-function resetTmps() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const BUFFER_PERIOD_SECONDS = -60;
-        debug('resetting temporary reservationPerHour...');
-        yield ttts.Models.ReservationPerHour.update({
-            status: ttts.factory.itemAvailability.SoldOut,
-            expired_at: {
-                // 念のため、仮予約有効期間より1分長めにしておく
-                $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
-            }
-        }, {
-            $set: {
-                status: ttts.factory.itemAvailability.InStock
-            },
-            $unset: {
-                expired_at: 1,
-                reservation_id: 1
-            }
-        }, {
-            multi: true
-        }).exec();
-        debug('temporary reservationPerHour reset.');
-        // 失敗しても、次のタスクにまかせる(気にしない)
-    });
-}
-exports.resetTmps = resetTmps;

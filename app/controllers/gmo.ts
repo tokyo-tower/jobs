@@ -470,6 +470,7 @@ async function clearReservation(reservations: any[]): Promise<void> {
             }
         ).exec();
 
+        // tslint:disable-next-line:no-suspicious-comment
         // TODO 在庫を有に変更
     }));
     await Promise.all(promises);

@@ -4,8 +4,7 @@
  * @namespace TheaterController
  */
 
-import { Models } from '@motionpicture/ttts-domain';
-import { ScreenUtil } from '@motionpicture/ttts-domain';
+import { Models, ScreenUtil } from '@motionpicture/ttts-domain';
 
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';

@@ -1,6 +1,6 @@
 "use strict";
 /**
- * task name
+ * GMO通知を監視する
  * @ignore
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -13,8 +13,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ttts = require("@motionpicture/ttts-domain");
-const gmoController = require("../../app/controllers/gmo");
-ttts.mongoose.connect(process.env.MONGOLAB_URI);
+const gmoController = require("../../../../app/controllers/gmo");
+const mongooseConnectionOptions_1 = require("../../../../app/mongooseConnectionOptions");
+ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
 let count = 0;
 const INTERVAL_MILLISECONDS = 250;
 const MAX_NUMBER_OF_PARALLEL_TASK = 10;
