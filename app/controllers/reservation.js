@@ -1,7 +1,6 @@
 "use strict";
 /**
  * 座席予約タスクコントローラー
- *
  * @namespace ReservationController
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -13,19 +12,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ttts_domain_1 = require("@motionpicture/ttts-domain");
-const conf = require("config");
+const ttts = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
 const moment = require("moment");
-const querystring = require("querystring");
-const request = require("request");
 const debug = createDebug('ttts-jobs:controller:reservation');
-const STATUS_AVAILABLE = 'AVAILABLE';
 /**
- *
- *
- * @memberOf controller/reservation
+ * 設定指定で座席在庫を作成する
+ * @memberof controller/reservation
  */
 function createFromSetting() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -33,11 +27,13 @@ function createFromSetting() {
         const targetInfo = getTargetInfoForCreateFromSetting();
         const times = targetInfo.startTimes;
         const days = targetInfo.days;
+        debug('times days', times, days);
         // 作成情報取得(作品、スクリーン、作成日(引数の日数より)、開始時刻(引数の時刻より))
         // 2017/10 検索条件からスクリーン削除
         // screen: setting.screen,
         const setting = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
-        const performances = yield ttts_domain_1.Models.Performance.find({
+        debug('setting:', setting);
+        const performances = yield ttts.Models.Performance.find({
             film: setting.film,
             day: { $in: days },
             start_time: { $in: times }
@@ -49,7 +45,7 @@ function createFromSetting() {
         // if (screenOfPerformance === undefined) {
         //     throw new Error('screen not found.');
         // }
-        const screenOfPerformances = yield ttts_domain_1.Models.Screen.find({}, 'name theater sections')
+        const screenOfPerformances = yield ttts.Models.Screen.find({}, 'name theater sections')
             .populate('theater', 'name address')
             .exec();
         const screens = {};
@@ -57,22 +53,26 @@ function createFromSetting() {
             const id = screen._id;
             screens[id] = screen;
         });
+        debug('screens:', screens);
+        const stockRepo = new ttts.repository.Stock(ttts.mongoose.connection);
         // 予約登録・パフォーマンス分Loop
         const promisesR = (performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
             // 2017/10 2次 予約枠、時間の変更対応
             const screen = screens[performance.screen];
             // 座席分Loop
-            //const promisesS = ((<any>screenOfPerformance).get('sections')[0].seats.map(async (seat: any) => {
-            const promisesS = (screen.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
-                const reservation = {};
-                reservation.performance = performance._id;
-                reservation.seat_code = seat.code;
-                reservation.status = STATUS_AVAILABLE;
-                reservation.performance_canceled = false;
-                reservation.checkins = [];
-                const result = yield ttts_domain_1.Models.Reservation.findOneAndUpdate({
-                    performance: reservation.performance,
-                    seat_code: reservation.seat_code
+            //const promises = ((<any>screenOfPerformance).get('sections')[0].seats.map(async (seat: any) => {
+            const promises = (screen.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
+                const stock = {
+                    performance: performance._id,
+                    seat_code: seat.code,
+                    availability: ttts.factory.itemAvailability.InStock
+                    // reservation.performance_canceled = false;
+                    // reservation.checkins = [];
+                };
+                debug('creating stock', stock);
+                const result = yield stockRepo.stockModel.findOneAndUpdate({
+                    performance: stock.performance,
+                    seat_code: stock.seat_code
                 }, {
                     //なければ作成あれば更新：値は先勝ちで作成
                     //間違って同じ日の予約を流した時、すでに予約に進んでいるデータを壊さないため。
@@ -80,7 +80,7 @@ function createFromSetting() {
                     // 新規作成時のみセットしたいカラムは$setOnInsertに設定
                     // 項目が重なっているとエラーになる↓
                     // MongoError: Cannot update 'film' and 'film' at the same time
-                    $setOnInsert: reservation
+                    $setOnInsert: stock
                 }, {
                     upsert: true,
                     new: true
@@ -92,7 +92,7 @@ function createFromSetting() {
                     debug('ok.');
                 }
             })));
-            yield Promise.all(promisesS);
+            yield Promise.all(promises);
         })));
         yield Promise.all(promisesR);
     });
@@ -100,8 +100,7 @@ function createFromSetting() {
 exports.createFromSetting = createFromSetting;
 /**
  * パフォーマンス作成・作成対象情報取得
- *
- * @memberOf controller/performance
+ * @memberof controller/performance
  */
 function getTargetInfoForCreateFromSetting() {
     const info = {};
@@ -142,21 +141,22 @@ function getTargetInfoForCreateFromSetting() {
 }
 /**
  * 仮予約ステータスで、一定時間過ぎた予約を空席にする
- *
- * @memberOf ReservationController
+ * @memberof ReservationController
  */
 function removeTmps() {
     return __awaiter(this, void 0, void 0, function* () {
-        const BUFFER_PERIOD_SECONDS = -60;
-        debug('removing temporary reservations...');
-        yield ttts_domain_1.Models.Reservation.remove({
-            status: ttts_domain_1.ReservationUtil.STATUS_TEMPORARY,
-            expired_at: {
-                // 念のため、仮予約有効期間より1分長めにしておく
-                $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
-            }
-        }).exec();
-        debug('temporary reservations removed.');
+        // const BUFFER_PERIOD_SECONDS = -60;
+        // debug('removing temporary reservations...');
+        // await ttts.Models.Reservation.remove(
+        //     {
+        //         status: ReservationUtil.STATUS_TEMPORARY,
+        //         expired_at: {
+        //             // 念のため、仮予約有効期間より1分長めにしておく
+        //             $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
+        //         }
+        //     }
+        // ).exec();
+        // debug('temporary reservations removed.');
         // 失敗しても、次のタスクにまかせる(気にしない)
     });
 }
@@ -170,139 +170,82 @@ exports.removeTmps = removeTmps;
  */
 function resetTmps() {
     return __awaiter(this, void 0, void 0, function* () {
-        const BUFFER_PERIOD_SECONDS = -60;
-        debug('resetting temporary reservations...');
-        yield ttts_domain_1.Models.Reservation.update({
-            status: {
-                $in: [ttts_domain_1.ReservationUtil.STATUS_TEMPORARY,
-                    ttts_domain_1.ReservationUtil.STATUS_TEMPORARY_FOR_SECURE_EXTRA]
-            },
-            expired_at: {
-                // 念のため、仮予約有効期間より1分長めにしておく
-                $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
-            }
-        }, {
-            $set: {
-                status: STATUS_AVAILABLE
-            },
-            $unset: {
-                payment_no: 1,
-                ticket_type: 1,
-                expired_at: 1,
-                ticket_ttts_extension: 1,
-                reservation_ttts_extension: 1
-            }
-        }, {
-            multi: true
-        }).exec();
-        debug('temporary reservations reset.');
+        // const BUFFER_PERIOD_SECONDS = -60;
+        // debug('resetting temporary reservations...');
+        // await ttts.Models.Reservation.update(
+        //     {
+        //         status: {
+        //             $in: [ttts.ReservationUtil.STATUS_TEMPORARY,
+        //             ttts.ReservationUtil.STATUS_TEMPORARY_FOR_SECURE_EXTRA]
+        //         },
+        //         expired_at: {
+        //             // 念のため、仮予約有効期間より1分長めにしておく
+        //             $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
+        //         }
+        //     },
+        //     {
+        //         $set: {
+        //             status: STATUS_AVAILABLE
+        //         },
+        //         $unset: {
+        //             payment_no: 1,
+        //             ticket_type: 1,
+        //             expired_at: 1,
+        //             ticket_ttts_extension: 1,
+        //             reservation_ttts_extension: 1
+        //         }
+        //     },
+        //     {
+        //         multi: true
+        //     }
+        // ).exec();
+        // debug('temporary reservations reset.');
         // 失敗しても、次のタスクにまかせる(気にしない)
     });
 }
 exports.resetTmps = resetTmps;
 /**
  * TTTS確保上の仮予約をTTTS確保へ戻す
- *
- * @memberOf ReservationController
+ * @memberof ReservationController
  */
 function tmp2ttts() {
     return __awaiter(this, void 0, void 0, function* () {
-        const BUFFER_PERIOD_SECONDS = -60;
-        const ids = yield ttts_domain_1.Models.Reservation.distinct('_id', {
-            status: ttts_domain_1.ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_TTTS,
-            expired_at: {
-                // 念のため、仮予約有効期間より1分長めにしておく
-                $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
-            }
-        }).exec();
-        yield Promise.all(ids.map((id) => __awaiter(this, void 0, void 0, function* () {
-            yield ttts_domain_1.Models.Reservation.findByIdAndUpdate(id, { status: ttts_domain_1.ReservationUtil.STATUS_KEPT_BY_TTTS }).exec();
-        })));
+        // const BUFFER_PERIOD_SECONDS = -60;
+        // const ids = await ttts.Models.Reservation.distinct(
+        //     '_id',
+        //     {
+        //         status: ttts.ReservationUtil.STATUS_TEMPORARY_ON_KEPT_BY_TTTS,
+        //         expired_at: {
+        //             // 念のため、仮予約有効期間より1分長めにしておく
+        //             $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
+        //         }
+        //     }
+        // ).exec();
+        // await Promise.all(ids.map(async (id) => {
+        //     await ttts.Models.Reservation.findByIdAndUpdate(
+        //         id,
+        //         { status: ttts.ReservationUtil.STATUS_KEPT_BY_TTTS }
+        //     ).exec();
+        // }));
     });
 }
 exports.tmp2ttts = tmp2ttts;
 /**
  * 固定日時を経過したら、空席ステータスにするバッチ
- *
- * @memberOf ReservationController
+ * @memberof ReservationController
  */
 function releaseSeatsKeptByMembers() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (moment(conf.get('datetimes.reservation_end_members')) < moment()) {
-            // 空席にする場合はこちら
-            debug('releasing reservations kept by members...');
-            yield ttts_domain_1.Models.Reservation.remove({
-                status: ttts_domain_1.ReservationUtil.STATUS_KEPT_BY_MEMBER
-            }).exec();
-            // 失敗しても、次のタスクにまかせる(気にしない)
-        }
+        // if (moment(conf.get<string>('datetimes.reservation_end_members')) < moment()) {
+        //     // 空席にする場合はこちら
+        //     debug('releasing reservations kept by members...');
+        //     await ttts.Models.Reservation.remove(
+        //         {
+        //             status: ttts.ReservationUtil.STATUS_KEPT_BY_MEMBER
+        //         }
+        //     ).exec();
+        //     // 失敗しても、次のタスクにまかせる(気にしない)
+        // }
     });
 }
 exports.releaseSeatsKeptByMembers = releaseSeatsKeptByMembers;
-/**
- * GMO離脱データを解放する(内部確保)
- * todo 空席に変更する仕様に変更
- *
- * @memberOf ReservationController
- */
-function releaseGarbages() {
-    return __awaiter(this, void 0, void 0, function* () {
-        // 一定期間WAITING_SETTLEMENTの予約を抽出
-        const WAITING_PERIOD_HOURS = -2;
-        const reservations = yield ttts_domain_1.Models.Reservation.find({
-            status: ttts_domain_1.ReservationUtil.STATUS_WAITING_SETTLEMENT,
-            updated_at: { $lt: moment().add(WAITING_PERIOD_HOURS, 'hours').toISOString() }
-        }).exec();
-        const paymentNos4release = [];
-        const gmoUrl = (process.env.NODE_ENV === 'production') ?
-            'https://p01.mul-pay.jp/payment/SearchTradeMulti.idPass' :
-            'https://pt01.mul-pay.jp/payment/SearchTradeMulti.idPass';
-        const promises = reservations.map((reservation) => __awaiter(this, void 0, void 0, function* () {
-            // GMO取引状態参照
-            debug('requesting... ');
-            request.post({
-                url: gmoUrl,
-                form: {
-                    ShopID: process.env.GMO_SHOP_ID,
-                    ShopPass: process.env.GMO_SHOP_PASS,
-                    OrderID: reservation.get('gmo_order_id'),
-                    PayType: reservation.get('payment_method')
-                }
-            }, (error, response, body) => {
-                const STATUS_CODE_OK = 200;
-                debug('request processed.', error);
-                if (error instanceof Error) {
-                    throw error;
-                }
-                if (response.statusCode !== STATUS_CODE_OK) {
-                    throw new Error(`statusCode is ${response.statusCode}`);
-                }
-                const searchTradeResult = querystring.parse(body);
-                // GMOにない、あるいは、UNPROCESSEDであれば離脱データ
-                if (searchTradeResult.ErrCode !== undefined) {
-                    // M01-M01004002
-                    // 指定されたオーダーIDの取引は登録されていません。
-                    if (searchTradeResult.ErrCode === 'M01' && searchTradeResult.ErrInfo === 'M01004002') {
-                        paymentNos4release.push(reservation.get('payment_no'));
-                    }
-                }
-                else {
-                    if (searchTradeResult.Status === ttts_domain_1.GMO.utils.util.Status.Unprocessed) {
-                        paymentNos4release.push(reservation.get('payment_no'));
-                    }
-                }
-            });
-        }));
-        yield Promise.all(promises);
-        debug('promised.');
-        if (paymentNos4release.length === 0) {
-            return;
-        }
-        // 予約削除
-        debug('updating reservations...');
-        yield ttts_domain_1.Models.Reservation.remove({
-            payment_no: { $in: paymentNos4release }
-        }).exec();
-    });
-}
-exports.releaseGarbages = releaseGarbages;

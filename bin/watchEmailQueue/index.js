@@ -1,7 +1,6 @@
 "use strict";
 /**
  * task name
- *
  * @ignore
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -13,9 +12,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
+const ttts = require("@motionpicture/ttts-domain");
 const emailQueueController = require("../../app/controllers/emailQueue");
-mongoose.connect(process.env.MONGOLAB_URI);
+ttts.mongoose.connect(process.env.MONGOLAB_URI);
 let count = 0;
 const INTERVAL_MILLISECONDS = 250;
 const MAX_NUMBER_OF_PARALLEL_TASK = 10;

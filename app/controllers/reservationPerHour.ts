@@ -1,10 +1,9 @@
 /**
  * パフォーマンスタスクコントローラー
- *
  * @namespace controller/reservationPerHour
  */
 
-import { Models, ReservationUtil, TicketTypeGroupUtil } from '@motionpicture/ttts-domain';
+import * as ttts from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
 import * as moment from 'moment';
 
@@ -12,7 +11,7 @@ const debug = createDebug('ttts-jobs:controller:performance');
 /**
  *
  *
- * @memberOf controller/reservationPerHour
+ * @memberof controller/reservationPerHour
  */
 export async function createFromSetting(): Promise<void> {
     // 引数情報取得
@@ -21,11 +20,11 @@ export async function createFromSetting(): Promise<void> {
     const days = targetInfo.days;
 
     const reservationPerHour: any = {
-        ticket_category: TicketTypeGroupUtil.TICKET_TYPE_CATEGORY_WHEELCHAIR,
-        status : ReservationUtil.STATUS_AVAILABLE
+        ticket_category: ttts.TicketTypeGroupUtil.TICKET_TYPE_CATEGORY_WHEELCHAIR,
+        status: ttts.factory.itemAvailability.InStock
     };
     // 日数分Loop
-    const promisesDay = (days.map(async (day : string) => {
+    const promisesDay = (days.map(async (day: string) => {
         reservationPerHour.performance_day = day;
         // 時間分Loop
         const promisesHour = (hours.map(async (hour: string) => {
@@ -34,10 +33,10 @@ export async function createFromSetting(): Promise<void> {
             // 時間ごとの予約情報登録
             debug('creating reservationPerHour...');
             //スクリーン、作品、上映日、開始時間
-            const result = await Models.ReservationPerHour.findOneAndUpdate(
+            const result = await ttts.Models.ReservationPerHour.findOneAndUpdate(
                 {
-                    performance_day : reservationPerHour.performance_day,
-                    performance_hour : reservationPerHour.performance_hour
+                    performance_day: reservationPerHour.performance_day,
+                    performance_hour: reservationPerHour.performance_hour
                 },
                 {
                     //$set: reservationPerHour
@@ -61,7 +60,7 @@ export async function createFromSetting(): Promise<void> {
 /**
  * 時間ごとの予約情報作成・作成対象情報取得
  *
- * @memberOf controller/reservationPerHour
+ * @memberof controller/reservationPerHour
  */
 function getTargetInfoForCreateFromSetting(): any {
     const info: any = {};
@@ -71,7 +70,7 @@ function getTargetInfoForCreateFromSetting(): any {
     // 引数から作成対象時間と作成日数を取得
     const argvLength: number = 5;
     if (process.argv.length < argvLength) {
-         throw new Error('argv \'time\' or \'days\' not found.');
+        throw new Error('argv \'time\' or \'days\' not found.');
     }
     const indexTargetHours: number = 2;
     const indexStartDay: number = 3;
@@ -91,7 +90,7 @@ function getTargetInfoForCreateFromSetting(): any {
         info.days.push(dateWk);
     }
     const hourLength: number = 2;
-    hours.forEach( (hour) => {
+    hours.forEach((hour) => {
         // 2桁でない時は'0'詰め
         hour = (hour.length < hourLength) ? `0${hour}` : hour;
         info.hours.push(hour);
@@ -103,16 +102,14 @@ function getTargetInfoForCreateFromSetting(): any {
  * 仮予約ステータスで、一定時間過ぎた予約を空席にする
  * (statusを"AVAILABLE"戻す)
  *
- * @memberOf reservationPerHour
+ * @memberof reservationPerHour
  */
 export async function resetTmps(): Promise<void> {
     const BUFFER_PERIOD_SECONDS = -60;
     debug('resetting temporary reservationPerHour...');
-    await Models.ReservationPerHour.update(
+    await ttts.Models.ReservationPerHour.update(
         {
-            status: { $in: [ReservationUtil.STATUS_TEMPORARY,
-                            ReservationUtil.STATUS_TEMPORARY_FOR_SECURE_EXTRA]
-            },
+            status: ttts.factory.itemAvailability.SoldOut,
             expired_at: {
                 // 念のため、仮予約有効期間より1分長めにしておく
                 $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
@@ -120,7 +117,7 @@ export async function resetTmps(): Promise<void> {
         },
         {
             $set: {
-                status: ReservationUtil.STATUS_AVAILABLE
+                status: ttts.factory.itemAvailability.InStock
             },
             $unset: {
                 expired_at: 1,

@@ -1,18 +1,17 @@
 /**
  * task name
- *
  * @ignore
  */
 
-import * as mongoose from 'mongoose';
+import * as ttts from '@motionpicture/ttts-domain';
 import * as reservationController from '../../app/controllers/reservation';
 import * as reservationPerHourController from '../../app/controllers/reservationPerHour';
 
 async function main(): Promise<void> {
-    mongoose.connect(<string>process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
     await reservationController.resetTmps();
     await reservationPerHourController.resetTmps();
-    mongoose.disconnect();
+    ttts.mongoose.disconnect();
 }
 
 // tslint:disable-next-line:no-floating-promises

@@ -4,9 +4,8 @@
  * @ignore
  */
 
-import * as mongoose from 'mongoose';
+import * as ttts from '@motionpicture/ttts-domain';
 
 before(async () => {
-    (<any>mongoose).Promise = global.Promise;
-    mongoose.connect(<string>process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
 });

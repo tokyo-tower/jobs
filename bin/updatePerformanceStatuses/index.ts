@@ -1,16 +1,15 @@
 /**
  * task name
- *
  * @ignore
  */
 
-import * as mongoose from 'mongoose';
+import * as ttts from '@motionpicture/ttts-domain';
 import * as performanceController from '../../app/controllers/performance';
 
 async function main(): Promise<void> {
-    mongoose.connect(<string>process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
     await performanceController.updateStatuses();
-    mongoose.disconnect();
+    ttts.mongoose.disconnect();
 }
 
 // tslint:disable-next-line:no-floating-promises

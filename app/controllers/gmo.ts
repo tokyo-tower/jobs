@@ -18,8 +18,7 @@ const CANCEL_CHARGE_REFUND: number = 0;
 
 /**
  * GMO結果通知を処理する
- *
- * @memberOf controller/gmo
+ * @memberof controller/gmo
  */
 // tslint:disable-next-line:max-func-body-length cyclomatic-complexity
 export async function processOne() {
@@ -34,12 +33,14 @@ export async function processOne() {
     ).exec();
     debug('notification found.', notification);
 
+    const reservationRepo = new ttts.repository.Reservation(ttts.mongoose.connection);
+
     if (notification !== null) {
         try {
             // 内容の整合性チェック
             debug('finding reservations...payment_no:', notification.get('order_id'));
             const parsedOrderId = ttts.ReservationUtil.parseGMOOrderId(notification.get('order_id'));
-            const reservations = await ttts.Models.Reservation.find(
+            const reservations = await reservationRepo.reservationModel.find(
                 {
                     performance_day: parsedOrderId.performanceDay,
                     payment_no: parsedOrderId.paymentNo
@@ -65,7 +66,6 @@ export async function processOne() {
                 // }
 
                 // クレジットカード決済の場合
-                let rawUpdateReservation: any;
                 if (notification.get('pay_type') === ttts.GMO.utils.util.PayType.Credit) {
                     switch (notification.get('status')) {
                         case ttts.GMO.utils.util.Status.Unprocessed:
@@ -89,115 +89,7 @@ export async function processOne() {
                             break;
                     }
                 } else if (notification.get('pay_type') === ttts.GMO.utils.util.PayType.Cvs) {
-                    switch (notification.get('status')) {
-                        case ttts.GMO.utils.util.Status.Paysuccess:
-                            // 予約完了ステータスへ変更
-                            debug('updating reservations by paymentNo...', notification.get('order_id'));
-                            await ttts.Models.Reservation.update(
-                                { gmo_order_id: notification.get('order_id') },
-                                {
-                                    status: ttts.ReservationUtil.STATUS_RESERVED,
-                                    updated_user: 'system'
-                                },
-                                { multi: true }
-                            ).exec();
-                            debug('reservations updated');
-
-                            // 完了メールキュー追加(あれば更新日時を更新するだけ)
-                            // todo 新メールキュー方式に変更
-                            debug('creating reservationEmailCue...');
-                            // await Models.ReservationEmailCue.findOneAndUpdate(
-                            //     {
-                            //         payment_no: notification.get('order_id'),
-                            //         template: ReservationEmailCueUtil.TEMPLATE_COMPLETE
-                            //     },
-                            //     {
-                            //         $set: { updated_at: Date.now() },
-                            //         $setOnInsert: { status: ReservationEmailCueUtil.STATUS_UNSENT }
-                            //     },
-                            //     {
-                            //         upsert: true,
-                            //         new: true
-                            //     }
-                            // ).exec();
-                            debug('reservationEmailCue created.');
-
-                            // あったにせよなかったにせよ処理済に
-                            break;
-
-                        case ttts.GMO.utils.util.Status.Reqsuccess:
-                            // GMOパラメータを予約に追加
-                            debug('updating reservations by paymentNo...', notification.get('order_id'));
-                            rawUpdateReservation = await ttts.Models.Reservation.update(
-                                { payment_no: notification.get('order_id') },
-                                {
-                                    gmo_shop_id: notification.get('shop_id'),
-                                    gmo_amount: notification.get('amount'),
-                                    gmo_tax: notification.get('tax'),
-                                    gmo_cvs_code: notification.get('cvs_code'),
-                                    gmo_cvs_conf_no: notification.get('cvs_conf_no'),
-                                    gmo_cvs_receipt_no: notification.get('cvs_receipt_no'),
-                                    gmo_payment_term: notification.get('payment_term'),
-                                    updated_user: 'system'
-                                },
-                                { multi: true }
-                            ).exec();
-                            debug('reservations updated.', rawUpdateReservation);
-
-                            // 仮予約完了メールキュー追加(あれば更新日時を更新するだけ)
-                            // todo 新メールキュー方式に変更
-                            // debug('creating reservationEmailCue...');
-                            // await Models.ReservationEmailCue.findOneAndUpdate(
-                            //     {
-                            //         payment_no: notification.get('order_id'),
-                            //         template: ReservationEmailCueUtil.TEMPLATE_TEMPORARY
-                            //     },
-                            //     {
-                            //         $set: { updated_at: Date.now() },
-                            //         $setOnInsert: { status: ReservationEmailCueUtil.STATUS_UNSENT }
-                            //     },
-                            //     {
-                            //         upsert: true,
-                            //         new: true
-                            //     }
-                            // ).exec();
-                            // debug('reservationEmailCue created.');
-
-                            // あったにせよなかったにせよ処理済に
-                            break;
-
-                        case ttts.GMO.utils.util.Status.Unprocessed:
-                            // 何もしない
-                            break;
-
-                        case ttts.GMO.utils.util.Status.Payfail: // 決済失敗
-                        case ttts.GMO.utils.util.Status.Cancel: // 支払い停止
-                            // 空席に戻す
-                            debug('removing reservations...gmo_order_id:', notification.get('order_id'));
-                            await Promise.all(reservations.map(async (reservation) => {
-                                debug('removing reservation...', reservation.get('_id'));
-                                await reservation.remove();
-                                debug('reservation removed.', reservation.get('_id'));
-                            }));
-
-                            break;
-
-                        case ttts.GMO.utils.util.Status.Expired: // 期限切れ
-                            // 空席に戻す
-                            debug('removing reservations...payment_no:', notification.get('order_id'));
-                            const promises = reservations.map(async (reservation) => {
-                                debug('removing reservation...', reservation.get('_id'));
-                                await reservation.remove();
-                                debug('reservation removed.', reservation.get('_id'));
-                            });
-
-                            await Promise.all(promises);
-
-                            break;
-
-                        default:
-                            break;
-                    }
+                    // no op
                 } else {
                     // 他の決済は本案件では非対応なので何もしない
                 }
@@ -222,8 +114,10 @@ export async function processOne() {
  */
 // tslint:disable-next-line:max-func-body-length cyclomatic-complexity
 export async function settleGMOAuth() {
-    const reservation = await ttts.Models.Reservation.findOneAndUpdate({
-        status: ttts.ReservationUtil.STATUS_RESERVED,
+    const reservationRepo = new ttts.repository.Reservation(ttts.mongoose.connection);
+
+    const reservation = await reservationRepo.reservationModel.findOneAndUpdate({
+        status: ttts.factory.reservationStatusType.ReservationConfirmed,
         gmo_status: ttts.GMO.utils.util.Status.Auth,
         payment_method: ttts.GMO.utils.util.PayType.Credit,
         payment_seat_index: 0
@@ -275,7 +169,7 @@ export async function settleGMOAuth() {
             return;
         }
 
-        await ttts.Models.Reservation.findOneAndUpdate(
+        await reservationRepo.reservationModel.findOneAndUpdate(
             { _id: reservation._id },
             {
                 $set: {
@@ -369,10 +263,12 @@ export async function refundForSuspend() {
  * @return {any}
  */
 async function getRefundReservations(): Promise<any> {
+    const reservationRepo = new ttts.repository.Reservation(ttts.mongoose.connection);
+
     let info: any = null;
 
     // 返金対象予約取得(一般予約かつ返金ステータスが指示済)
-    const reservations = await ttts.Models.Reservation.find(
+    const reservations = await reservationRepo.reservationModel.find(
         {
             purchaser_group: ttts.ReservationUtil.PURCHASER_GROUP_CUSTOMER,
             'performance_ttts_extension.refund_status': ttts.PerformanceUtil.REFUND_STATUS.INSTRUCTED
@@ -448,7 +344,7 @@ async function getPerformanceRefundCount(performanceId: string): Promise<any> {
 function getRefundCount(reservations: any[]): number {
     let count: number = 0;
     for (const reservation of reservations) {
-        if (reservation.status === ttts.ReservationUtil.STATUS_RESERVED) {
+        if (reservation.status === ttts.factory.reservationStatusType.ReservationConfirmed) {
             count += 1;
         }
     }
@@ -548,6 +444,7 @@ function getEmailMessages(reservation: any, locale: string): any {
  * @return {Promise<void>}
  */
 async function clearReservation(reservations: any[]): Promise<void> {
+    const reservationRepo = new ttts.repository.Reservation(ttts.mongoose.connection);
 
     const promises = ((<any>reservations).map(async (reservation: any) => {
 
@@ -557,52 +454,27 @@ async function clearReservation(reservations: any[]): Promise<void> {
             await ttts.Models.ReservationPerHour.findOneAndUpdate(
                 { reservation_id: reservation._id.toString() },
                 {
-                    $set: { status: ttts.ReservationUtil.STATUS_AVAILABLE },
+                    $set: { status: ttts.factory.itemAvailability.InStock },
                     $unset: { expired_at: 1, reservation_id: 1 }
                 },
                 { new: true }
             ).exec();
             //logger.info('ReservationPerHour clear reservation_id=', reservation._id.toString());
         }
+
         // 予約データ解放(AVAILABLEに変更)
-        await ttts.Models.Reservation.findByIdAndUpdate(
+        await reservationRepo.reservationModel.findByIdAndUpdate(
             reservation._id,
             {
-                $set: { status: ttts.ReservationUtil.STATUS_AVAILABLE },
-                $unset: getUnsetFields(reservation._doc)
+                status: ttts.factory.reservationStatusType.ReservationCancelled
             }
         ).exec();
+
+        // TODO 在庫を有に変更
     }));
     await Promise.all(promises);
 }
-/**
- * 更新時削除フィールド取得
- *
- * @param {any} reservation
- * @return {any} unset
- */
-function getUnsetFields(reservation: any): any {
-    const setFields: string[] = [
-        '_id',
-        'performance',
-        'seat_code',
-        'updated_at',
-        'checkins',
-        'performance_canceled',
-        'status',
-        '__v',
-        'created_at'
-    ];
-    const unset = {};
-    // セットフィールド以外は削除フィールドにセット
-    Object.getOwnPropertyNames(reservation).forEach((propertyName) => {
-        if (setFields.indexOf(propertyName) < 0) {
-            (<any>unset)[propertyName] = 1;
-        }
-    });
 
-    return unset;
-}
 /**
  * キャンセルリクエスト保管
  *

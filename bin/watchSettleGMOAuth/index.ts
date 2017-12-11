@@ -1,13 +1,12 @@
 /**
  * task name
- *
  * @ignore
  */
 
-import * as mongoose from 'mongoose';
+import * as ttts from '@motionpicture/ttts-domain';
 import * as gmoController from '../../app/controllers/gmo';
 
-mongoose.connect(<string>process.env.MONGOLAB_URI);
+ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
 let count = 0;
 
 const INTERVAL_MILLISECONDS = 250;

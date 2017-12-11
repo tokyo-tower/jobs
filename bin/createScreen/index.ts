@@ -1,15 +1,15 @@
 /**
  * create screens
- *
  * @ignore
  */
-import * as mongoose from 'mongoose';
+
+import * as ttts from '@motionpicture/ttts-domain';
 import * as screenController from '../../app/controllers/screen';
 
 async function main(): Promise<void> {
-    mongoose.connect(<string>process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
     await screenController.createFromJson();
-    mongoose.disconnect();
+    ttts.mongoose.disconnect();
 }
 
 // tslint:disable-next-line:no-floating-promises

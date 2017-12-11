@@ -1,17 +1,15 @@
 /**
  * create ticketTypes
- *
  * @ignore
  */
 
-import * as mongoose from 'mongoose';
-
+import * as ttts from '@motionpicture/ttts-domain';
 import * as ticketTypeController from '../../app/controllers/ticketType';
 
 async function main(): Promise<void> {
-    mongoose.connect(<string>process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
     await ticketTypeController.createFromJson();
-    mongoose.disconnect();
+    ttts.mongoose.disconnect();
 }
 
 // tslint:disable-next-line:no-floating-promises
