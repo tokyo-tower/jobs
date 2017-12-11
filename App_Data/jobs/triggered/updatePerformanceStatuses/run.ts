@@ -5,17 +5,29 @@
 
 import * as ttts from '@motionpicture/ttts-domain';
 
-import * as performanceController from '../../../../app/controllers/performance';
 import mongooseConnectionOptions from '../../../../app/mongooseConnectionOptions';
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
+const redisClient = ttts.redis.createClient(
+    // tslint:disable-next-line:no-magic-numbers
+    parseInt(<string>process.env.TTTS_PERFORMANCE_STATUSES_REDIS_PORT, 10),
+    <string>process.env.TTTS_PERFORMANCE_STATUSES_REDIS_HOST,
+    {
+        password: process.env.TTTS_PERFORMANCE_STATUSES_REDIS_KEY,
+        tls: { servername: process.env.TTTS_PERFORMANCE_STATUSES_REDIS_HOST },
+        return_buffers: true
+    }
+);
 
-performanceController.updateStatuses()
-    .then(() => {
-        // no op
-    }).catch((err) => {
+ttts.service.itemAvailability.updatePerformanceStatuses()(
+    new ttts.repository.Stock(ttts.mongoose.connection),
+    new ttts.repository.Performance(ttts.mongoose.connection),
+    new ttts.repository.PerformanceStatuses(redisClient)
+)
+    .catch((err) => {
         console.error(err);
-    }).then(() => {
+    })
+    .then(() => {
         ttts.mongoose.disconnect();
-        process.exit(0);
+        redisClient.quit();
     });

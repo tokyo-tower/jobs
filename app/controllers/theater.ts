@@ -4,7 +4,7 @@
  * @namespace TheaterController
  */
 
-import { Models, ScreenUtil } from '@motionpicture/ttts-domain';
+import * as ttts from '@motionpicture/ttts-domain';
 
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
@@ -26,10 +26,10 @@ export async function createScreensFromJson(): Promise<void> {
         const seatsNumbersBySeatCode: {
             [key: string]: number
         } = {};
-        seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_NORMAL] = 0;
-        seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_PREMIERE_BOX] = 0;
-        seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_PREMIERE_LUXURY] = 0;
-        seatsNumbersBySeatCode[ScreenUtil.SEAT_GRADE_CODE_FRONT_RECLINING] = 0;
+        seatsNumbersBySeatCode[ttts.factory.place.screen.SeatGrade.Normal] = 0;
+        seatsNumbersBySeatCode[ttts.factory.place.screen.SeatGrade.PremiereBox] = 0;
+        seatsNumbersBySeatCode[ttts.factory.place.screen.SeatGrade.PremiereLuxury] = 0;
+        seatsNumbersBySeatCode[ttts.factory.place.screen.SeatGrade.FrontReclining] = 0;
         screen.sections[0].seats.forEach((seat: any) => {
             seatsNumbersBySeatCode[seat.grade.code] += 1;
         });
@@ -41,7 +41,7 @@ export async function createScreensFromJson(): Promise<void> {
         });
 
         debug('updating screen...');
-        await Models.Screen.findByIdAndUpdate(
+        await ttts.Models.Screen.findByIdAndUpdate(
             screen._id,
             screen,
             {
@@ -63,7 +63,7 @@ export async function createFromJson(): Promise<void> {
 
     await Promise.all(theaters.map(async (theater) => {
         debug('updating theater...');
-        await Models.Theater.findByIdAndUpdate(
+        await ttts.Models.Theater.findByIdAndUpdate(
             theater._id,
             theater,
             {

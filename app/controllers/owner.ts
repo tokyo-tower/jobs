@@ -4,7 +4,7 @@
  * @namespace controller/owner
  */
 
-import * as TTTS from '@motionpicture/ttts-domain';
+import * as ttts from '@motionpicture/ttts-domain';
 
 import * as crypto from 'crypto';
 import * as createDebug from 'debug';
@@ -17,6 +17,7 @@ const debug = createDebug('ttts-jobs:controller:staff');
  * @memberOf controller/owner
  */
 export async function createFromJson(): Promise<void> {
+    const ownerRepo = new ttts.repository.Owner(ttts.mongoose.connection);
     const owners: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/owners.json`);
 
     // あれば更新、なければ追加
@@ -25,10 +26,10 @@ export async function createFromJson(): Promise<void> {
         const SIZE = 64;
         const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
         owner.password_salt = passwordSalt;
-        owner.password_hash = TTTS.CommonUtil.createHash(owner.password, passwordSalt);
+        owner.password_hash = ttts.CommonUtil.createHash(owner.password, passwordSalt);
 
         debug('updating owner...');
-        await TTTS.Models.Owner.findOneAndUpdate(
+        await ownerRepo.ownerModel.findOneAndUpdate(
             {
                 username: owner.username
             },

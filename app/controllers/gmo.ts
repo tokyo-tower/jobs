@@ -235,11 +235,13 @@ export async function refundForSuspend() {
         // 予約データクリア
         await clearReservation(reservationInfo[key]);
     }
+
+    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
     // パフォーマンスに返金状態、返金済み数を更新
     for (const performanceId of Object.keys(performanceInfo)) {
         const paymentCount: number = performanceInfo[performanceId];
         // パフォーマンス更新
-        await ttts.Models.Performance.findOneAndUpdate(
+        await performanceRepo.performanceModel.findOneAndUpdate(
             {
                 _id: performanceId
             },
@@ -326,8 +328,9 @@ async function getRefundReservations(): Promise<any> {
  * @return {number}
  */
 async function getPerformanceRefundCount(performanceId: string): Promise<any> {
+    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
     // パフォーマンス更新
-    const performance = await ttts.Models.Performance.findById(
+    const performance = await performanceRepo.performanceModel.findById(
         {
             _id: performanceId
         }

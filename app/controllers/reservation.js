@@ -33,7 +33,8 @@ function createFromSetting() {
         // screen: setting.screen,
         const setting = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
         debug('setting:', setting);
-        const performances = yield ttts.Models.Performance.find({
+        const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
+        const performances = yield performanceRepo.performanceModel.find({
             film: setting.film,
             day: { $in: days },
             start_time: { $in: times }

@@ -8,12 +8,10 @@ import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
 import * as moment from 'moment';
 
-const DEFAULT_RADIX = 10;
 const debug = createDebug('ttts-jobs:controller:performance');
 
 /**
- *
- *
+ * 設定からパフォーマンスデータを作成する
  * @memberof controller/performance
  */
 export async function createFromSetting(): Promise<void> {
@@ -40,6 +38,7 @@ export async function createFromSetting(): Promise<void> {
     }
 
     // パフォーマンス登録
+    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
     const performance: any = {};
     const savePerformances: any = [];
     performance.screen_name = (screenOfPerformance !== null) ? screenOfPerformance.get('name') : '';
@@ -77,7 +76,7 @@ export async function createFromSetting(): Promise<void> {
             // パフォーマンス登録
             debug('creating performance...');
             //スクリーン、作品、上映日、開始時間
-            const result = await ttts.Models.Performance.findOneAndUpdate(
+            const result = await performanceRepo.performanceModel.findOneAndUpdate(
                 {
                     screen: performance.screen,
                     film: performance.film,
@@ -171,6 +170,8 @@ function getTargetInfoForCreateFromSetting(duration: number): any {
  * @memberof controller/performance
  */
 export async function createFromJson(): Promise<void> {
+    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
+
     const performances: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
     const screens = await ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
 
@@ -188,72 +189,10 @@ export async function createFromJson(): Promise<void> {
         performance.theater_name = screenOfPerformance.get('theater').get('name');
 
         debug('creating performance...');
-        await ttts.Models.Performance.create(performance);
+        await performanceRepo.performanceModel.create(performance);
         debug('performance created');
     }));
     debug('promised.');
-}
-
-/**
- * 空席ステータスを更新する
- * @memberof controller/performance
- */
-export async function updateStatuses() {
-    const stockRepo = new ttts.repository.Stock(ttts.mongoose.connection);
-
-    debug('finding performances...');
-    const performances = await ttts.Models.Performance.find(
-        {},
-        'day start_time screen'
-    ).populate('screen', 'seats_number').exec();
-    debug('performances found.');
-
-    const performanceStatusesModel = ttts.PerformanceStatusesModel.create();
-
-    debug('aggregating...');
-    const results: any[] = await stockRepo.stockModel.aggregate(
-        [
-            {
-                $match: {
-                    availability: ttts.factory.itemAvailability.InStock
-                }
-            },
-            {
-                $group: {
-                    _id: '$performance',
-                    count: { $sum: 1 }
-                }
-            }
-        ]
-    ).exec();
-
-    // パフォーマンスIDごとに
-    const reservationNumbers: {
-        [key: string]: number
-    } = {};
-    results.forEach((result) => {
-        reservationNumbers[result._id] = parseInt(result.count, DEFAULT_RADIX);
-    });
-
-    performances.forEach((performance) => {
-        // パフォーマンスごとに空席ステータスを算出する
-        if (!reservationNumbers.hasOwnProperty(performance.get('_id').toString())) {
-            reservationNumbers[performance.get('_id').toString()] = 0;
-        }
-
-        // 空席ステータス変更(空席数("予約可能"な予約データ数)をそのままセット)
-        //const status = (<any>performance).getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
-        //performanceStatusesModel.setStatus(performance._id.toString(), status);
-        const reservationNumber: number = reservationNumbers[performance.get('_id')];
-        //const availableSeatNum = (<any>performance).screen.seats_number - reservationNumber;
-        //performanceStatusesModel.setStatus(performance._id.toString(), availableSeatNum.toString());
-        performanceStatusesModel.setStatus(performance._id.toString(), reservationNumber.toString());
-        //---
-    });
-
-    debug('saving performanceStatusesModel...', performanceStatusesModel);
-    await ttts.PerformanceStatusesModel.store(performanceStatusesModel);
-    debug('performanceStatusesModel saved.');
 }
 
 /**
@@ -262,8 +201,10 @@ export async function updateStatuses() {
  * @memberof controller/performance
  */
 export async function release(performanceId: string): Promise<void> {
+    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
+
     debug('updating performance..._id:', performanceId);
-    await ttts.Models.Performance.findByIdAndUpdate(
+    await performanceRepo.performanceModel.findByIdAndUpdate(
         performanceId,
         { canceled: false }
     ).exec();

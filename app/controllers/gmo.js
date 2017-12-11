@@ -216,11 +216,12 @@ function refundForSuspend() {
             // 予約データクリア
             yield clearReservation(reservationInfo[key]);
         }
+        const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         // パフォーマンスに返金状態、返金済み数を更新
         for (const performanceId of Object.keys(performanceInfo)) {
             const paymentCount = performanceInfo[performanceId];
             // パフォーマンス更新
-            yield ttts.Models.Performance.findOneAndUpdate({
+            yield performanceRepo.performanceModel.findOneAndUpdate({
                 _id: performanceId
             }, {
                 $set: {
@@ -299,8 +300,9 @@ function getRefundReservations() {
  */
 function getPerformanceRefundCount(performanceId) {
     return __awaiter(this, void 0, void 0, function* () {
+        const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         // パフォーマンス更新
-        const performance = yield ttts.Models.Performance.findById({
+        const performance = yield performanceRepo.performanceModel.findById({
             _id: performanceId
         }).exec();
         return performance !== null ? performance.ttts_extension.refunded_count : 0;
@@ -427,6 +429,7 @@ function clearReservation(reservations) {
             yield reservationRepo.reservationModel.findByIdAndUpdate(reservation._id, {
                 status: ttts.factory.reservationStatusType.ReservationCancelled
             }).exec();
+            // tslint:disable-next-line:no-suspicious-comment
             // TODO 在庫を有に変更
         })));
         yield Promise.all(promises);

@@ -26,7 +26,8 @@ export async function createFromSetting(): Promise<void> {
     // screen: setting.screen,
     const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
     debug('setting:', setting);
-    const performances = await ttts.Models.Performance.find(
+    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
+    const performances = await performanceRepo.performanceModel.find(
         {
             film: setting.film,
             day: { $in: days },
