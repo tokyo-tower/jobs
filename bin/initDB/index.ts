@@ -1,11 +1,10 @@
 /**
  * mongodbのデータを初期化する
  * 主に開発環境構築時に使用することを想定しています
- *
  * @ignore
  */
 
-import * as mongoose from 'mongoose';
+import * as ttts from '@motionpicture/ttts-domain';
 
 import * as clientController from '../../app/controllers/client';
 import * as filmController from '../../app/controllers/film';
@@ -18,7 +17,7 @@ import * as ticketTypeController from '../../app/controllers/ticketType';
 import * as ticketTypeGroupController from '../../app/controllers/ticketTypeGroup';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
 
     await schemaController.dropCollections();
     await ticketTypeController.createFromJson();
@@ -35,7 +34,7 @@ async function main(): Promise<void> {
     // await staffController.createReservationsFromJson();
     // await memberController.createReservationsFromJson();
 
-    mongoose.disconnect();
+    ttts.mongoose.disconnect();
 }
 
 // tslint:disable-next-line:no-floating-promises

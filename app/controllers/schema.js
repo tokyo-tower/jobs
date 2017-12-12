@@ -13,8 +13,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const ttts = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
-const mongodb = require("mongodb");
 const debug = createDebug('ttts-jobs:controller:schema');
 /**
  * 全コレクションを削除する
@@ -23,7 +23,8 @@ const debug = createDebug('ttts-jobs:controller:schema');
  */
 function dropCollections() {
     return __awaiter(this, void 0, void 0, function* () {
-        const db = yield mongodb.MongoClient.connect(process.env.MONGOLAB_URI);
+        ttts.mongoose.connect(process.env.MONGOLAB_URI);
+        const db = ttts.mongoose.connection.db;
         const collections = yield db.collections();
         yield Promise.all(collections.map((collection) => __awaiter(this, void 0, void 0, function* () {
             // 初めてコレクションを作成の場合、dropに失敗する

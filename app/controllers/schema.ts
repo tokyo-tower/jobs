@@ -4,8 +4,8 @@
  * @namespace controller/schema
  */
 
+import * as ttts from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
-import * as mongodb from 'mongodb';
 
 const debug = createDebug('ttts-jobs:controller:schema');
 
@@ -15,9 +15,10 @@ const debug = createDebug('ttts-jobs:controller:schema');
  * @memberOf controller/schema
  */
 export async function dropCollections() {
-    const db = await mongodb.MongoClient.connect(process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
+    const db = ttts.mongoose.connection.db;
     const collections = await db.collections();
-    await Promise.all(collections.map(async (collection) => {
+    await Promise.all(collections.map(async (collection: any) => {
         // 初めてコレクションを作成の場合、dropに失敗する
         try {
             debug('dropping collection...', collection.collectionName);

@@ -13,7 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const TTTS = require("@motionpicture/ttts-domain");
+const ttts = require("@motionpicture/ttts-domain");
 const crypto = require("crypto");
 const createDebug = require("debug");
 const fs = require("fs-extra");
@@ -24,6 +24,7 @@ const debug = createDebug('ttts-jobs:controller:staff');
  */
 function createFromJson() {
     return __awaiter(this, void 0, void 0, function* () {
+        const ownerRepo = new ttts.repository.Owner(ttts.mongoose.connection);
         const owners = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/owners.json`);
         // あれば更新、なければ追加
         yield Promise.all(owners.map((owner) => __awaiter(this, void 0, void 0, function* () {
@@ -31,9 +32,9 @@ function createFromJson() {
             const SIZE = 64;
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
             owner.password_salt = passwordSalt;
-            owner.password_hash = TTTS.CommonUtil.createHash(owner.password, passwordSalt);
+            owner.password_hash = ttts.CommonUtil.createHash(owner.password, passwordSalt);
             debug('updating owner...');
-            yield TTTS.Models.Owner.findOneAndUpdate({
+            yield ownerRepo.ownerModel.findOneAndUpdate({
                 username: owner.username
             }, owner, {
                 new: true,

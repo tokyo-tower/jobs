@@ -1,7 +1,6 @@
 "use strict";
 /**
  * パフォーマンスタスクコントローラー
- *
  * @namespace controller/performance
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -13,17 +12,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ttts_domain_1 = require("@motionpicture/ttts-domain");
+const ttts = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
 const moment = require("moment");
-const STATUS_AVAILABLE = 'AVAILABLE';
-const DEFAULT_RADIX = 10;
 const debug = createDebug('ttts-jobs:controller:performance');
 /**
- *
- *
- * @memberOf controller/performance
+ * 設定からパフォーマンスデータを作成する
+ * @memberof controller/performance
  */
 function createFromSetting() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -34,18 +30,19 @@ function createFromSetting() {
         const times = targetInfo.times;
         const days = targetInfo.days;
         // 劇場とスクリーン情報取得
-        const screenOfPerformance = yield ttts_domain_1.Models.Screen.findById(setting.screen, 'name theater sections')
+        const screenOfPerformance = yield ttts.Models.Screen.findById(setting.screen, 'name theater sections')
             .populate('theater', 'name address')
             .exec();
         if (screenOfPerformance === undefined) {
             throw new Error('screen not found.');
         }
         // 作品情報取得
-        const film = yield ttts_domain_1.Models.Film.findById({ _id: setting.film }).exec();
+        const film = yield ttts.Models.Film.findById({ _id: setting.film }).exec();
         if (film === undefined) {
             throw new Error('film not found.');
         }
         // パフォーマンス登録
+        const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         const performance = {};
         const savePerformances = [];
         performance.screen_name = (screenOfPerformance !== null) ? screenOfPerformance.get('name') : '';
@@ -66,11 +63,11 @@ function createFromSetting() {
                 performance.end_time = time.end_time;
                 performance.ttts_extension = {
                     tour_number: time.tour_number,
-                    ev_service_status: ttts_domain_1.PerformanceUtil.EV_SERVICE_STATUS.NORMAL,
+                    ev_service_status: ttts.PerformanceUtil.EV_SERVICE_STATUS.NORMAL,
                     ev_service_update_user: '',
-                    online_sales_status: ttts_domain_1.PerformanceUtil.ONLINE_SALES_STATUS.NORMAL,
+                    online_sales_status: ttts.PerformanceUtil.ONLINE_SALES_STATUS.NORMAL,
                     online_sales_update_user: '',
-                    refund_status: ttts_domain_1.PerformanceUtil.REFUND_STATUS.NONE,
+                    refund_status: ttts.PerformanceUtil.REFUND_STATUS.NONE,
                     refund_update_user: '',
                     refunded_count: 0
                 };
@@ -81,7 +78,7 @@ function createFromSetting() {
                 // パフォーマンス登録
                 debug('creating performance...');
                 //スクリーン、作品、上映日、開始時間
-                const result = yield ttts_domain_1.Models.Performance.findOneAndUpdate({
+                const result = yield performanceRepo.performanceModel.findOneAndUpdate({
                     screen: performance.screen,
                     film: performance.film,
                     day: performance.day,
@@ -110,7 +107,7 @@ exports.createFromSetting = createFromSetting;
 /**
  * パフォーマンス作成・作成対象情報取得
  *
- * @memberOf controller/performance
+ * @memberof controller/performance
  */
 function getTargetInfoForCreateFromSetting(duration) {
     const info = {};
@@ -165,12 +162,13 @@ function getTargetInfoForCreateFromSetting(duration) {
 /**
  *
  *
- * @memberOf controller/performance
+ * @memberof controller/performance
  */
 function createFromJson() {
     return __awaiter(this, void 0, void 0, function* () {
+        const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         const performances = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
-        const screens = yield ttts_domain_1.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
+        const screens = yield ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
         // あれば更新、なければ追加
         yield Promise.all(performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
             // 劇場とスクリーン名称を追加
@@ -183,7 +181,7 @@ function createFromJson() {
             performance.screen_name = screenOfPerformance.get('name');
             performance.theater_name = screenOfPerformance.get('theater').get('name');
             debug('creating performance...');
-            yield ttts_domain_1.Models.Performance.create(performance);
+            yield performanceRepo.performanceModel.create(performance);
             debug('performance created');
         })));
         debug('promised.');
@@ -191,64 +189,15 @@ function createFromJson() {
 }
 exports.createFromJson = createFromJson;
 /**
- * 空席ステータスを更新する
- *
- * @memberOf controller/performance
- */
-function updateStatuses() {
-    return __awaiter(this, void 0, void 0, function* () {
-        debug('finding performances...');
-        const performances = yield ttts_domain_1.Models.Performance.find({}, 'day start_time screen').populate('screen', 'seats_number').exec();
-        debug('performances found.');
-        const performanceStatusesModel = ttts_domain_1.PerformanceStatusesModel.create();
-        debug('aggregating...');
-        const results = yield ttts_domain_1.Models.Reservation.aggregate([
-            {
-                $match: {
-                    status: STATUS_AVAILABLE
-                }
-            },
-            {
-                $group: {
-                    _id: '$performance',
-                    count: { $sum: 1 }
-                }
-            }
-        ]).exec();
-        // パフォーマンスIDごとに
-        const reservationNumbers = {};
-        results.forEach((result) => {
-            reservationNumbers[result._id] = parseInt(result.count, DEFAULT_RADIX);
-        });
-        performances.forEach((performance) => {
-            // パフォーマンスごとに空席ステータスを算出する
-            if (!reservationNumbers.hasOwnProperty(performance.get('_id').toString())) {
-                reservationNumbers[performance.get('_id').toString()] = 0;
-            }
-            // 空席ステータス変更(空席数("予約可能"な予約データ数)をそのままセット)
-            //const status = (<any>performance).getSeatStatus(reservationNumbers[performance.get('_id').toString()]);
-            //performanceStatusesModel.setStatus(performance._id.toString(), status);
-            const reservationNumber = reservationNumbers[performance.get('_id')];
-            //const availableSeatNum = (<any>performance).screen.seats_number - reservationNumber;
-            //performanceStatusesModel.setStatus(performance._id.toString(), availableSeatNum.toString());
-            performanceStatusesModel.setStatus(performance._id.toString(), reservationNumber.toString());
-            //---
-        });
-        debug('saving performanceStatusesModel...', performanceStatusesModel);
-        yield ttts_domain_1.PerformanceStatusesModel.store(performanceStatusesModel);
-        debug('performanceStatusesModel saved.');
-    });
-}
-exports.updateStatuses = updateStatuses;
-/**
  * ID指定でパフォーマンスを公開する
  *
- * @memberOf controller/performance
+ * @memberof controller/performance
  */
 function release(performanceId) {
     return __awaiter(this, void 0, void 0, function* () {
+        const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         debug('updating performance..._id:', performanceId);
-        yield ttts_domain_1.Models.Performance.findByIdAndUpdate(performanceId, { canceled: false }).exec();
+        yield performanceRepo.performanceModel.findByIdAndUpdate(performanceId, { canceled: false }).exec();
         debug('performance updated');
     });
 }

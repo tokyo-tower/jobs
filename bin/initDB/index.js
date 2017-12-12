@@ -2,7 +2,6 @@
 /**
  * mongodbのデータを初期化する
  * 主に開発環境構築時に使用することを想定しています
- *
  * @ignore
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -14,7 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
+const ttts = require("@motionpicture/ttts-domain");
 const clientController = require("../../app/controllers/client");
 const filmController = require("../../app/controllers/film");
 const ownerController = require("../../app/controllers/owner");
@@ -26,7 +25,7 @@ const ticketTypeController = require("../../app/controllers/ticketType");
 const ticketTypeGroupController = require("../../app/controllers/ticketTypeGroup");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        mongoose.connect(process.env.MONGOLAB_URI);
+        ttts.mongoose.connect(process.env.MONGOLAB_URI);
         yield schemaController.dropCollections();
         yield ticketTypeController.createFromJson();
         yield ticketTypeGroupController.createFromJson();
@@ -39,7 +38,7 @@ function main() {
         // 時間がかかってしまうので、一時的にコメントアウト
         // await staffController.createReservationsFromJson();
         // await memberController.createReservationsFromJson();
-        mongoose.disconnect();
+        ttts.mongoose.disconnect();
     });
 }
 // tslint:disable-next-line:no-floating-promises

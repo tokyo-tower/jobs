@@ -1,15 +1,15 @@
 /**
  * create reservations
- *
  * @ignore
  */
-import * as mongoose from 'mongoose';
+
+import * as ttts from '@motionpicture/ttts-domain';
 import * as gmoController from '../../app/controllers/gmo';
 
 async function main(): Promise<void> {
-    mongoose.connect(process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
     await gmoController.refundForSuspend();
-    mongoose.disconnect();
+    ttts.mongoose.disconnect();
 }
 
 // tslint:disable-next-line:no-floating-promises

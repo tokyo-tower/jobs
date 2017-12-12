@@ -11,20 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const TTTS = require("@motionpicture/ttts-domain");
+const ttts = require("@motionpicture/ttts-domain");
 const assert = require("assert");
-const mongoose = require("mongoose");
 const emailQueueController = require("../../app/controllers/emailQueue");
 describe('メールキューコントローラー 送信', () => {
     let connection;
     before(() => __awaiter(this, void 0, void 0, function* () {
-        connection = mongoose.createConnection(process.env.MONGOLAB_URI);
+        connection = ttts.mongoose.createConnection(process.env.MONGOLAB_URI);
         // 全削除
-        const emailQueueModel = connection.model(TTTS.Models.EmailQueue.modelName, TTTS.Models.EmailQueue.schema);
+        const emailQueueModel = connection.model(ttts.Models.EmailQueue.modelName, ttts.Models.EmailQueue.schema);
         yield emailQueueModel.remove({}).exec();
     }));
     it('ok', () => __awaiter(this, void 0, void 0, function* () {
-        const emailQueueModel = connection.model(TTTS.Models.EmailQueue.modelName, TTTS.Models.EmailQueue.schema);
+        const emailQueueModel = connection.model(ttts.Models.EmailQueue.modelName, ttts.Models.EmailQueue.schema);
         // テストデータ作成
         const emailQueue = {
             from: {
@@ -40,14 +39,14 @@ describe('メールキューコントローラー 送信', () => {
                 mimetype: 'text/plain',
                 text: 'test content'
             },
-            status: TTTS.EmailQueueUtil.STATUS_UNSENT
+            status: ttts.EmailQueueUtil.STATUS_UNSENT
         };
         const emailQueueDoc = yield emailQueueModel.create(emailQueue);
         yield emailQueueController.sendOne();
         // 送信済みになっていることを確認
         const sentEmailQueueDoc = yield emailQueueModel.findById(emailQueueDoc._id).exec();
         if (sentEmailQueueDoc !== null) {
-            assert.equal(sentEmailQueueDoc.get('status'), TTTS.EmailQueueUtil.STATUS_SENT);
+            assert.equal(sentEmailQueueDoc.get('status'), ttts.EmailQueueUtil.STATUS_SENT);
         }
         // テストデータ削除
         yield emailQueueDoc.remove();
