@@ -1,7 +1,6 @@
 "use strict";
 /**
  * パフォーマンスタスクコントローラー
- *
  * @namespace controller/reservationPerHour
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -13,14 +12,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ttts_domain_1 = require("@motionpicture/ttts-domain");
+const ttts = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const moment = require("moment");
 const debug = createDebug('ttts-jobs:controller:performance');
 /**
  *
  *
- * @memberOf controller/reservationPerHour
+ * @memberof controller/reservationPerHour
  */
 function createFromSetting() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -29,8 +28,8 @@ function createFromSetting() {
         const hours = targetInfo.hours;
         const days = targetInfo.days;
         const reservationPerHour = {
-            ticket_category: ttts_domain_1.TicketTypeGroupUtil.TICKET_TYPE_CATEGORY_WHEELCHAIR,
-            status: ttts_domain_1.ReservationUtil.STATUS_AVAILABLE
+            ticket_category: ttts.TicketTypeGroupUtil.TICKET_TYPE_CATEGORY_WHEELCHAIR,
+            status: ttts.factory.itemAvailability.InStock
         };
         // 日数分Loop
         const promisesDay = (days.map((day) => __awaiter(this, void 0, void 0, function* () {
@@ -42,7 +41,7 @@ function createFromSetting() {
                 // 時間ごとの予約情報登録
                 debug('creating reservationPerHour...');
                 //スクリーン、作品、上映日、開始時間
-                const result = yield ttts_domain_1.Models.ReservationPerHour.findOneAndUpdate({
+                const result = yield ttts.Models.ReservationPerHour.findOneAndUpdate({
                     performance_day: reservationPerHour.performance_day,
                     performance_hour: reservationPerHour.performance_hour
                 }, {
@@ -67,7 +66,7 @@ exports.createFromSetting = createFromSetting;
 /**
  * 時間ごとの予約情報作成・作成対象情報取得
  *
- * @memberOf controller/reservationPerHour
+ * @memberof controller/reservationPerHour
  */
 function getTargetInfoForCreateFromSetting() {
     const info = {};
@@ -102,37 +101,3 @@ function getTargetInfoForCreateFromSetting() {
     });
     return info;
 }
-/**
- * 仮予約ステータスで、一定時間過ぎた予約を空席にする
- * (statusを"AVAILABLE"戻す)
- *
- * @memberOf reservationPerHour
- */
-function resetTmps() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const BUFFER_PERIOD_SECONDS = -60;
-        debug('resetting temporary reservationPerHour...');
-        yield ttts_domain_1.Models.ReservationPerHour.update({
-            status: { $in: [ttts_domain_1.ReservationUtil.STATUS_TEMPORARY,
-                    ttts_domain_1.ReservationUtil.STATUS_TEMPORARY_FOR_SECURE_EXTRA]
-            },
-            expired_at: {
-                // 念のため、仮予約有効期間より1分長めにしておく
-                $lt: moment().add(BUFFER_PERIOD_SECONDS, 'seconds').toISOString()
-            }
-        }, {
-            $set: {
-                status: ttts_domain_1.ReservationUtil.STATUS_AVAILABLE
-            },
-            $unset: {
-                expired_at: 1,
-                reservation_id: 1
-            }
-        }, {
-            multi: true
-        }).exec();
-        debug('temporary reservationPerHour reset.');
-        // 失敗しても、次のタスクにまかせる(気にしない)
-    });
-}
-exports.resetTmps = resetTmps;

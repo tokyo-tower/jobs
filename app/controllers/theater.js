@@ -13,8 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ttts_domain_1 = require("@motionpicture/ttts-domain");
-const ttts_domain_2 = require("@motionpicture/ttts-domain");
+const ttts = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
 const debug = createDebug('ttts-jobs:controller:theater');
@@ -30,10 +29,10 @@ function createScreensFromJson() {
             screen.seats_number = screen.sections[0].seats.length;
             // 座席グレードごとの座席数情報を追加
             const seatsNumbersBySeatCode = {};
-            seatsNumbersBySeatCode[ttts_domain_2.ScreenUtil.SEAT_GRADE_CODE_NORMAL] = 0;
-            seatsNumbersBySeatCode[ttts_domain_2.ScreenUtil.SEAT_GRADE_CODE_PREMIERE_BOX] = 0;
-            seatsNumbersBySeatCode[ttts_domain_2.ScreenUtil.SEAT_GRADE_CODE_PREMIERE_LUXURY] = 0;
-            seatsNumbersBySeatCode[ttts_domain_2.ScreenUtil.SEAT_GRADE_CODE_FRONT_RECLINING] = 0;
+            seatsNumbersBySeatCode[ttts.factory.place.screen.SeatGrade.Normal] = 0;
+            seatsNumbersBySeatCode[ttts.factory.place.screen.SeatGrade.PremiereBox] = 0;
+            seatsNumbersBySeatCode[ttts.factory.place.screen.SeatGrade.PremiereLuxury] = 0;
+            seatsNumbersBySeatCode[ttts.factory.place.screen.SeatGrade.FrontReclining] = 0;
             screen.sections[0].seats.forEach((seat) => {
                 seatsNumbersBySeatCode[seat.grade.code] += 1;
             });
@@ -44,7 +43,7 @@ function createScreensFromJson() {
                 };
             });
             debug('updating screen...');
-            yield ttts_domain_1.Models.Screen.findByIdAndUpdate(screen._id, screen, {
+            yield ttts.Models.Screen.findByIdAndUpdate(screen._id, screen, {
                 new: true,
                 upsert: true
             }).exec();
@@ -63,7 +62,7 @@ function createFromJson() {
         const theaters = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`);
         yield Promise.all(theaters.map((theater) => __awaiter(this, void 0, void 0, function* () {
             debug('updating theater...');
-            yield ttts_domain_1.Models.Theater.findByIdAndUpdate(theater._id, theater, {
+            yield ttts.Models.Theater.findByIdAndUpdate(theater._id, theater, {
                 new: true,
                 upsert: true
             }).exec();
