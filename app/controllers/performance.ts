@@ -17,22 +17,26 @@ const debug = createDebug('ttts-jobs:controller:performance');
 export async function createFromSetting(): Promise<void> {
     // 作成情報取得
     const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
+    debug('setting:', setting);
 
     // 引数情報取得
     const targetInfo = getTargetInfoForCreateFromSetting(setting.performance_duration);
     const times = targetInfo.times;
     const days = targetInfo.days;
+    debug('targetInfo:', targetInfo);
 
     // 劇場とスクリーン情報取得
-    const screenOfPerformance = await ttts.Models.Screen.findById(setting.screen, 'name theater sections')
-        .populate('theater', 'name address')
+    const screenOfPerformance = await ttts.Models.Screen.findById(setting.screen)
+        .populate('theater')
         .exec();
+    debug('screenOfPerformance:', screenOfPerformance);
     if (screenOfPerformance === undefined) {
         throw new Error('screen not found.');
     }
 
     // 作品情報取得
     const film = await ttts.Models.Film.findById({ _id: setting.film }).exec();
+    debug('film:', film);
     if (film === undefined) {
         throw new Error('film not found.');
     }
@@ -174,6 +178,7 @@ export async function createFromJson(): Promise<void> {
 
     const performances: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
     const screens = await ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
+    console.log(screens);
 
     // あれば更新、なければ追加
     await Promise.all(performances.map(async (performance) => {

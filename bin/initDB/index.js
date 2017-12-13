@@ -14,7 +14,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ttts = require("@motionpicture/ttts-domain");
-const clientController = require("../../app/controllers/client");
 const filmController = require("../../app/controllers/film");
 const ownerController = require("../../app/controllers/owner");
 //import * as performanceController from '../../app/controllers/performance';
@@ -33,7 +32,6 @@ function main() {
         yield theaterController.createFromJson();
         yield theaterController.createScreensFromJson();
         //await performanceController.createFromJson();
-        yield clientController.createFromJson();
         yield ownerController.createFromJson();
         // 時間がかかってしまうので、一時的にコメントアウト
         // await staffController.createReservationsFromJson();
