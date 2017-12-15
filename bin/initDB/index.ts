@@ -6,7 +6,6 @@
 
 import * as ttts from '@motionpicture/ttts-domain';
 
-import * as clientController from '../../app/controllers/client';
 import * as filmController from '../../app/controllers/film';
 import * as ownerController from '../../app/controllers/owner';
 //import * as performanceController from '../../app/controllers/performance';
@@ -27,7 +26,6 @@ async function main(): Promise<void> {
     await theaterController.createScreensFromJson();
     //await performanceController.createFromJson();
 
-    await clientController.createFromJson();
     await ownerController.createFromJson();
 
     // 時間がかかってしまうので、一時的にコメントアウト
