@@ -67,11 +67,11 @@ function createFromSetting() {
                 performance.end_time = time.end_time;
                 performance.ttts_extension = {
                     tour_number: time.tour_number,
-                    ev_service_status: ttts.PerformanceUtil.EV_SERVICE_STATUS.NORMAL,
+                    ev_service_status: ttts.factory.performance.EvServiceStatus.Normal,
                     ev_service_update_user: '',
-                    online_sales_status: ttts.PerformanceUtil.ONLINE_SALES_STATUS.NORMAL,
+                    online_sales_status: ttts.factory.performance.OnlineSalesStatus.Normal,
                     online_sales_update_user: '',
-                    refund_status: ttts.PerformanceUtil.REFUND_STATUS.NONE,
+                    refund_status: ttts.factory.performance.RefundStatus.None,
                     refund_update_user: '',
                     refunded_count: 0
                 };
@@ -173,7 +173,6 @@ function createFromJson() {
         const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         const performances = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
         const screens = yield ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
-        console.log(screens);
         // あれば更新、なければ追加
         yield Promise.all(performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
             // 劇場とスクリーン名称を追加

@@ -64,11 +64,11 @@ export async function createFromSetting(): Promise<void> {
             performance.end_time = time.end_time;
             performance.ttts_extension = {
                 tour_number: time.tour_number,
-                ev_service_status: ttts.PerformanceUtil.EV_SERVICE_STATUS.NORMAL,
+                ev_service_status: ttts.factory.performance.EvServiceStatus.Normal,
                 ev_service_update_user: '',
-                online_sales_status: ttts.PerformanceUtil.ONLINE_SALES_STATUS.NORMAL,
+                online_sales_status: ttts.factory.performance.OnlineSalesStatus.Normal,
                 online_sales_update_user: '',
-                refund_status: ttts.PerformanceUtil.REFUND_STATUS.NONE,
+                refund_status: ttts.factory.performance.RefundStatus.None,
                 refund_update_user: '',
                 refunded_count: 0
             };
@@ -178,7 +178,6 @@ export async function createFromJson(): Promise<void> {
 
     const performances: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
     const screens = await ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
-    console.log(screens);
 
     // あれば更新、なければ追加
     await Promise.all(performances.map(async (performance) => {
