@@ -11,6 +11,15 @@ import mongooseConnectionOptions from '../../../../app/mongooseConnectionOptions
 const debug = createDebug('ttts-jobs:continuous:settleCreditCard');
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
+const redisClient = ttts.redis.createClient(
+    {
+        host: <string>process.env.REDIS_HOST,
+        // tslint:disable-next-line:no-magic-numbers
+        port: parseInt(<string>process.env.REDIS_PORT, 10),
+        password: <string>process.env.REDIS_KEY,
+        tls: { servername: <string>process.env.REDIS_HOST }
+    }
+);
 
 let count = 0;
 
@@ -30,7 +39,7 @@ setInterval(
             debug('count:', count);
             await ttts.service.task.executeByName(
                 ttts.factory.taskName.ReturnOrder
-            )(taskRepository, ttts.mongoose.connection);
+            )(taskRepository, ttts.mongoose.connection, redisClient);
         } catch (error) {
             console.error(error.message);
         }
