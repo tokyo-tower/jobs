@@ -64,34 +64,13 @@ function createFromSetting() {
             //const promises = ((<any>screenOfPerformance).get('sections')[0].seats.map(async (seat: any) => {
             const promises = (screen.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
                 const stock = {
+                    id: `${performance._id}-${seat.code}`,
                     performance: performance._id,
                     seat_code: seat.code,
                     availability: ttts.factory.itemAvailability.InStock
-                    // reservation.performance_canceled = false;
-                    // reservation.checkins = [];
                 };
                 debug('creating stock', stock);
-                const result = yield stockRepo.stockModel.findOneAndUpdate({
-                    performance: stock.performance,
-                    seat_code: stock.seat_code
-                }, {
-                    //なければ作成あれば更新：値は先勝ちで作成
-                    //間違って同じ日の予約を流した時、すでに予約に進んでいるデータを壊さないため。
-                    //$set: reservation
-                    // 新規作成時のみセットしたいカラムは$setOnInsertに設定
-                    // 項目が重なっているとエラーになる↓
-                    // MongoError: Cannot update 'film' and 'film' at the same time
-                    $setOnInsert: stock
-                }, {
-                    upsert: true,
-                    new: true
-                }).exec();
-                if (result === null) {
-                    debug('error.');
-                }
-                else {
-                    debug('ok.');
-                }
+                yield stockRepo.saveIfNotExists(stock);
             })));
             yield Promise.all(promises);
         })));
