@@ -21,6 +21,7 @@ const debug = createDebug('ttts-jobs:controller:performance');
  * 設定からパフォーマンスデータを作成する
  * @memberof controller/performance
  */
+// tslint:disable-next-line:max-func-body-length
 function createFromSetting() {
     return __awaiter(this, void 0, void 0, function* () {
         // 作成情報取得
@@ -36,71 +37,62 @@ function createFromSetting() {
             .populate('theater')
             .exec();
         debug('screenOfPerformance:', screenOfPerformance);
-        if (screenOfPerformance === undefined) {
+        if (screenOfPerformance === null) {
             throw new Error('screen not found.');
         }
         // 作品情報取得
         const film = yield ttts.Models.Film.findById({ _id: setting.film }).exec();
         debug('film:', film);
-        if (film === undefined) {
+        if (film === null) {
             throw new Error('film not found.');
         }
         // パフォーマンス登録
         const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
-        const performance = {};
         const savePerformances = [];
-        performance.screen_name = (screenOfPerformance !== null) ? screenOfPerformance.get('name') : '';
-        performance.theater_name = (screenOfPerformance !== null) ? screenOfPerformance.get('theater').get('name') : '';
-        performance.theater = setting.theater;
-        //performance.screen = setting.screen;
-        performance.film = setting.film;
-        performance.canceled = false;
-        performance.ticket_type_group = setting.ticket_type_group;
         // 7日分Loop
         const promisesDay = (days.map((day) => __awaiter(this, void 0, void 0, function* () {
-            performance.day = day;
             // 開始時間分Loop
             const promisesTime = (times.map((time) => __awaiter(this, void 0, void 0, function* () {
-                // パフォーマンス時間情報セット
-                performance.open_time = time.open_time;
-                performance.start_time = time.start_time;
-                performance.end_time = time.end_time;
-                performance.ttts_extension = {
-                    tour_number: time.tour_number,
-                    ev_service_status: ttts.PerformanceUtil.EV_SERVICE_STATUS.NORMAL,
-                    ev_service_update_user: '',
-                    online_sales_status: ttts.PerformanceUtil.ONLINE_SALES_STATUS.NORMAL,
-                    online_sales_update_user: '',
-                    refund_status: ttts.PerformanceUtil.REFUND_STATUS.NONE,
-                    refund_update_user: '',
-                    refunded_count: 0
-                };
                 // 2017/10 2次 予約枠、時間の変更対応
-                performance.screen =
-                    setting.special_screens.hasOwnProperty(performance.start_time) ?
-                        setting.special_screens[performance.start_time] : setting.screen;
+                const screen = (setting.special_screens[time.start_time] !== undefined) ?
+                    setting.special_screens[time.start_time] : setting.screen;
+                // ユニークなIDを生成
+                const id = [
+                    // tslint:disable-next-line:no-magic-numbers
+                    day.slice(-6),
+                    setting.film,
+                    screen,
+                    time.start_time
+                ].join('');
                 // パフォーマンス登録
-                debug('creating performance...');
+                const performance = {
+                    id: id,
+                    theater: screenOfPerformance.get('theater').get('id'),
+                    theater_name: screenOfPerformance.get('theater').get('name'),
+                    screen: screen,
+                    screen_name: screenOfPerformance.get('name'),
+                    film: film.get('id'),
+                    ticket_type_group: setting.ticket_type_group,
+                    day: day,
+                    open_time: time.open_time,
+                    start_time: time.start_time,
+                    end_time: time.end_time,
+                    canceled: false,
+                    ttts_extension: {
+                        tour_number: time.tour_number,
+                        ev_service_status: ttts.factory.performance.EvServiceStatus.Normal,
+                        ev_service_update_user: '',
+                        online_sales_status: ttts.factory.performance.OnlineSalesStatus.Normal,
+                        online_sales_update_user: '',
+                        refund_status: ttts.factory.performance.RefundStatus.None,
+                        refund_update_user: '',
+                        refunded_count: 0
+                    }
+                };
+                debug('creating performance...', performance);
                 //スクリーン、作品、上映日、開始時間
-                const result = yield performanceRepo.performanceModel.findOneAndUpdate({
-                    screen: performance.screen,
-                    film: performance.film,
-                    day: performance.day,
-                    start_time: performance.start_time
-                }, {
-                    // 初回は $setと$setOnInsertがセットされ2回目以降は$setのみセット
-                    // created_atは更新されない
-                    $set: performance
-                    //$setOnInsert: performance
-                }, {
-                    upsert: true,
-                    new: true
-                }).exec();
-                debug('performance created');
-                if (result !== null) {
-                    performance._id = result._id;
-                    savePerformances.push(result);
-                }
+                yield performanceRepo.saveIfNotExists(performance);
+                savePerformances.push(performance);
             })));
             yield Promise.all(promisesTime);
         })));
@@ -173,7 +165,6 @@ function createFromJson() {
         const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         const performances = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
         const screens = yield ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
-        console.log(screens);
         // あれば更新、なければ追加
         yield Promise.all(performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
             // 劇場とスクリーン名称を追加
