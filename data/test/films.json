@@ -1,0 +1,10 @@
+[
+    {
+        "_id": "000001",
+        "name":{"ja":"東京タワー TOP DECK","en":"TokyoTower TOP DECK"},
+        "sections":[{"code":"01","name":{"ja":"","en":""}}],
+        "minutes":"",
+        "is_mx4d":false,
+        "copyright":""
+    }
+]

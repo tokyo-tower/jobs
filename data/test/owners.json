@@ -1,0 +1,70 @@
+[
+    {
+        "username": "motionpicture",
+        "password": "motionpicture",
+        "name": {
+            "ja": "内部関係者モーションピクチャー",
+            "en": "staff motionpicture"
+        },
+        "notes":"0",
+        "email": "hello@motionpicture.jp",
+        "group": "STAFF"
+    },
+    {
+        "username": "window-motionpicture",
+        "password": "motionpicture",
+        "name": {
+            "ja": "当日窓口モーションピクチャー",
+            "en": "window staff motionpicture"
+        },
+        "notes":"0",
+        "email": "hello@motionpicture.jp",
+        "group": "WINDOW_STAFF"
+    },
+    {
+        "username": "officestaff",
+        "password": "officetower333",
+        "name": {
+            "ja": "電波塔オフィススタッフ",
+            "en": "Tokyo Tower Office Staff"
+        },
+        "notes":"0",
+        "email": "hello@motionpicture.jp",
+        "group": "STAFF"
+    },
+    {
+        "username": "servicestaff",
+        "password": "servicetower333",
+        "name": {
+            "ja": "サービスカウンタースタッフ",
+            "en": "SC Staff"
+        },
+        "notes":"0",
+        "email": "hello@motionpicture.jp",
+        "group": "STAFF"
+    },
+    {
+        "username": "1F-ELEVATOR",
+        "password": "motionpicture",
+        "name": {
+            "ja": "フットタウン1F",
+            "en": "1F-ELEVATOR-staff1"
+        },
+        "description":"大展望台",
+        "notes":"1",
+        "email": "hello@motionpicture.jp",
+        "group": "DAITEN_AUTH"
+    },
+    {
+        "username": "TOPDECK-ELEVATOR",
+        "password": "motionpicture",
+        "name": {
+            "ja": "TOP DECKエレベータ",
+            "en": "TOPDECK-ELEVATOR"
+        },
+        "description":"TOP DECK",
+        "notes":"1",
+        "email": "hello@motionpicture.jp",
+        "group": "TOPDECK_AUTH"
+    }
+]
