@@ -30,11 +30,9 @@ export async function processOne() {
         try {
             // 内容の整合性チェック
             debug('finding reservations...payment_no:', notification.get('order_id'));
-            const parsedOrderId = ttts.ReservationUtil.parseGMOOrderId(notification.get('order_id'));
             const reservations = await reservationRepo.reservationModel.find(
                 {
-                    performance_day: parsedOrderId.performanceDay,
-                    payment_no: parsedOrderId.paymentNo
+                    gmo_order_id: notification.get('order_id')
                 }
             ).exec();
             debug('reservations found.', reservations.length);
