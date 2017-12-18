@@ -6,8 +6,10 @@
 import * as ttts from '@motionpicture/ttts-domain';
 import * as ticketTypeController from '../../app/controllers/ticketType';
 
+import mongooseConnectionOptions from '../../mongooseConnectionOptions';
+
 async function main(): Promise<void> {
-    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
     await ticketTypeController.createFromJson();
     ttts.mongoose.disconnect();
 }

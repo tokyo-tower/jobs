@@ -5,7 +5,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const ttts = require("@motionpicture/ttts-domain");
-const mongooseConnectionOptions_1 = require("../../../../app/mongooseConnectionOptions");
+const mongooseConnectionOptions_1 = require("../../../../mongooseConnectionOptions");
 ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
 const redisClient = ttts.redis.createClient(
 // tslint:disable-next-line:no-magic-numbers

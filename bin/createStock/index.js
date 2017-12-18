@@ -13,11 +13,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ttts = require("@motionpicture/ttts-domain");
-const performanceController = require("../../app/controllers/reservation");
+const StockController = require("../../app/controllers/stock");
+const mongooseConnectionOptions_1 = require("../../mongooseConnectionOptions");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        ttts.mongoose.connect(process.env.MONGOLAB_URI);
-        yield performanceController.createFromSetting();
+        ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
+        yield StockController.createFromSetting();
         ttts.mongoose.disconnect();
     });
 }

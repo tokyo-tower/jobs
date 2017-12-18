@@ -7,7 +7,7 @@
 import * as ttts from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
 
-import mongooseConnectionOptions from '../../../../app/mongooseConnectionOptions';
+import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
 
 const debug = createDebug('ttts-jobs:*');
 

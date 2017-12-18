@@ -22,9 +22,10 @@ const schemaController = require("../../app/controllers/schema");
 const theaterController = require("../../app/controllers/theater");
 const ticketTypeController = require("../../app/controllers/ticketType");
 const ticketTypeGroupController = require("../../app/controllers/ticketTypeGroup");
+const mongooseConnectionOptions_1 = require("../../mongooseConnectionOptions");
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        ttts.mongoose.connect(process.env.MONGOLAB_URI);
+        ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
         yield schemaController.dropCollections();
         yield ticketTypeController.createFromJson();
         yield ticketTypeGroupController.createFromJson();

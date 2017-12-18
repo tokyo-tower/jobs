@@ -6,7 +6,9 @@
 import * as ttts from '@motionpicture/ttts-domain';
 import * as emailQueueController from '../../app/controllers/emailQueue';
 
-ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
+import mongooseConnectionOptions from '../../mongooseConnectionOptions';
+
+ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 let count = 0;
 
 const INTERVAL_MILLISECONDS = 250;

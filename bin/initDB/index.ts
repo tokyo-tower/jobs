@@ -15,8 +15,10 @@ import * as theaterController from '../../app/controllers/theater';
 import * as ticketTypeController from '../../app/controllers/ticketType';
 import * as ticketTypeGroupController from '../../app/controllers/ticketTypeGroup';
 
+import mongooseConnectionOptions from '../../mongooseConnectionOptions';
+
 async function main(): Promise<void> {
-    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 
     await schemaController.dropCollections();
     await ticketTypeController.createFromJson();

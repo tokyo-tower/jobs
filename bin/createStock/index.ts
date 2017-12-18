@@ -4,11 +4,13 @@
  */
 
 import * as ttts from '@motionpicture/ttts-domain';
-import * as performanceController from '../../app/controllers/reservation';
+import * as StockController from '../../app/controllers/stock';
+
+import mongooseConnectionOptions from '../../mongooseConnectionOptions';
 
 async function main(): Promise<void> {
-    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI);
-    await performanceController.createFromSetting();
+    ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
+    await StockController.createFromSetting();
     ttts.mongoose.disconnect();
 }
 

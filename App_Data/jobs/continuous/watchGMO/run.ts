@@ -5,7 +5,7 @@
 
 import * as ttts from '@motionpicture/ttts-domain';
 import * as gmoController from '../../../../app/controllers/gmo';
-import mongooseConnectionOptions from '../../../../app/mongooseConnectionOptions';
+import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 let count = 0;

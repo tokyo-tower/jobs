@@ -14,7 +14,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const ttts = require("@motionpicture/ttts-domain");
 const emailQueueController = require("../../app/controllers/emailQueue");
-ttts.mongoose.connect(process.env.MONGOLAB_URI);
+const mongooseConnectionOptions_1 = require("../../mongooseConnectionOptions");
+ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
 let count = 0;
 const INTERVAL_MILLISECONDS = 250;
 const MAX_NUMBER_OF_PARALLEL_TASK = 10;

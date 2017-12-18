@@ -5,7 +5,7 @@
 
 import * as ttts from '@motionpicture/ttts-domain';
 
-import mongooseConnectionOptions from '../../../../app/mongooseConnectionOptions';
+import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 const redisClient = ttts.redis.createClient(
