@@ -1,5 +1,5 @@
 /**
- * パフォーマンス在庫状況を更新する
+ * パフォーマンスに対する供給情報ごとの在庫状況を更新する
  * @ignore
  */
 
@@ -19,10 +19,11 @@ const redisClient = ttts.redis.createClient(
     }
 );
 
-ttts.service.itemAvailability.updatePerformanceStatuses()(
+ttts.service.itemAvailability.updatePerformanceOffersAvailability()(
     new ttts.repository.Stock(ttts.mongoose.connection),
     new ttts.repository.Performance(ttts.mongoose.connection),
-    new ttts.repository.PerformanceStatuses(redisClient)
+    new ttts.repository.itemAvailability.SeatReservationOffer(redisClient),
+    new ttts.repository.rateLimit.TicketTypeCategory(redisClient)
 )
     .catch((err) => {
         console.error(err);

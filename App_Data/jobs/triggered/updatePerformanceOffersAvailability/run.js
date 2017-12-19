@@ -1,6 +1,6 @@
 "use strict";
 /**
- * パフォーマンス在庫状況を更新する
+ * パフォーマンスに対する供給情報ごとの在庫状況を更新する
  * @ignore
  */
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -14,7 +14,7 @@ parseInt(process.env.REDIS_PORT, 10), process.env.REDIS_HOST, {
     tls: { servername: process.env.REDIS_HOST },
     return_buffers: true
 });
-ttts.service.itemAvailability.updatePerformanceStatuses()(new ttts.repository.Stock(ttts.mongoose.connection), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.PerformanceStatuses(redisClient))
+ttts.service.itemAvailability.updatePerformanceOffersAvailability()(new ttts.repository.Stock(ttts.mongoose.connection), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.itemAvailability.SeatReservationOffer(redisClient), new ttts.repository.rateLimit.TicketTypeCategory(redisClient))
     .catch((err) => {
     console.error(err);
 })

@@ -21,8 +21,7 @@ export async function createFromSetting(): Promise<void> {
     debug('setting:', setting);
 
     // 引数情報取得
-    const targetInfo = getTargetInfoForCreateFromSetting(setting.performance_duration,
-                                                         setting.no_performance_times);
+    const targetInfo = getTargetInfoForCreateFromSetting(setting.performance_duration, setting.no_performance_times);
     const times = targetInfo.times;
     const days = targetInfo.days;
     debug('targetInfo:', targetInfo);
@@ -105,8 +104,7 @@ export async function createFromSetting(): Promise<void> {
  *
  * @memberof controller/performance
  */
-function getTargetInfoForCreateFromSetting(duration: number,
-                                           noPerformanceTimes: string[]): any {
+function getTargetInfoForCreateFromSetting(duration: number, noPerformanceTimes: string[]): any {
     const info: any = {};
     info.days = [];
     info.times = [];
@@ -149,7 +147,7 @@ function getTargetInfoForCreateFromSetting(duration: number,
         minutes.forEach((minute) => {
             const startTime: string = hour + minute;
             // パフォーマンスを作成しない時刻に指定されていなかったら作成
-            if (noPerformanceTimes.indexOf(startTime) < 0){
+            if (noPerformanceTimes.indexOf(startTime) < 0) {
                 info.times.push({
                     open_time: startTime,
                     start_time: startTime,
