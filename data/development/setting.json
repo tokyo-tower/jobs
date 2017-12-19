@@ -19,5 +19,6 @@
         "2100":"00102",
         "2200":"00102"
     },
-    "performance_duration": 15
+    "performance_duration": 15,
+    "no_performance_times": ["2215", "2230", "2245"]
 }

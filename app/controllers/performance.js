@@ -28,7 +28,7 @@ function createFromSetting() {
         const setting = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
         debug('setting:', setting);
         // 引数情報取得
-        const targetInfo = getTargetInfoForCreateFromSetting(setting.performance_duration);
+        const targetInfo = getTargetInfoForCreateFromSetting(setting.performance_duration, setting.no_performance_times);
         const times = targetInfo.times;
         const days = targetInfo.days;
         debug('targetInfo:', targetInfo);
@@ -105,7 +105,7 @@ exports.createFromSetting = createFromSetting;
  *
  * @memberof controller/performance
  */
-function getTargetInfoForCreateFromSetting(duration) {
+function getTargetInfoForCreateFromSetting(duration, noPerformanceTimes) {
     const info = {};
     info.days = [];
     info.times = [];
@@ -144,12 +144,15 @@ function getTargetInfoForCreateFromSetting(duration) {
         let index = 0;
         minutes.forEach((minute) => {
             const startTime = hour + minute;
-            info.times.push({
-                open_time: startTime,
-                start_time: startTime,
-                end_time: getEndTime(startTime),
-                tour_number: `${hour}${tours[index]}`
-            });
+            // パフォーマンスを作成しない時刻に指定されていなかったら作成
+            if (noPerformanceTimes.indexOf(startTime) < 0) {
+                info.times.push({
+                    open_time: startTime,
+                    start_time: startTime,
+                    end_time: getEndTime(startTime),
+                    tour_number: `${hour}${tours[index]}`
+                });
+            }
             index += 1;
         });
     });
