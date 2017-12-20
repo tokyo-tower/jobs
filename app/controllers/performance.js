@@ -48,18 +48,16 @@ function createFromSetting() {
         const savePerformances = [];
         // 7日分Loop
         yield Promise.all(targetInfo.map((performanceInfo) => __awaiter(this, void 0, void 0, function* () {
-            const day = moment(performanceInfo.start_date).tz('Asia/Tokyo').format('YYYYMMDD');
-            const startTime = moment(performanceInfo.start_date).tz('Asia/Tokyo').format('HHmm');
-            const endTime = moment(performanceInfo.end_date).tz('Asia/Tokyo').format('HHmm');
             // 2017/10 2次 予約枠、時間の変更対応
-            const screen = (setting.special_screens[startTime] !== undefined) ? setting.special_screens[startTime] : setting.screen;
-            // ユニークなIDを生成
+            const screen = (setting.special_screens[performanceInfo.start_time] !== undefined)
+                ? setting.special_screens[performanceInfo.start_time]
+                : setting.screen;
             const id = [
                 // tslint:disable-next-line:no-magic-numbers
-                day.slice(-6),
+                performanceInfo.day.slice(-6),
                 setting.film,
                 screen,
-                startTime
+                performanceInfo.start_time
             ].join('');
             // パフォーマンス登録
             const performance = {
@@ -70,13 +68,13 @@ function createFromSetting() {
                 screen_name: screenOfPerformance.get('name'),
                 film: film.get('id'),
                 ticket_type_group: setting.ticket_type_group,
-                day: day,
-                open_time: startTime,
-                start_time: startTime,
-                end_time: endTime,
+                day: performanceInfo.day,
+                open_time: performanceInfo.start_time,
+                start_time: performanceInfo.start_time,
+                end_time: performanceInfo.end_time,
                 canceled: false,
                 ttts_extension: {
-                    tour_number: performanceInfo.tour.code,
+                    tour_number: performanceInfo.tour_number,
                     ev_service_status: ttts.factory.performance.EvServiceStatus.Normal,
                     ev_service_update_user: '',
                     online_sales_status: ttts.factory.performance.OnlineSalesStatus.Normal,
@@ -89,7 +87,7 @@ function createFromSetting() {
                 start_date: performanceInfo.start_date,
                 end_date: performanceInfo.end_date,
                 duration: performanceInfo.duration,
-                tour: performanceInfo.tour
+                tour_number: performanceInfo.tour_number
             };
             debug('creating performance...', performance);
             yield performanceRepo.saveIfNotExists(performance);
@@ -128,29 +126,24 @@ function getTargetInfoForCreateFromSetting(duration, noPerformanceTimes) {
             // 2桁でない時は'0'詰め
             // tslint:disable-next-line:no-magic-numbers
             hour = `0${hour}`.slice(-2);
-            const tourStartDate = moment(`${now.format('YYYYMMDD')} ${hour}:00:00+09:00`, 'YYYYMMDD HH:mm:ssZ');
             minutes.forEach((minute, minuteIndex) => {
                 // ツアー情報作成
-                const tourCode = `${hour}${tours[minuteIndex]}`;
-                const tour = {
-                    name: {
-                        en: `Tour${tourCode}`,
-                        ja: `ツアー${tourCode}`
-                    },
-                    code: `${tourCode}`,
-                    door_time: tourStartDate.toDate(),
-                    start_date: tourStartDate.toDate(),
-                    end_date: moment(tourStartDate).add(1, 'hour').toDate(),
-                    duration: moment.duration(1, 'hour').toISOString()
-                };
+                const tourNumber = `${hour}${tours[minuteIndex]}`;
                 const startDate = moment(`${now.format('YYYYMMDD')} ${hour}:${minute}:00+09:00`, 'YYYYMMDD HH:mm:ssZ');
+                const endDate = moment(startDate).add(duration, 'minutes');
+                const day = moment(startDate).tz('Asia/Tokyo').format('YYYYMMDD');
+                const startTime = moment(startDate).tz('Asia/Tokyo').format('HHmm');
+                const endTime = moment(endDate).tz('Asia/Tokyo').format('HHmm');
                 // パフォーマンスを作成しない時刻に指定されていなかったら作成
                 if (noPerformanceTimes.indexOf(`${hour}${minute}`) < 0) {
                     performanceInfos.push({
+                        day: day,
+                        start_time: startTime,
+                        end_time: endTime,
                         door_time: startDate.toDate(),
                         start_date: startDate.toDate(),
-                        end_date: moment(startDate).add(duration, 'minutes').toDate(),
-                        tour: tour,
+                        end_date: endDate.toDate(),
+                        tour_number: tourNumber,
                         duration: moment.duration(duration, 'minutes').toISOString()
                     });
                 }
