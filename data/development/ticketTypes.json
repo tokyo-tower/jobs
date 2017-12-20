@@ -26,7 +26,7 @@
             }
         ],
         "ttts_extension": {
-            "category": "0",
+            "category": "Normal",
             "required_seat_num": 1,
             "csv_code": "10011"
         }
@@ -58,7 +58,7 @@
             }
         ],
         "ttts_extension": {
-            "category": "0",
+            "category": "Normal",
             "required_seat_num": 1,
             "csv_code": "0000000000231"
         }
@@ -90,7 +90,7 @@
             }
         ],
         "ttts_extension": {
-            "category": "0",
+            "category": "Normal",
             "required_seat_num": 1,
             "csv_code": "10041"
         }
@@ -122,7 +122,7 @@
             }
         ],
         "ttts_extension": {
-            "category": "1",
+            "category": "Wheelchair",
             "required_seat_num": 6,
             "csv_code": "10011"
         }
@@ -154,7 +154,7 @@
             }
         ],
         "ttts_extension": {
-            "category": "1",
+            "category": "Wheelchair",
             "required_seat_num": 6,
             "csv_code": "10031"
         }
@@ -186,7 +186,7 @@
             }
         ],
         "ttts_extension": {
-            "category": "1",
+            "category": "Wheelchair",
             "required_seat_num": 6,
             "csv_code": "10041"
         }
