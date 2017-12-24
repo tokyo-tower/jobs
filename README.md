@@ -13,15 +13,16 @@ set FRONTEND_ENDPOINT=**********frontendのエンドポイント**********
 set MONGOLAB_URI=**********mongodb接続URI**********
 set GMO_ENDPOINT=**********gmo apiのエンドポイント**********
 set GMO_SITE_ID=**********gmo サイトID**********
-set GMO_SHOP_ID=**********gmo ショップID**********
-set GMO_SHOP_PASS=**********gmo ショップパスワード**********
+set PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS=**********何日先までパフォーマンスごとの集計データを更新するか**********
 ```
+
 only on Aure WebApps
 
 ```shell
 set WEBSITE_NODE_DEFAULT_VERSION=**********node.jsバージョン**********
 set WEBSITE_TIME_ZONE=Tokyo Standard Time
 ```
+
 DEBUG
 
 ```shell

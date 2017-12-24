@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 - パフォーマンスに対する返品タスク監視ジョブを追加。
 - パフォーマンスに対する供給情報ごとの在庫状況を更新するジョブを追加。
+- 入場ゲート情報同期ジョブを追加。
+- パフォーマンスごとの集計ジョブを追加。
 
 ### Changed
 
