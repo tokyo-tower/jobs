@@ -14,6 +14,8 @@ set MONGOLAB_URI=**********mongodb接続URI**********
 set GMO_ENDPOINT=**********gmo apiのエンドポイント**********
 set GMO_SITE_ID=**********gmo サイトID**********
 set PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS=**********何日先までパフォーマンスごとの集計データを更新するか**********
+set PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS=**********パフォーマンスごとの集計データ保持期間(秒)**********
+set PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS=**********パフォーマンス在庫状況のデータ保持期間(秒)**********
 ```
 
 only on Aure WebApps

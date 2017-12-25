@@ -10,6 +10,8 @@ import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
 
 // tslint:disable-next-line:no-magic-numbers
 const PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS = parseInt(<string>process.env.PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS, 10);
+// tslint:disable-next-line:no-magic-numbers
+const PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS = parseInt(<string>process.env.PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS, 10);
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 const redisClient = ttts.redis.createClient({
@@ -20,10 +22,13 @@ const redisClient = ttts.redis.createClient({
     tls: { servername: process.env.REDIS_HOST }
 });
 
-ttts.service.performance.aggregateCounts({
-    startFrom: moment().toDate(),
-    startThrough: moment().add(PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS, 'days').toDate()
-})(
+ttts.service.performance.aggregateCounts(
+    {
+        startFrom: moment().toDate(),
+        startThrough: moment().add(PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS, 'days').toDate()
+    },
+    PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS
+)(
     new ttts.repository.Performance(ttts.mongoose.connection),
     new ttts.repository.Reservation(ttts.mongoose.connection),
     new ttts.repository.Owner(ttts.mongoose.connection),
