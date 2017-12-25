@@ -1,5 +1,5 @@
 /**
- * GMO実売上
+ * メール通知
  * @ignore
  */
 
@@ -21,7 +21,7 @@ const redisClient = ttts.redis.createClient(
 let count = 0;
 
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 1000;
+const INTERVAL_MILLISECONDS = 200;
 const taskRepository = new ttts.repository.Task(ttts.mongoose.connection);
 
 setInterval(
@@ -34,7 +34,7 @@ setInterval(
 
         try {
             await ttts.service.task.executeByName(
-                ttts.factory.taskName.SettleCreditCard
+                ttts.factory.taskName.SendEmailNotification
             )(taskRepository, ttts.mongoose.connection, redisClient);
         } catch (error) {
             console.error(error.message);

@@ -1,6 +1,5 @@
 /**
- * COA仮予約資産移動
- *
+ * 座席予約資産移動
  * @ignore
  */
 
@@ -22,7 +21,7 @@ const redisClient = ttts.redis.createClient(
 let count = 0;
 
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 500;
+const INTERVAL_MILLISECONDS = 200;
 const taskRepository = new ttts.repository.Task(ttts.mongoose.connection);
 
 setInterval(

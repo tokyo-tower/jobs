@@ -1,7 +1,6 @@
 "use strict";
 /**
- * COA仮予約資産移動
- *
+ * 座席予約資産移動
  * @ignore
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -25,7 +24,7 @@ const redisClient = ttts.redis.createClient({
 });
 let count = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 500;
+const INTERVAL_MILLISECONDS = 200;
 const taskRepository = new ttts.repository.Task(ttts.mongoose.connection);
 setInterval(() => __awaiter(this, void 0, void 0, function* () {
     if (count > MAX_NUBMER_OF_PARALLEL_TASKS) {

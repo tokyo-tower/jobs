@@ -1,6 +1,6 @@
 "use strict";
 /**
- * GMO実売上
+ * メール通知
  * @ignore
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -24,7 +24,7 @@ const redisClient = ttts.redis.createClient({
 });
 let count = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 1000;
+const INTERVAL_MILLISECONDS = 200;
 const taskRepository = new ttts.repository.Task(ttts.mongoose.connection);
 setInterval(() => __awaiter(this, void 0, void 0, function* () {
     if (count > MAX_NUBMER_OF_PARALLEL_TASKS) {
@@ -32,7 +32,7 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     }
     count += 1;
     try {
-        yield ttts.service.task.executeByName(ttts.factory.taskName.SettleCreditCard)(taskRepository, ttts.mongoose.connection, redisClient);
+        yield ttts.service.task.executeByName(ttts.factory.taskName.SendEmailNotification)(taskRepository, ttts.mongoose.connection, redisClient);
     }
     catch (error) {
         console.error(error.message);
