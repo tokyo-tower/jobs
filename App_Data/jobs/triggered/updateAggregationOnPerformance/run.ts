@@ -29,9 +29,11 @@ ttts.service.performance.aggregateCounts(
     },
     PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS
 )(
+    new ttts.repository.place.CheckinGate(redisClient),
     new ttts.repository.Performance(ttts.mongoose.connection),
     new ttts.repository.Reservation(ttts.mongoose.connection),
-    new ttts.repository.Owner(ttts.mongoose.connection),
+    new ttts.repository.itemAvailability.Performance(redisClient),
+    new ttts.repository.itemAvailability.SeatReservationOffer(redisClient),
     new ttts.repository.PerformanceWithAggregation(redisClient)
     )
     .catch((err) => {
