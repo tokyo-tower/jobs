@@ -17,7 +17,7 @@
         "listFiles": false,
         "locale": "en-us",
         "module": "commonjs",
-        "newLine": "CRLF",
+        "newLine": "LF",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
@@ -38,7 +38,6 @@
         "watch": false
     },
     "exclude": [
-        "config",
         "data",
         "node_modules"
     ]

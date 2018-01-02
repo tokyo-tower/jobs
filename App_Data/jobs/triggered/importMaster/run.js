@@ -1,6 +1,6 @@
 "use strict";
 /**
- * タスク中止
+ * マスターデータインポートジョブ
  * @ignore
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -14,22 +14,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const ttts = require("@motionpicture/ttts-domain");
 const mongooseConnectionOptions_1 = require("../../../../mongooseConnectionOptions");
+const MasterSyncConstoller = require("../../../../controllers/masterSync");
 ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
-let count = 0;
-const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 500;
-const RETRY_INTERVAL_MINUTES = 10;
-const taskRepository = new ttts.repository.Task(ttts.mongoose.connection);
-setInterval(() => __awaiter(this, void 0, void 0, function* () {
-    if (count > MAX_NUBMER_OF_PARALLEL_TASKS) {
-        return;
-    }
-    count += 1;
-    try {
-        yield ttts.service.task.abort(RETRY_INTERVAL_MINUTES)(taskRepository);
-    }
-    catch (error) {
-        console.error(error.message);
-    }
-    count -= 1;
-}), INTERVAL_MILLISECONDS);
+function main() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield MasterSyncConstoller.createTicketTypesFromJson();
+        yield MasterSyncConstoller.createTicketTypeGroupsFromJson();
+        yield MasterSyncConstoller.createFilmsFromJson();
+        yield MasterSyncConstoller.createTheatersFromJson();
+        yield MasterSyncConstoller.createScreensFromJson();
+        //await performanceController.createFromJson();
+        yield MasterSyncConstoller.createOwnersFromJson();
+    });
+}
+main().catch((err) => {
+    console.error(err);
+}).then(() => {
+    ttts.mongoose.disconnect();
+});

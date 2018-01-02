@@ -2,34 +2,25 @@
 
 # Getting Started
 
-## Required environment variables
-```shell
-set NODE_ENV=**********環境名(development,test,productionなど)**********
-set SENDGRID_API_KEY=**********sendgrid api key**********
-set REDIS_HOST=**********パフォーマンス空席状況保管先redis host**********
-set REDIS_PORT=**********パフォーマンス空席状況保管先redis port**********
-set REDIS_KEY=**********パフォーマンス空席状況保管先redis key**********
-set FRONTEND_ENDPOINT=**********frontendのエンドポイント**********
-set MONGOLAB_URI=**********mongodb接続URI**********
-set GMO_ENDPOINT=**********gmo apiのエンドポイント**********
-set GMO_SITE_ID=**********gmo サイトID**********
-set PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS=**********何日先までパフォーマンスごとの集計データを更新するか**********
-set PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS=**********パフォーマンスごとの集計データ保持期間(秒)**********
-set PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS=**********パフォーマンス在庫状況のデータ保持期間(秒)**********
-```
+## Usage
 
-only on Aure WebApps
+### Environment variables
 
-```shell
-set WEBSITE_NODE_DEFAULT_VERSION=**********node.jsバージョン**********
-set WEBSITE_TIME_ZONE=Tokyo Standard Time
-```
-
-DEBUG
-
-```shell
-set DEBUG=ttts-jobs*
-```
+| Name                                          | Required | Value       | Purpose                               |
+| --------------------------------------------- | -------- | ----------- | ------------------------------------- |
+| `DEBUG`                                       | false    | ttts-jobs:* | Debug                                 |
+| `NPM_TOKEN`                                   | true     |             | NPM auth token                        |
+| `NODE_ENV`                                    | true     |             | 環境名(development,test,productionなど) |
+| `SENDGRID_API_KEY`                            | true     |             | GMOリンク決済からの戻り先エンドポイント             |
+| `REDIS_HOST`                                  | true     |             | redis host                            |
+| `REDIS_PORT`                                  | true     |             | redis port                            |
+| `REDIS_KEY`                                   | true     |             | redis key                             |
+| `MONGOLAB_URI`                                | true     |             | mongodb接続URI                        |
+| `GMO_ENDPOINT`                                | true     |             | GMO apiのエンドポイント                       |
+| `GMO_SITE_ID`                                 | true     |             | GMO サイトID                             |
+| `PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS`       | true     |             | 何日先までパフォーマンスごとの集計データを更新するか     |
+| `PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS`  | true     |             | パフォーマンスごとの集計データ保持期間(秒)         |
+| `PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS` | true     |             | パフォーマンス在庫状況のデータ保持期間(秒)       |
 
 
 # tslint

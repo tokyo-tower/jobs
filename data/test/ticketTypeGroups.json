@@ -2,8 +2,8 @@
     {
         "_id": "01",
         "name": {
-            "ja": "デフォルト",
-            "en": ""
+            "ja": "基本グループ",
+            "en": "Default group"
         },
         "description": "default",
         "ticket_types": [
