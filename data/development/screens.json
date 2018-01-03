@@ -40,9 +40,6 @@
     {"code":"A-38","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
     {"code":"A-39","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
     {"code":"A-40","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-41","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-42","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-43","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}},
-    {"code":"A-44","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}}
+    {"code":"A-41","grade":{"code":"00","name":{"ja":"ノーマルシート","en":"Normal Seat"},"additional_charge":0}}
 ]}]}
 ]

@@ -2,10 +2,10 @@
     {
         "_id": "001",
         "name": {
-            "ja": "トップデッキツアー（大人）",
+            "ja": "トップデッキツアー(大人)",
             "en": "Top Deck Tour (Adult: 16 years or over)",
-            "zh-hant": "Top Deck Tour（成人:16歲以上）",
-            "zh-hans": "Top Deck Tour（成人：16岁以上）",
+            "zh-hant": "Top Deck Tour(成人:16歲以上)",
+            "zh-hans": "Top Deck Tour(成人：16岁以上)",
             "ko": "Top Deck Tour(어른: 16세 이상)",
             "th": "Top Deck Tour (ผู้ใหญ่)",
             "id": "Top Deck Tour (Dewasa: 16 tahun ke atas)",
@@ -35,10 +35,10 @@
     {
         "_id": "002",
         "name": {
-            "ja": "トップデッキツアー（小・中学生）",
-            "en": "Top Deck Tour (Junior: 7 to 15 years) x",
-            "zh-hant": "Top Deck Tour（國中小學生:7～15歲）",
-            "zh-hans": "Top Deck Tour（中小学生：7～15岁）",
+            "ja": "トップデッキツアー(小・中学生)",
+            "en": "Top Deck Tour (Junior: 7 to 15 years)",
+            "zh-hant": "Top Deck Tour(國中小學生:7～15歲)",
+            "zh-hans": "Top Deck Tour(中小学生：7～15岁)",
             "ko": "Top Deck Tour(초/중학생: 7~15세)",
             "th": "Top Deck Tour (นักเรียนชั้นประถม/มัธยมต้น)",
             "id": "Top Deck Tour (Pelajar SD, SMP: 7-15 tahun)",
@@ -68,10 +68,10 @@
     {
         "_id": "003",
         "name": {
-            "ja": "トップデッキツアー（幼児・4歳～）",
+            "ja": "トップデッキツアー(幼児・4歳～)",
             "en": "Top Deck Tour (Child: 4 to 6 years) ",
-            "zh-hant": "Top Deck Tour（幼童:4～6歲）",
-            "zh-hans": "Top Deck Tour（幼儿：4～6岁）",
+            "zh-hant": "Top Deck Tour(幼童:4～6歲)",
+            "zh-hans": "Top Deck Tour(幼儿：4～6岁)",
             "ko": "Top Deck Tour(유아: 4~6세)",
             "th": "Top Deck Tour (เด็กเล็ก/4 ขวบขึ้นไป)",
             "id": "Top Deck Tour (Anak-anak: 4-6 tahun)",
@@ -101,10 +101,10 @@
     {
         "_id": "004",
         "name": {
-            "ja": "トップデッキツアー 車いす（大人）",
+            "ja": "トップデッキツアー 車いす(大人)",
             "en": "Top Deck Tour: Wheelchair (Adult: 16 years or over) ",
-            "zh-hant": "Top Deck Tour 輪椅（成人:16歲以上）",
-            "zh-hans": "Top Deck Tour轮椅（成人：16岁以上）",
+            "zh-hant": "Top Deck Tour 輪椅(成人:16歲以上)",
+            "zh-hans": "Top Deck Tour轮椅(成人：16岁以上)",
             "ko": "Top Deck Tour 휠체어(어른: 16세 이상)",
             "th": "Top Deck Tour นั่งรถเข็นวีลแชร์ (ผู้ใหญ่)",
             "id": "Top Deck Tour Kursi Roda (Dewasa: 16 tahun ke atas)",
@@ -134,10 +134,10 @@
     {
         "_id": "005",
         "name": {
-            "ja": "トップデッキツアー 車いす（小・中学生）",
+            "ja": "トップデッキツアー 車いす(小・中学生)",
             "en": "Top Deck Tour: Wheelchair (Junior: 7 to 15 years) ",
-            "zh-hant": "Top Deck Tour 輪椅（國中小學生:7～15歲）",
-            "zh-hans": "Top Deck Tour轮椅（中小学生：7～15岁）",
+            "zh-hant": "Top Deck Tour 輪椅(國中小學生:7～15歲)",
+            "zh-hans": "Top Deck Tour轮椅(中小学生：7～15岁)",
             "ko": "Top Deck Tour 휠체어(초/중학생: 7~15세)",
             "th": "Top Deck Tour นั่งรถเข็นวีลแชร์ (นักเรียนชั้นประถม/มัธยมต้น)",
             "id": "Top Deck Tour Kursi Roda (Pelajar SD, SMP: 7-15 tahun)",
@@ -167,10 +167,10 @@
     {
         "_id": "006",
         "name": {
-            "ja": "トップデッキツアー 車いす（幼児・４歳～）",
+            "ja": "トップデッキツアー 車いす(幼児・４歳～)",
             "en": "Top Deck Tour: Wheelchair (Child: 4 to 6 years)",
-            "zh-hant": "Top Deck Tour 輪椅（幼童:4～6歲）",
-            "zh-hans": "Top Deck Tour轮椅（幼儿：4～6岁）",
+            "zh-hant": "Top Deck Tour 輪椅(幼童:4～6歲)",
+            "zh-hans": "Top Deck Tour轮椅(幼儿：4～6岁)",
             "ko": "Top Deck Tour 휠체어(유아: 4~6세)",
             "th": "Top Deck Tour นั่งรถเข็นวีลแชร์ (เด็กเล็ก/4 ขวบขึ้นไป)",
             "id": "Top Deck Tour Kursi Roda (Anak-anak: 4-6 tahun)",
