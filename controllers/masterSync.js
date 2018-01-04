@@ -138,13 +138,9 @@ function createOwnersFromJson() {
             const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
             owner.password_salt = passwordSalt;
             owner.password_hash = ttts.CommonUtil.createHash(owner.password, passwordSalt);
+            delete owner.password;
             debug('updating owner...');
-            yield ownerRepo.ownerModel.findOneAndUpdate({
-                username: owner.username
-            }, owner, {
-                new: true,
-                upsert: true
-            }).exec();
+            yield ownerRepo.save(owner);
             debug('owner updated');
         })));
         debug('promised.');

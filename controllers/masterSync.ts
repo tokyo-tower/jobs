@@ -150,18 +150,10 @@ export async function createOwnersFromJson(): Promise<void> {
         const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
         owner.password_salt = passwordSalt;
         owner.password_hash = ttts.CommonUtil.createHash(owner.password, passwordSalt);
+        delete owner.password;
 
         debug('updating owner...');
-        await ownerRepo.ownerModel.findOneAndUpdate(
-            {
-                username: owner.username
-            },
-            owner,
-            {
-                new: true,
-                upsert: true
-            }
-        ).exec();
+        await ownerRepo.save(owner);
         debug('owner updated');
     }));
     debug('promised.');
