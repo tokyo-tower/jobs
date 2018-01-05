@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Deprecated
 
 ### Removed
+- 所有者コレクションを削除(ユーザー情報をCognitoへ移行)
 
 ### Fixed
 

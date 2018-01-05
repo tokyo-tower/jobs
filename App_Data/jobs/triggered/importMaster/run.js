@@ -24,7 +24,6 @@ function main() {
         yield MasterSyncConstoller.createTheatersFromJson();
         yield MasterSyncConstoller.createScreensFromJson();
         //await performanceController.createFromJson();
-        yield MasterSyncConstoller.createOwnersFromJson();
     });
 }
 main().catch((err) => {

@@ -13,7 +13,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ttts = require("@motionpicture/ttts-domain");
-const crypto = require("crypto");
 const createDebug = require("debug");
 const fs = require("fs-extra");
 const debug = createDebug('ttts-jobs:controllers:masterSync');
@@ -124,26 +123,3 @@ function createTicketTypeGroupsFromJson() {
     });
 }
 exports.createTicketTypeGroupsFromJson = createTicketTypeGroupsFromJson;
-/**
- * jsonから所有者生成
- */
-function createOwnersFromJson() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const ownerRepo = new ttts.repository.Owner(ttts.mongoose.connection);
-        const owners = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/owners.json`);
-        // あれば更新、なければ追加
-        yield Promise.all(owners.map((owner) => __awaiter(this, void 0, void 0, function* () {
-            // パスワードハッシュ化
-            const SIZE = 64;
-            const passwordSalt = crypto.randomBytes(SIZE).toString('hex');
-            owner.password_salt = passwordSalt;
-            owner.password_hash = ttts.CommonUtil.createHash(owner.password, passwordSalt);
-            delete owner.password;
-            debug('updating owner...');
-            yield ownerRepo.save(owner);
-            debug('owner updated');
-        })));
-        debug('promised.');
-    });
-}
-exports.createOwnersFromJson = createOwnersFromJson;

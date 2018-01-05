@@ -4,8 +4,12 @@
  */
 
 import * as ttts from '@motionpicture/ttts-domain';
+import * as AWS from 'aws-sdk';
+import * as createDebug from 'debug';
 
 import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
+
+const debug = createDebug('ttts-jobs:syncCheckinGates');
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 const redisClient = ttts.redis.createClient({
@@ -16,28 +20,56 @@ const redisClient = ttts.redis.createClient({
     tls: { servername: process.env.REDIS_HOST }
 });
 
-const ownerRepo = new ttts.repository.Owner(ttts.mongoose.connection);
 const checkinGateRepo = new ttts.repository.place.CheckinGate(redisClient);
 
-ownerRepo.ownerModel.find({ notes: '1' })
-    .exec().then(async (owners) => {
-        const checkinGates = owners.map((owner) => {
-            return {
-                identifier: owner.get('group'),
-                name: owner.get('description')
-            };
+// Cognitoからグループリストを取得して、入場ゲートリポジトリーに保管する
+getCognitoGroups().then(async (groups) => {
+    const checkinGates = groups.map((group) => {
+        return {
+            identifier: <string>group.GroupName,
+            name: <string>group.Description
+        };
+    });
+    debug('storing checkinGates...', checkinGates);
+
+    await Promise.all(checkinGates.map(async (checkinGate) => {
+        try {
+            await checkinGateRepo.store(checkinGate);
+        } catch (error) {
+            console.error(error);
+        }
+    }));
+}).catch((error) => {
+    console.error(error);
+}).then(() => {
+    ttts.mongoose.disconnect();
+    redisClient.quit();
+});
+
+async function getCognitoGroups() {
+    return new Promise<AWS.CognitoIdentityServiceProvider.GroupListType>((resolve, reject) => {
+        const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({
+            apiVersion: 'latest',
+            region: 'ap-northeast-1',
+            accessKeyId: <string>process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: <string>process.env.AWS_SECRET_ACCESS_KEY
         });
 
-        await Promise.all(checkinGates.map(async (checkinGate) => {
-            try {
-                await checkinGateRepo.store(checkinGate);
-            } catch (error) {
-                console.error(error);
-            }
-        }));
-    }).catch((error) => {
-        console.error(error);
-    }).then(() => {
-        ttts.mongoose.disconnect();
-        redisClient.quit();
+        cognitoIdentityServiceProvider.listGroups(
+            {
+                UserPoolId: <string>process.env.COGNITO_USER_POOL_ID
+            },
+            (err, data) => {
+                debug('listGroups result:', err, data);
+                if (err instanceof Error) {
+                    reject(err);
+                } else {
+                    if (data.Groups === undefined) {
+                        reject(new Error('Unexpected.'));
+                    } else {
+                        resolve(data.Groups);
+                    }
+                }
+            });
     });
+}

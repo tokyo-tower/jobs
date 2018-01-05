@@ -13,7 +13,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ttts = require("@motionpicture/ttts-domain");
+const AWS = require("aws-sdk");
+const createDebug = require("debug");
 const mongooseConnectionOptions_1 = require("../../../../mongooseConnectionOptions");
+const debug = createDebug('ttts-jobs:syncCheckinGates');
 ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
 const redisClient = ttts.redis.createClient({
     // tslint:disable-next-line:no-magic-numbers
@@ -22,16 +25,16 @@ const redisClient = ttts.redis.createClient({
     password: process.env.REDIS_KEY,
     tls: { servername: process.env.REDIS_HOST }
 });
-const ownerRepo = new ttts.repository.Owner(ttts.mongoose.connection);
 const checkinGateRepo = new ttts.repository.place.CheckinGate(redisClient);
-ownerRepo.ownerModel.find({ notes: '1' })
-    .exec().then((owners) => __awaiter(this, void 0, void 0, function* () {
-    const checkinGates = owners.map((owner) => {
+// Cognitoからグループリストを取得して、入場ゲートリポジトリーに保管する
+getCognitoGroups().then((groups) => __awaiter(this, void 0, void 0, function* () {
+    const checkinGates = groups.map((group) => {
         return {
-            identifier: owner.get('group'),
-            name: owner.get('description')
+            identifier: group.GroupName,
+            name: group.Description
         };
     });
+    debug('storing checkinGates...', checkinGates);
     yield Promise.all(checkinGates.map((checkinGate) => __awaiter(this, void 0, void 0, function* () {
         try {
             yield checkinGateRepo.store(checkinGate);
@@ -46,3 +49,31 @@ ownerRepo.ownerModel.find({ notes: '1' })
     ttts.mongoose.disconnect();
     redisClient.quit();
 });
+function getCognitoGroups() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({
+                apiVersion: 'latest',
+                region: 'ap-northeast-1',
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+            });
+            cognitoIdentityServiceProvider.listGroups({
+                UserPoolId: process.env.COGNITO_USER_POOL_ID
+            }, (err, data) => {
+                debug('listGroups result:', err, data);
+                if (err instanceof Error) {
+                    reject(err);
+                }
+                else {
+                    if (data.Groups === undefined) {
+                        reject(new Error('Unexpected.'));
+                    }
+                    else {
+                        resolve(data.Groups);
+                    }
+                }
+            });
+        });
+    });
+}

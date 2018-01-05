@@ -18,8 +18,6 @@ async function main(): Promise<void> {
     await MasterSyncConstoller.createTheatersFromJson();
     await MasterSyncConstoller.createScreensFromJson();
     //await performanceController.createFromJson();
-
-    await MasterSyncConstoller.createOwnersFromJson();
 }
 
 main().catch((err) => {
