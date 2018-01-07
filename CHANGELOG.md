@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - 入場ゲート情報同期ジョブを追加。
 - パフォーマンスごとの集計ジョブを追加。
 - マスターインポートジョブを追加。
+- 注文作成ジョブを追加。
 
 ### Changed
 
