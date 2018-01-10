@@ -1,0 +1,18 @@
+[
+    {
+        "_id": "01",
+        "name": {
+            "ja": "基本グループ",
+            "en": "Default group"
+        },
+        "description": "default",
+        "ticket_types": [
+            "001",
+            "002",
+            "003",
+            "004",
+            "005",
+            "006"
+        ]
+    }
+]

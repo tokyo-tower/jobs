@@ -5,12 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 ### Added
+- 本番環境のjsonマスターデータを追加。
 
 ### Changed
 
 ### Deprecated
 
 ### Removed
+- 所有者jsonマスターデータを削除。
 
 ### Fixed
 
