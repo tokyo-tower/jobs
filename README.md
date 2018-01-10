@@ -1,6 +1,16 @@
-# TTTSタスクアプリケーション
+<img src="https://motionpicture.jp/images/common/logo_01.svg" alt="motionpicture" title="motionpicture" align="right" height="56" width="98"/>
 
-# Getting Started
+# 東京タワーチケット予約システムジョブアプリケーション
+
+[![CircleCI](https://circleci.com/gh/motionpicture/ttts-jobs.svg?style=svg&circle-token=86145ada73c0363eac14e60f4449f912b6a17e09)](https://circleci.com/gh/motionpicture/ttts-jobs)
+
+
+## Table of contents
+
+* [Usage](#usage)
+* [Code Samples](#code-samples)
+* [Jsdoc](#jsdoc)
+* [License](#license)
 
 ## Usage
 
@@ -21,16 +31,19 @@
 | `PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS`       | true     |             | 何日先までパフォーマンスごとの集計データを更新するか     |
 | `PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS`  | true     |             | パフォーマンスごとの集計データ保持期間(秒)         |
 | `PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS` | true     |             | パフォーマンス在庫状況のデータ保持期間(秒)       |
+| `COGNITO_USER_POOL_ID`                        | true     |             | 入場アカウントを管理するCognitoユーザープールID      |
+| `AWS_ACCESS_KEY_ID`                           | true     |             | AWSリソースアクセスキー                         |
+| `AWS_SECRET_ACCESS_KEY`                       | true     |             | AWSリソースアクセスシークレット                     |
 
 
-# tslint
+## Code Samples
 
-コード品質チェックをtslintで行っています。lintパッケージとして以下を仕様。
-* [tslint](https://github.com/palantir/tslint)
-* [tslint-microsoft-contrib](https://github.com/Microsoft/tslint-microsoft-contrib)
-`npm run check`でチェック実行。改修の際には、必ずチェックすること。
+No samples.
 
-# test
-mochaフレームワークでテスト実行。
-* [mocha](https://www.npmjs.com/package/mocha)
-`npm test`でテスト実行。
+## Jsdoc
+
+`npm run doc` emits jsdoc to ./doc.
+
+## License
+
+UNLICENSED
