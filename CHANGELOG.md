@@ -5,20 +5,28 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 ### Added
-- 本番環境のjsonマスターデータを追加。
 
 ### Changed
 
 ### Deprecated
 
 ### Removed
-- 所有者jsonマスターデータを削除。
 
 ### Fixed
-- 在庫作成時にスクリーンが存在しない場合に対応。
 
 ### Security
 
+
+## v7.0.2 - 2018-01-10
+### Fixed
+- 在庫作成時にスクリーンが存在しない場合に対応。
+
+## v7.0.1 - 2018-01-10
+### Added
+- 本番環境のjsonマスターデータを追加。
+
+### Removed
+- 所有者jsonマスターデータを削除。
 
 ## v7.0.0 - 2018-01-10
 ### Added
