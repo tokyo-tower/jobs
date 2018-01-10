@@ -5,6 +5,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+
+## v7.0.0 - 2018-01-10
+### Added
 - パフォーマンスに対する返品タスク監視ジョブを追加。
 - パフォーマンスに対する供給情報ごとの在庫状況を更新するジョブを追加。
 - 入場ゲート情報同期ジョブを追加。
@@ -12,17 +26,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - マスターインポートジョブを追加。
 - 注文作成ジョブを追加。
 
-### Changed
-
-### Deprecated
-
 ### Removed
 - 所有者コレクションを削除(ユーザー情報をCognitoへ移行)
-
-### Fixed
-
-### Security
-
 
 ## v6.0.0 - 2017-12-13
 ### Changed
