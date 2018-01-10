@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - 所有者jsonマスターデータを削除。
 
 ### Fixed
+- 在庫作成時にスクリーンが存在しない場合に対応。
 
 ### Security
 

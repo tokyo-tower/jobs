@@ -38,43 +38,31 @@ function createFromSetting() {
             film: setting.film,
             day: { $in: days },
             start_time: { $in: times }
-        }, '_id start_time screen').exec();
-        // 劇場とスクリーン情報取得
-        // const screenOfPerformance = await Models.Screen.findById(setting.screen, 'name theater sections')
-        //                                    .populate('theater', 'name address')
-        //                                    .exec();
-        // if (screenOfPerformance === undefined) {
-        //     throw new Error('screen not found.');
-        // }
-        const screenOfPerformances = yield ttts.Models.Screen.find({}, 'name theater sections')
-            .populate('theater', 'name address')
-            .exec();
-        const screens = {};
-        screenOfPerformances.map((screen) => {
-            const id = screen._id;
-            screens[id] = screen;
-        });
-        debug('screens:', screens);
+        }, '_id start_time screen').populate('screen').exec();
+        debug(performances, 'performances found.');
         const stockRepo = new ttts.repository.Stock(ttts.mongoose.connection);
         // 予約登録・パフォーマンス分Loop
-        const promisesR = (performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
+        yield Promise.all(((performances).map((performance) => __awaiter(this, void 0, void 0, function* () {
+            debug('creating stocks for performance...', performance);
             // 2017/10 2次 予約枠、時間の変更対応
-            const screen = screens[performance.screen];
+            const screen = performance.get('screen');
+            // 万が一スクリーンがなければ在庫作成しない
+            if (screen === null) {
+                return;
+            }
+            debug('creating stocks for screen...', screen);
             // 座席分Loop
-            //const promises = ((<any>screenOfPerformance).get('sections')[0].seats.map(async (seat: any) => {
-            const promises = (screen.get('sections')[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
+            const promises = (screen.sections[0].seats.map((seat) => __awaiter(this, void 0, void 0, function* () {
                 const stock = {
                     id: `${performance._id}-${seat.code}`,
                     performance: performance._id,
                     seat_code: seat.code,
                     availability: ttts.factory.itemAvailability.InStock
                 };
-                debug('creating stock', stock);
                 yield stockRepo.saveIfNotExists(stock);
             })));
             yield Promise.all(promises);
-        })));
-        yield Promise.all(promisesR);
+        }))));
     });
 }
 exports.createFromSetting = createFromSetting;
