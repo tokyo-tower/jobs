@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Security
 
 
+## v7.1.0 - 2018-01-11
+### Added
+- 展示イベントの販売情報更新ジョブを追加。
+
 ## v7.0.2 - 2018-01-10
 ### Fixed
 - 在庫作成時にスクリーンが存在しない場合に対応。
