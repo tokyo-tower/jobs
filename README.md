@@ -29,8 +29,10 @@
 | `GMO_ENDPOINT`                                | true     |             | GMO apiのエンドポイント                       |
 | `GMO_SITE_ID`                                 | true     |             | GMO サイトID                             |
 | `PERFORMANCE_AGGREGATE_THROUGH_IN_DAYS`       | true     |             | 何日先までパフォーマンスごとの集計データを更新するか     |
-| `PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS`  | true     |             | パフォーマンスごとの集計データ保持期間(秒)         |
-| `PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS` | true     |             | パフォーマンス在庫状況のデータ保持期間(秒)       |
+| `PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS`  | true     |             | パフォーマンスごとの集計データ保持期間             |
+| `PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS` | true     |             | パフォーマンス在庫状況のデータ保持期間           |
+| `UPDATE_EVENT_OFFERS_PERIOD_IN_DAYS`          | true     |             | イベント販売情報更新期間                  |
+| `EVENT_OFFERS_EXPIRES_IN_SECONDS`             | true     |             | イベント販売情報データ保持期間               |
 | `COGNITO_USER_POOL_ID`                        | true     |             | 入場アカウントを管理するCognitoユーザープールID      |
 | `AWS_ACCESS_KEY_ID`                           | true     |             | AWSリソースアクセスキー                         |
 | `AWS_SECRET_ACCESS_KEY`                       | true     |             | AWSリソースアクセスシークレット                     |

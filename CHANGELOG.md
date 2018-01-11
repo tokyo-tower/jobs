@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 ### Added
+- 展示イベントの販売情報更新ジョブを追加。
 
 ### Changed
 
