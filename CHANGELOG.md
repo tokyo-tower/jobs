@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - パフォーマンス在庫状況更新期間を環境変数として追加。
 
 ### Changed
+- 予約の属性に在庫情報リストを追加。
 
 ### Deprecated
 
