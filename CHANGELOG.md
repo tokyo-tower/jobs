@@ -5,11 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 ### Added
-- パフォーマンス在庫状況更新期間を環境変数として追加。
 
 ### Changed
-- 予約の属性に在庫情報リストを追加。
-- イベントと在庫作成ジョブのスケジュール調整。
 
 ### Deprecated
 
@@ -19,6 +16,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+
+## v7.2.0 - 2018-01-16
+### Added
+- パフォーマンス在庫状況更新期間を環境変数として追加。
+
+### Changed
+- 予約の属性に在庫情報リストを追加。
+- イベントと在庫作成ジョブのスケジュール調整。
 
 ## v7.1.0 - 2018-01-11
 ### Added
