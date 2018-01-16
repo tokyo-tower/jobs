@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 - 予約の属性に在庫情報リストを追加。
+- イベントと在庫作成ジョブのスケジュール調整。
 
 ### Deprecated
 
