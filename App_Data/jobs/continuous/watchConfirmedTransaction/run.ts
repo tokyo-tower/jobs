@@ -14,6 +14,9 @@ let countExecute = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
 const INTERVAL_MILLISECONDS = 200;
 
+const taskRepo = new ttts.repository.Task(ttts.mongoose.connection);
+const transactionRepo = new ttts.repository.Transaction(ttts.mongoose.connection);
+
 setInterval(
     async () => {
         if (countExecute > MAX_NUBMER_OF_PARALLEL_TASKS) {
@@ -25,7 +28,7 @@ setInterval(
         try {
             await ttts.service.transaction.placeOrder.exportTasks(
                 ttts.factory.transactionStatusType.Confirmed
-            );
+            )(taskRepo, transactionRepo);
         } catch (error) {
             console.error(error.message);
         }
