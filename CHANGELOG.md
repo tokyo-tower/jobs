@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Security
 
 
+## v7.2.1 - 2018-01-17
+### Changed
+- install latest ttts-domain.
+
 ## v7.2.0 - 2018-01-16
 ### Added
 - パフォーマンス在庫状況更新期間を環境変数として追加。
