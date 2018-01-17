@@ -18,13 +18,15 @@ ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.defa
 let countExecute = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
 const INTERVAL_MILLISECONDS = 200;
+const taskRepo = new ttts.repository.Task(ttts.mongoose.connection);
+const transactionRepo = new ttts.repository.Transaction(ttts.mongoose.connection);
 setInterval(() => __awaiter(this, void 0, void 0, function* () {
     if (countExecute > MAX_NUBMER_OF_PARALLEL_TASKS) {
         return;
     }
     countExecute += 1;
     try {
-        yield ttts.service.transaction.placeOrder.exportTasks(ttts.factory.transactionStatusType.Confirmed);
+        yield ttts.service.transaction.placeOrder.exportTasks(ttts.factory.transactionStatusType.Confirmed)(taskRepo, transactionRepo);
     }
     catch (error) {
         console.error(error.message);
