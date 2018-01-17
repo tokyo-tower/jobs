@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Security
 
 
+## v7.2.2 - 2018-01-18
+### Fixed
+- 取引に対するタスクがエクスポートされないバグ対応。
+
 ## v7.2.1 - 2018-01-17
 ### Changed
 - install latest ttts-domain.
