@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 
 ### Changed
+- パフォーマンスと在庫を91日後から1日分、毎時で常に作成トライするように変更。
 
 ### Deprecated
 
