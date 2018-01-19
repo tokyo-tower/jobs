@@ -1,2 +1,2 @@
 cd D:\home\site\wwwroot
-node bin/createStock/index 18 83 8
+node bin/createStock/index 18 91 1
