@@ -7,7 +7,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 
 ### Changed
-- パフォーマンスと在庫を91日後から1日分、毎時で常に作成トライするように変更。
 
 ### Deprecated
 
@@ -17,6 +16,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+
+## v7.2.3 - 2018-01-19
+### Changed
+- パフォーマンスと在庫を91日後から1日分、毎時で常に作成トライするように変更。
 
 ## v7.2.2 - 2018-01-18
 ### Fixed
