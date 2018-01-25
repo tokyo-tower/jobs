@@ -61,7 +61,7 @@
         "ttts_extension": {
             "category": "Normal",
             "required_seat_num": 1,
-            "csv_code": "0000000000231"
+            "csv_code": "10031"
         },
         "rate_limit_unit_in_seconds": 0
     },
