@@ -17,6 +17,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Security
 
 
+## v7.2.4 - 2018-02-02
+### Fixed
+- 券種マスターデータを修正。
+- クレジットカード決済のない注文の返品処理が完了しないバグを修正。
+
 ## v7.2.3 - 2018-01-19
 ### Changed
 - パフォーマンスと在庫を91日後から1日分、毎時で常に作成トライするように変更。
