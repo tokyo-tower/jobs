@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Fixed
 - 券種マスターデータを修正。
+- クレジットカード決済のない注文の返品処理が完了しないバグを修正。
 
 ### Security
 
