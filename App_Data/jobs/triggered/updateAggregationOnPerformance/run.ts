@@ -34,7 +34,8 @@ ttts.service.performance.aggregateCounts(
     new ttts.repository.Reservation(ttts.mongoose.connection),
     new ttts.repository.itemAvailability.Performance(redisClient),
     new ttts.repository.itemAvailability.SeatReservationOffer(redisClient),
-    new ttts.repository.PerformanceWithAggregation(redisClient)
+    new ttts.repository.PerformanceWithAggregation(redisClient),
+    new ttts.repository.offer.ExhibitionEvent(redisClient)
     )
     .catch((err) => {
         console.error(err);

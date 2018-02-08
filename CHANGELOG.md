@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Removed
 
 ### Fixed
+- パフォーマンス集計が毎秒の仕様であるのに対して、処理時間が数分、という状況に対して、処理自体をチューニング。
 
 ### Security
 
