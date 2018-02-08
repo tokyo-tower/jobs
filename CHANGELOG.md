@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 
 ### Changed
+- 予約スキーマに注文取引主体属性を追加。
 
 ### Deprecated
 
