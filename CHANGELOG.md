@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 - 予約スキーマに注文取引主体属性を追加。
+- パフォーマンス集計対象を、日本時間で集計タイミングの日の0時から指定期間分にするように調整。
 
 ### Deprecated
 
