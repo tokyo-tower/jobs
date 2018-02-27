@@ -4,8 +4,19 @@
  */
 
 import * as ttts from '@motionpicture/ttts-domain';
+import * as moment from 'moment';
 
 import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
+
+const UPDATE_PERFORMANCE_AVAILABILITY_PERIOD_IN_DAYS_STR = process.env.UPDATE_PERFORMANCE_AVAILABILITY_PERIOD_IN_DAYS;
+if (UPDATE_PERFORMANCE_AVAILABILITY_PERIOD_IN_DAYS_STR === undefined) {
+    throw new Error('process.env.UPDATE_PERFORMANCE_AVAILABILITY_PERIOD_IN_DAYS undefined.');
+}
+
+const PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS_STR = process.env.PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS;
+if (PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS_STR === undefined) {
+    throw new Error('process.env.PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS undefined.');
+}
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 const redisClient = ttts.redis.createClient({
@@ -16,16 +27,18 @@ const redisClient = ttts.redis.createClient({
     tls: { servername: process.env.REDIS_HOST }
 });
 
-ttts.service.itemAvailability.updatePerformanceAvailabilities(
-    // tslint:disable-next-line:no-magic-numbers
-    parseInt(<string>process.env.UPDATE_PERFORMANCE_AVAILABILITY_PERIOD_IN_DAYS, 10),
-    // tslint:disable-next-line:no-magic-numbers
-    parseInt(<string>process.env.PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS, 10)
-)(
+// 余裕をもって必要分集計するために、24時間前から集計
+const startFrom = moment().add(-1, 'day').toDate();
+const startThrough = moment(startFrom).add(parseInt(UPDATE_PERFORMANCE_AVAILABILITY_PERIOD_IN_DAYS_STR, 10) + 1, 'days').toDate();
+ttts.service.itemAvailability.updatePerformanceAvailabilities({
+    startFrom: startFrom,
+    startThrough: startThrough,
+    ttl: parseInt(PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS_STR, 10)
+})(
     new ttts.repository.Stock(ttts.mongoose.connection),
     new ttts.repository.Performance(ttts.mongoose.connection),
     new ttts.repository.itemAvailability.Performance(redisClient)
-    )
+)
     .catch((err) => {
         console.error(err);
     })
