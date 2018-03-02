@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Removed
 
 ### Fixed
+- パフォーマンスの集計データ作成時の、販売情報ごとの予約数カウントロジックを修正。
 
 ### Security
 
