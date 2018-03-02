@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 
 ### Changed
+- パフォーマンス在庫状況更新処理とパフォーマンス集計データ作成ジョブの対象期間を、必要分に対してやや冗長に設定するように変更。
 
 ### Deprecated
 

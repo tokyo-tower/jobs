@@ -8,16 +8,13 @@ import * as ttts from '@motionpicture/ttts-domain';
 import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
-const redisClient = ttts.redis.createClient(
+const redisClient = ttts.redis.createClient({
     // tslint:disable-next-line:no-magic-numbers
-    parseInt(<string>process.env.REDIS_PORT, 10),
-    <string>process.env.REDIS_HOST,
-    {
-        password: process.env.REDIS_KEY,
-        tls: { servername: process.env.REDIS_HOST },
-        return_buffers: true
-    }
-);
+    port: parseInt(<string>process.env.REDIS_PORT, 10),
+    host: <string>process.env.REDIS_HOST,
+    password: process.env.REDIS_KEY,
+    tls: { servername: process.env.REDIS_HOST }
+});
 
 ttts.service.itemAvailability.updatePerformanceOffersAvailability()(
     new ttts.repository.Stock(ttts.mongoose.connection),
