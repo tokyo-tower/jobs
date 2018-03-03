@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Fixed
 - パフォーマンスの集計データ作成時の、販売情報ごとの予約数カウントロジックを修正。
+- 車椅子券種在庫数算出時に、同伴者分の在庫を考慮するように変更。
 
 ### Security
 
