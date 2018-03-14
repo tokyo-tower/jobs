@@ -10,8 +10,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- イベントの販売情報ごとの在庫状況集計期間を調整。
-
 ### Deprecated
 
 ### Removed
@@ -19,6 +17,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v7.2.7 - 2018-03-14
+
+### Changed
+
+- イベントの販売情報ごとの在庫状況集計期間を調整。
 
 ## v7.2.6 - 2018-03-05
 ### Changed
