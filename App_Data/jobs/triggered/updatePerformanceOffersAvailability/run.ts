@@ -4,8 +4,14 @@
  */
 
 import * as ttts from '@motionpicture/ttts-domain';
+import * as moment from 'moment';
 
 import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
+
+const UPDATE_PERFORMANCE_OFFERS_AVAILABILITY_PERIOD_IN_DAYS_STR = process.env.UPDATE_PERFORMANCE_OFFERS_AVAILABILITY_PERIOD_IN_DAYS;
+if (UPDATE_PERFORMANCE_OFFERS_AVAILABILITY_PERIOD_IN_DAYS_STR === undefined) {
+    throw new Error('process.env.UPDATE_PERFORMANCE_OFFERS_AVAILABILITY_PERIOD_IN_DAYS undefined.');
+}
 
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 const redisClient = ttts.redis.createClient({
@@ -16,7 +22,13 @@ const redisClient = ttts.redis.createClient({
     tls: { servername: process.env.REDIS_HOST }
 });
 
-ttts.service.itemAvailability.updatePerformanceOffersAvailability()(
+// 余裕をもって必要分集計するために、24時間前から集計
+const startFrom = moment().add(-1, 'day').toDate();
+const startThrough = moment(startFrom).add(parseInt(UPDATE_PERFORMANCE_OFFERS_AVAILABILITY_PERIOD_IN_DAYS_STR, 10) + 1, 'days').toDate();
+ttts.service.itemAvailability.updatePerformanceOffersAvailability({
+    startFrom: startFrom,
+    startThrough: startThrough
+})(
     new ttts.repository.Stock(ttts.mongoose.connection),
     new ttts.repository.Performance(ttts.mongoose.connection),
     new ttts.repository.itemAvailability.SeatReservationOffer(redisClient),

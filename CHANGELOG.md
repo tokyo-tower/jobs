@@ -1,9 +1,11 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
+
 ### Added
 
 ### Changed
@@ -16,6 +18,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v7.2.7 - 2018-03-14
+
+### Changed
+
+- イベントの販売情報ごとの在庫状況集計期間を調整。
 
 ## v7.2.6 - 2018-03-05
 ### Changed
