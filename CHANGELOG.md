@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Fixed
 
+- 販売者都合での返金完了メールの内容調整。
+
 ### Security
 
 ## v7.2.7 - 2018-03-14
