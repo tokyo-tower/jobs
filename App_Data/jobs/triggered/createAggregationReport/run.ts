@@ -14,7 +14,8 @@ main().then(() => {
 })
 
 async function main() {
-    let targetDate = moment().format('YYYY/MM/DD');
+    //  前日を集計する。
+    const targetDate = moment().add('day', -1).format('YYYY/MM/DD');
     console.log(`byEndDate:${targetDate}`)
     try {
         await ttts.service.aggregate.report4sales.aggregateSalesByEndDate(
