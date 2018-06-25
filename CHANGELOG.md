@@ -18,6 +18,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v7.3.0 - 2018-06-25
+
+### Added
+
+- 売上レポート用データ集計処理追加。
+
 ## v7.2.8 - 2018-03-22
 
 ### Fixed
