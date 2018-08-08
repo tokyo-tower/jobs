@@ -18,6 +18,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+
+## v7.3.3 - 2018-08-08
+
+### Changed
+
+- データ集計を引数で実行できるように。
+
 ## v7.3.1 - 2018-06-25
 
 ### Added
