@@ -24,7 +24,13 @@ function main() {
         // 前日を集計する。UTC時間と日本時間に注意！！
         // 日本時間の深夜にバッチを起動するということは、UTC時間だとまだ日付が変わってない。
         // const targetDate = moment().add('day', -1).format('YYYY/MM/DD');
-        const targetDate = moment().format('YYYY/MM/DD');
+        let targetDate = "";
+        if (process.argv.length === 3) {
+            targetDate = moment(process.argv[2]).format('YYYY/MM/DD');
+        }
+        else {
+            targetDate = moment().format('YYYY/MM/DD');
+        }
         console.log(`byEndDate:${targetDate}`);
         try {
             yield ttts.service.aggregate.report4sales.aggregateSalesByEndDate(targetDate)(new ttts.repository.Reservation(ttts.mongoose.connection), new ttts.repository.Transaction(ttts.mongoose.connection), new ttts.repository.AggregateSale(ttts.mongoose.connection));
