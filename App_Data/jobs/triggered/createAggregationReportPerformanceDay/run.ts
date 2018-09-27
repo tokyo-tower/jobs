@@ -40,6 +40,13 @@ async function main() {
         };
 
         console.log(`createAggregationReportに${performanceDays}で渡す`);
-        await kick.post(attribute);
+        await kick.post(attribute, async (error, response, body) => {
+            if (error) {
+                console.log(error);
+            }
+            if (body) {
+                console.log(response);
+            }
+        });
     }
 }

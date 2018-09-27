@@ -43,7 +43,14 @@ function main() {
                 headers: { Authorization: auth }
             };
             console.log(`createAggregationReportに${performanceDays}で渡す`);
-            yield kick.post(attribute);
+            yield kick.post(attribute, (error, response, body) => __awaiter(this, void 0, void 0, function* () {
+                if (error) {
+                    console.log(error);
+                }
+                if (body) {
+                    console.log(response);
+                }
+            }));
         }
     });
 }
