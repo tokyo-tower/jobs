@@ -18,7 +18,8 @@
     "debug": "^3.1.0",
     "fs-extra": "^5.0.0",
     "moment": "^2.20.1",
-    "moment-timezone": "^0.5.14"
+    "moment-timezone": "^0.5.14",
+    "request": "^2.88.0"
   },
   "description": "This is a repogitory for TTTS jobs.",
   "devDependencies": {

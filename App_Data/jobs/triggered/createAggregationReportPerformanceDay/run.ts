@@ -5,8 +5,9 @@
 /* tslint:disable:no-console */
 /* tslint:disable:no-magic-numbers */
 import * as ttts from '@motionpicture/ttts-domain';
-import * as moment from 'moment-timezone';
+import * as kick from 'request';
 import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
+
 ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 
 const redisClient = ttts.redis.createClient({
@@ -18,56 +19,27 @@ const redisClient = ttts.redis.createClient({
 
 main().then(() => {
     ttts.mongoose.disconnect();
+    redisClient.quit();
 });
 
 async function main() {
-    //process.argv.push('20180901,20180902');
+    const suspensionRepo = new ttts.repository.itemAvailability.Suspension(redisClient);
+    const keysPerformance = await suspensionRepo.findKeys();
 
-    let performanceDays: string[] = [];
-    if (process.argv.length === 3) {
-        performanceDays = process.argv[2].split(',').map((key: string) => {
-            return moment(key, 'YYYYMMDD').format('YYYY/MM/DD');
-        });
-    } else {
-        const suspensionRepo = new ttts.repository.itemAvailability.Suspension(redisClient);
-        const keysPerformance = await suspensionRepo.findKeys();
+    const performanceDays: string = keysPerformance.map((key: string) => {
+        return key.replace(/performanceDay/gi, '');
+    }).join(',');
 
-        performanceDays = keysPerformance.map((key: string) => {
-            return moment(key.replace(/performanceDay/gi, ''), 'YYYYMMDD').format('YYYY/MM/DD');
-        });
-    }
+    if (performanceDays) {
 
-    for (const performanceDay of performanceDays) {
-        console.log(`byEndDate:${performanceDay}`);
-        try {
-            await ttts.service.aggregate.report4sales.aggregateSalesByEndDate(
-                performanceDay
-            )(
-                new ttts.repository.Reservation(ttts.mongoose.connection),
-                new ttts.repository.Transaction(ttts.mongoose.connection),
-                new ttts.repository.AggregateSale(ttts.mongoose.connection)
-            );
-        } catch (error) {
-            console.log(`error byEndDate:${performanceDay}`);
-        }
+        const aggregationUrl = `${process.env.JOBS_ENDPOINT}/api/triggeredwebjobs/createAggregationReport/run?arguments=${performanceDays}`;
+        const auth = `Basic ${Buffer.from(`${process.env.JOBS_UID}:${process.env.JOBS_ENCRYPTED_PASSWORD}`).toString('base64')}`;
+        const attribute = {
+            uri: aggregationUrl,
+            headers: { Authorization: auth }
+        };
 
-        console.log(`byEventStartDate:${performanceDay}`);
-        try {
-            await ttts.service.aggregate.report4sales.aggregateSalesByEventStartDate(
-                performanceDay
-            )(
-                new ttts.repository.Reservation(ttts.mongoose.connection),
-                new ttts.repository.Transaction(ttts.mongoose.connection),
-                new ttts.repository.AggregateSale(ttts.mongoose.connection)
-            );
-        } catch (error) {
-            console.log(`error byEventStartDate:${performanceDay}`);
-        }
-
-        if (process.argv.length !== 3) {
-            const suspensionRepo = new ttts.repository.itemAvailability.Suspension(redisClient);
-            await suspensionRepo.deleteKey(moment(performanceDay, 'YYYY/MM/DD').format('YYYYMMDD'));
-        }
-        console.log(`${performanceDay} Completed!`);
+        console.log(`createAggregationReportに${performanceDays}で渡す`);
+        await kick.post(attribute);
     }
 }
