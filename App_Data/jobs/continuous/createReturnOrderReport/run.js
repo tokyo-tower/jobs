@@ -1,7 +1,4 @@
 "use strict";
-/**
- * 注文返品取引レポート作成
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -11,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * 注文返品取引レポート作成
+ */
 const ttts = require("@motionpicture/ttts-domain");
 const mongooseConnectionOptions_1 = require("../../../../mongooseConnectionOptions");
 ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
@@ -23,7 +23,7 @@ const redisClient = ttts.redis.createClient({
 });
 let count = 0;
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 200;
+const INTERVAL_MILLISECONDS = 100;
 const taskRepository = new ttts.repository.Task(ttts.mongoose.connection);
 setInterval(() => __awaiter(this, void 0, void 0, function* () {
     if (count > MAX_NUBMER_OF_PARALLEL_TASKS) {

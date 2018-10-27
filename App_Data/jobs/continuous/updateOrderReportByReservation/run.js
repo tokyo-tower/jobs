@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * 注文取引レポート作成
+ * 予約から注文レポート更新
  */
 const ttts = require("@motionpicture/ttts-domain");
 const mongooseConnectionOptions_1 = require("../../../../mongooseConnectionOptions");
@@ -31,7 +31,7 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
     }
     count += 1;
     try {
-        yield ttts.service.task.executeByName(ttts.factory.taskName.CreatePlaceOrderReport)(taskRepository, ttts.mongoose.connection, redisClient);
+        yield ttts.service.task.executeByName(ttts.factory.taskName.UpdateOrderReportByReservation)(taskRepository, ttts.mongoose.connection, redisClient);
     }
     catch (error) {
         console.error(error.message);

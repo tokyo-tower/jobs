@@ -1,5 +1,5 @@
 /**
- * 注文返品取引レポート作成
+ * 予約から注文レポート更新
  */
 import * as ttts from '@motionpicture/ttts-domain';
 
@@ -32,7 +32,7 @@ setInterval(
 
         try {
             await ttts.service.task.executeByName(
-                ttts.factory.taskName.CreateReturnOrderReport
+                ttts.factory.taskName.UpdateOrderReportByReservation
             )(taskRepository, ttts.mongoose.connection, redisClient);
         } catch (error) {
             console.error(error.message);

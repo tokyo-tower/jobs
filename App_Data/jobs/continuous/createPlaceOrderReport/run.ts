@@ -1,7 +1,6 @@
 /**
  * 注文取引レポート作成
  */
-
 import * as ttts from '@motionpicture/ttts-domain';
 
 import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
@@ -20,7 +19,7 @@ const redisClient = ttts.redis.createClient(
 let count = 0;
 
 const MAX_NUBMER_OF_PARALLEL_TASKS = 10;
-const INTERVAL_MILLISECONDS = 200;
+const INTERVAL_MILLISECONDS = 100;
 const taskRepository = new ttts.repository.Task(ttts.mongoose.connection);
 
 setInterval(
