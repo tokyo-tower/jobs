@@ -13,7 +13,7 @@
     }
   ],
   "dependencies": {
-    "@motionpicture/ttts-domain": "^13.2.2-alpha.2",
+    "@motionpicture/ttts-domain": "^13.2.2",
     "aws-sdk": "^2.182.0",
     "debug": "^3.1.0",
     "fs-extra": "^5.0.0",
