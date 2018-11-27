@@ -1,8 +1,4 @@
 "use strict";
-/**
- * 売上レポートに対する集計データを更新する
- * @ignore
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -12,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * 売上レポートに対する集計データを更新する
+ */
 const ttts = require("@motionpicture/ttts-domain");
 const moment = require("moment-timezone");
 const mongooseConnectionOptions_1 = require("../../../../mongooseConnectionOptions");
@@ -24,26 +23,26 @@ function main() {
         // 前日を集計する。UTC時間と日本時間に注意！！
         // 日本時間の深夜にバッチを起動するということは、UTC時間だとまだ日付が変わってない。
         // const targetDate = moment().add('day', -1).format('YYYY/MM/DD');
-        let targetDate = "";
+        let targetDate = '';
+        // tslint:disable-next-line:no-magic-numbers
         if (process.argv.length === 3) {
+            // tslint:disable-next-line:no-magic-numbers
             targetDate = moment(process.argv[2]).format('YYYY/MM/DD');
         }
         else {
             targetDate = moment().format('YYYY/MM/DD');
         }
-        console.log(`byEndDate:${targetDate}`);
         try {
             yield ttts.service.aggregate.report4sales.aggregateSalesByEndDate(targetDate)(new ttts.repository.Reservation(ttts.mongoose.connection), new ttts.repository.Transaction(ttts.mongoose.connection), new ttts.repository.AggregateSale(ttts.mongoose.connection));
         }
         catch (error) {
-            console.log(`error byEndDate:${targetDate}`);
+            console.error(`error byEndDate:${targetDate}`);
         }
-        console.log(`byEventStartDate:${targetDate}`);
         try {
             yield ttts.service.aggregate.report4sales.aggregateSalesByEventStartDate(targetDate)(new ttts.repository.Reservation(ttts.mongoose.connection), new ttts.repository.Transaction(ttts.mongoose.connection), new ttts.repository.AggregateSale(ttts.mongoose.connection));
         }
         catch (error) {
-            console.log(`error byEventStartDate:${targetDate}`);
+            console.error(`error byEventStartDate:${targetDate}`);
         }
     });
 }
