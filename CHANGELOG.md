@@ -8,9 +8,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
-- 注文取引レポート作成タスクを追加。
-- 注文返品取引レポート作成タスクを追加。
-
 ### Changed
 
 ### Deprecated
@@ -21,6 +18,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v7.4.0 - 2018-11-28
+
+### Added
+
+- 注文取引レポート作成タスクを追加。
+- 注文返品取引レポート作成タスクを追加。
 
 ## v7.3.3 - 2018-08-08
 
