@@ -14,11 +14,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
-- 定期的な売上集計ジョブを削除
-
 ### Fixed
 
 ### Security
+
+## v8.0.0 - 2018-11-28
+
+### Removed
+
+- 定期的な売上集計ジョブを削除
 
 ## v7.4.0 - 2018-11-28
 
