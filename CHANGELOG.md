@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+- 定期的な売上集計ジョブを削除
+
 ### Fixed
 
 ### Security
