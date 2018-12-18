@@ -13,7 +13,7 @@
     }
   ],
   "dependencies": {
-    "@motionpicture/ttts-domain": "^13.2.2",
+    "@motionpicture/ttts-domain": "^13.3.0-alpha.1",
     "aws-sdk": "^2.182.0",
     "debug": "^3.1.0",
     "fs-extra": "^5.0.0",
@@ -30,7 +30,6 @@
     "ink-docstrap": "^1.3.2",
     "jsdoc": "^3.5.5",
     "mocha": "^4.1.0",
-    "nsp": "^3.1.0",
     "rimraf": "^2.6.1",
     "snyk": "^1.67.0",
     "tslint": "^5.9.1",
@@ -48,7 +47,7 @@
   "repository": {},
   "scripts": {
     "build": "tsc",
-    "check": "npm run tslint && nsp check",
+    "check": "npm run tslint",
     "clean": "rimraf app/**/*.js bin/**/*.js test/**/*.js index.js npm-debug.log* doc/*",
     "doc": "jsdoc -c jsdoc.json",
     "mocha": "mocha",
