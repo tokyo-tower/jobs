@@ -8,8 +8,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
-- TriggerWebhookジョブを追加
-
 ### Changed
 
 ### Deprecated
@@ -19,6 +17,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v8.1.0 - 2018-12-23
+
+### Added
+
+- TriggerWebhookジョブを追加
 
 ## v8.0.0 - 2018-11-28
 
