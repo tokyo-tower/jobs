@@ -13,6 +13,7 @@ ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOption
 // tslint:disable-next-line:no-floating-promises
 performanceController.createFromSetting()
     .catch((err) => {
+        // tslint:disable-next-line:no-console
         console.error(err);
     }).then(() => {
         ttts.mongoose.disconnect();
