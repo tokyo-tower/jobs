@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
+- 返品レポート作成タスク追加のタイミングを、返品取引確定後から、返品処理完了後に変更
+
 ### Deprecated
 
 ### Removed
