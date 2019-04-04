@@ -10,8 +10,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- 返品レポート作成タスク追加のタイミングを、返品取引確定後から、返品処理完了後に変更
-
 ### Deprecated
 
 ### Removed
@@ -19,6 +17,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v8.1.1 - 2019-04-04
+
+### Changed
+
+- 返品レポート作成タスク追加のタイミングを、返品取引確定後から、返品処理完了後に変更
 
 ## v8.1.0 - 2018-12-23
 
