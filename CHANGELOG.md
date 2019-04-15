@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
+- 取引コレクションのインデックス調整
+- 予約インターフェースをChevreを継承するように拡張
+
 ### Deprecated
 
 ### Removed
