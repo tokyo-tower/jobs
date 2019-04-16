@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 - 取引コレクションのインデックス調整
 - 予約インターフェースをChevreを継承するように拡張
+- 組織コレクションのインデックス調整
 
 ### Deprecated
 
