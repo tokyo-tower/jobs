@@ -1,9 +1,4 @@
 "use strict";
-/**
- * グローバルヘルパー
- *
- * @ignore
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -13,7 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * グローバルヘルパー
+ */
 const ttts = require("@motionpicture/ttts-domain");
 before(() => __awaiter(this, void 0, void 0, function* () {
-    ttts.mongoose.connect(process.env.MONGOLAB_URI);
+    ttts.mongoose.connect(process.env.MONGOLAB_URI)
+        .then()
+        // tslint:disable-next-line:no-console
+        .catch(console.error);
 }));
