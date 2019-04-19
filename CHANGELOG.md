@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - 組織コレクションのインデックス調整
 - 注文取引の購入者プロフィール情報の持ち方をCinerinoに統一
 - install mongoose@5.5.1
+- install @motionpicture/ttts-domain@13.5.0
 
 ### Deprecated
 
