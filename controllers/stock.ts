@@ -29,12 +29,13 @@ export async function createFromSetting(): Promise<void> {
     const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
     const performances = await performanceRepo.performanceModel.find(
         {
-            film: setting.film,
+            // film: setting.film,
             day: { $in: days },
             start_time: { $in: times }
         },
         '_id start_time screen'
-    ).populate('screen').exec();
+    )
+        .exec();
     debug(performances, 'performances found.');
 
     const stockRepo = new ttts.repository.Stock(ttts.mongoose.connection);
