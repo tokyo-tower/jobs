@@ -1,9 +1,9 @@
 [
     {
-        "_id": "001",
+        "id": "001",
         "name": {
-            "ja": "東京タワー トップデッキツアー",
-            "en": "TokyoTower TOP DECK TOUR"
+            "en": "TokyoTower TOP DECK TOUR",
+            "ja": "東京タワー トップデッキツアー"
         },
         "sections": [],
         "minutes": 15,

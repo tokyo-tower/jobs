@@ -11,6 +11,7 @@ const debug = createDebug('ttts-jobs:controller:performance');
 /**
  * 設定からパフォーマンスデータを作成する
  */
+// tslint:disable-next-line:max-func-body-length
 export async function createFromSetting(): Promise<void> {
     // 作成情報取得
     const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
@@ -21,18 +22,29 @@ export async function createFromSetting(): Promise<void> {
     debug('targetInfo:', targetInfo);
 
     // 劇場とスクリーン情報取得
-    const screenOfPerformance = await ttts.Models.Screen.findById(setting.screen)
-        .populate('theater')
-        .exec();
+    const theaters: ttts.factory.place.movieTheater.ITheater[] =
+        fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`);
+    const theater = theaters.find((t) => t.id === setting.theater);
+    debug('theater:', theater);
+    if (theater === undefined) {
+        throw new Error('theater not found.');
+    }
+
+    const screens: ttts.factory.place.movieTheater.IScreen[] =
+        fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`);
+    debug('setting:', setting);
+    const screenOfPerformance = screens.find((s) => s.id === setting.screen);
     debug('screenOfPerformance:', screenOfPerformance);
-    if (screenOfPerformance === null) {
+    if (screenOfPerformance === undefined) {
         throw new Error('screen not found.');
     }
 
     // 作品情報取得
-    const film = await ttts.Models.Film.findById({ _id: setting.film }).exec();
+    const films: ttts.factory.creativeWork.movie.IFilm[] =
+        fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/films.json`);
+    const film = films.find((f) => f.id === setting.film);
     debug('film:', film);
-    if (film === null) {
+    if (film === undefined) {
         throw new Error('film not found.');
     }
 
@@ -67,11 +79,11 @@ export async function createFromSetting(): Promise<void> {
         // パフォーマンス登録
         const performance: ttts.factory.performance.IPerformance = {
             id: id,
-            theater: screenOfPerformance.get('theater').toObject(),
-            theater_name: screenOfPerformance.get('theater').get('name'),
-            screen: screenOfPerformance.toObject(),
-            screen_name: screenOfPerformance.get('name'),
-            film: film.toObject(),
+            theater: <any>theater,
+            theater_name: theater.name,
+            screen: <any>screenOfPerformance,
+            screen_name: screenOfPerformance.name,
+            film: <any>film,
             ticket_type_group: ticketTypeGroup.toObject(),
             day: performanceInfo.day,
             open_time: performanceInfo.start_time,
