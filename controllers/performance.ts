@@ -1,20 +1,15 @@
 /**
  * パフォーマンスタスクコントローラー
- * @namespace controller/performance
  */
-
 import * as ttts from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as moment from 'moment';
-// tslint:disable-next-line:no-require-imports no-var-requires
-require('moment-timezone');
+import * as moment from 'moment-timezone';
 
 const debug = createDebug('ttts-jobs:controller:performance');
 
 /**
  * 設定からパフォーマンスデータを作成する
- * @memberof controller/performance
  */
 export async function createFromSetting(): Promise<void> {
     // 作成情報取得
@@ -26,7 +21,9 @@ export async function createFromSetting(): Promise<void> {
     debug('targetInfo:', targetInfo);
 
     // 劇場とスクリーン情報取得
-    const screenOfPerformance = await ttts.Models.Screen.findById(setting.screen).populate('theater').exec();
+    const screenOfPerformance = await ttts.Models.Screen.findById(setting.screen)
+        .populate('theater')
+        .exec();
     debug('screenOfPerformance:', screenOfPerformance);
     if (screenOfPerformance === null) {
         throw new Error('screen not found.');
@@ -37,6 +34,15 @@ export async function createFromSetting(): Promise<void> {
     debug('film:', film);
     if (film === null) {
         throw new Error('film not found.');
+    }
+
+    // 券種情報取得
+    const ticketTypeGroup = await ttts.Models.TicketTypeGroup.findById(setting.ticket_type_group)
+        .populate('ticket_types')
+        .exec();
+    debug('ticketTypeGroup:', ticketTypeGroup);
+    if (ticketTypeGroup === null) {
+        throw new Error('Ticket Type Group not found.');
     }
 
     // パフォーマンス登録
@@ -61,12 +67,12 @@ export async function createFromSetting(): Promise<void> {
         // パフォーマンス登録
         const performance: ttts.factory.performance.IPerformance = {
             id: id,
-            theater: screenOfPerformance.get('theater').get('id'),
+            theater: screenOfPerformance.get('theater').toObject(),
             theater_name: screenOfPerformance.get('theater').get('name'),
-            screen: screen,
+            screen: screenOfPerformance.toObject(),
             screen_name: screenOfPerformance.get('name'),
-            film: film.get('id'),
-            ticket_type_group: setting.ticket_type_group,
+            film: film.toObject(),
+            ticket_type_group: ticketTypeGroup.toObject(),
             day: performanceInfo.day,
             open_time: performanceInfo.start_time,
             start_time: performanceInfo.start_time,
@@ -108,7 +114,6 @@ export interface ITargetPerformanceInfo {
 
 /**
  * パフォーマンス作成・作成対象情報取得
- * @memberof controller/performance
  */
 function getTargetInfoForCreateFromSetting(duration: number, noPerformanceTimes: string[]): ITargetPerformanceInfo[] {
     const performanceInfos: ITargetPerformanceInfo[] = [];
@@ -137,10 +142,10 @@ function getTargetInfoForCreateFromSetting(duration: number, noPerformanceTimes:
     for (let index = 0; index < days; index = index + 1) {
         const now = moment().add(start + index, 'days');
 
-        hours.forEach((hour) => {
+        hours.forEach((hourStr) => {
             // 2桁でない時は'0'詰め
             // tslint:disable-next-line:no-magic-numbers
-            hour = `0${hour}`.slice(-2);
+            const hour = `0${hourStr}`.slice(-2);
 
             minutes.forEach((minute, minuteIndex) => {
                 // ツアー情報作成
@@ -169,51 +174,4 @@ function getTargetInfoForCreateFromSetting(duration: number, noPerformanceTimes:
     }
 
     return performanceInfos;
-}
-
-/**
- *
- *
- * @memberof controller/performance
- */
-export async function createFromJson(): Promise<void> {
-    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
-
-    const performances: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
-    const screens = await ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
-
-    // あれば更新、なければ追加
-    await Promise.all(performances.map(async (performance) => {
-        // 劇場とスクリーン名称を追加
-        const screenOfPerformance = screens.find((screen) => {
-            return (screen.get('_id').toString() === performance.screen);
-        });
-        if (screenOfPerformance === undefined) {
-            throw new Error('screen not found.');
-        }
-
-        performance.screen_name = screenOfPerformance.get('name');
-        performance.theater_name = screenOfPerformance.get('theater').get('name');
-
-        debug('creating performance...');
-        await performanceRepo.performanceModel.create(performance);
-        debug('performance created');
-    }));
-    debug('promised.');
-}
-
-/**
- * ID指定でパフォーマンスを公開する
- *
- * @memberof controller/performance
- */
-export async function release(performanceId: string): Promise<void> {
-    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
-
-    debug('updating performance..._id:', performanceId);
-    await performanceRepo.performanceModel.findByIdAndUpdate(
-        performanceId,
-        { canceled: false }
-    ).exec();
-    debug('performance updated');
 }

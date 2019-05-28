@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
+- パフォーマンスコレクションからのリレーション削除対応に合わせて、自動生成パフォーマンスの型を調整
+
 ### Deprecated
 
 ### Removed

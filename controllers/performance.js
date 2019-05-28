@@ -1,8 +1,4 @@
 "use strict";
-/**
- * パフォーマンスタスクコントローラー
- * @namespace controller/performance
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -12,16 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * パフォーマンスタスクコントローラー
+ */
 const ttts = require("@motionpicture/ttts-domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
-const moment = require("moment");
-// tslint:disable-next-line:no-require-imports no-var-requires
-require('moment-timezone');
+const moment = require("moment-timezone");
 const debug = createDebug('ttts-jobs:controller:performance');
 /**
  * 設定からパフォーマンスデータを作成する
- * @memberof controller/performance
  */
 function createFromSetting() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -32,7 +28,9 @@ function createFromSetting() {
         const targetInfo = getTargetInfoForCreateFromSetting(setting.performance_duration, setting.no_performance_times);
         debug('targetInfo:', targetInfo);
         // 劇場とスクリーン情報取得
-        const screenOfPerformance = yield ttts.Models.Screen.findById(setting.screen).populate('theater').exec();
+        const screenOfPerformance = yield ttts.Models.Screen.findById(setting.screen)
+            .populate('theater')
+            .exec();
         debug('screenOfPerformance:', screenOfPerformance);
         if (screenOfPerformance === null) {
             throw new Error('screen not found.');
@@ -42,6 +40,14 @@ function createFromSetting() {
         debug('film:', film);
         if (film === null) {
             throw new Error('film not found.');
+        }
+        // 券種情報取得
+        const ticketTypeGroup = yield ttts.Models.TicketTypeGroup.findById(setting.ticket_type_group)
+            .populate('ticket_types')
+            .exec();
+        debug('ticketTypeGroup:', ticketTypeGroup);
+        if (ticketTypeGroup === null) {
+            throw new Error('Ticket Type Group not found.');
         }
         // パフォーマンス登録
         const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
@@ -62,12 +68,12 @@ function createFromSetting() {
             // パフォーマンス登録
             const performance = {
                 id: id,
-                theater: screenOfPerformance.get('theater').get('id'),
+                theater: screenOfPerformance.get('theater').toObject(),
                 theater_name: screenOfPerformance.get('theater').get('name'),
-                screen: screen,
+                screen: screenOfPerformance.toObject(),
                 screen_name: screenOfPerformance.get('name'),
-                film: film.get('id'),
-                ticket_type_group: setting.ticket_type_group,
+                film: film.toObject(),
+                ticket_type_group: ticketTypeGroup.toObject(),
                 day: performanceInfo.day,
                 open_time: performanceInfo.start_time,
                 start_time: performanceInfo.start_time,
@@ -98,7 +104,6 @@ function createFromSetting() {
 exports.createFromSetting = createFromSetting;
 /**
  * パフォーマンス作成・作成対象情報取得
- * @memberof controller/performance
  */
 function getTargetInfoForCreateFromSetting(duration, noPerformanceTimes) {
     const performanceInfos = [];
@@ -122,10 +127,10 @@ function getTargetInfoForCreateFromSetting(duration, noPerformanceTimes) {
     // 作成日数分の作成対象日付作成
     for (let index = 0; index < days; index = index + 1) {
         const now = moment().add(start + index, 'days');
-        hours.forEach((hour) => {
+        hours.forEach((hourStr) => {
             // 2桁でない時は'0'詰め
             // tslint:disable-next-line:no-magic-numbers
-            hour = `0${hour}`.slice(-2);
+            const hour = `0${hourStr}`.slice(-2);
             minutes.forEach((minute, minuteIndex) => {
                 // ツアー情報作成
                 const tourNumber = `${hour}${tours[minuteIndex]}`;
@@ -152,46 +157,3 @@ function getTargetInfoForCreateFromSetting(duration, noPerformanceTimes) {
     }
     return performanceInfos;
 }
-/**
- *
- *
- * @memberof controller/performance
- */
-function createFromJson() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
-        const performances = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
-        const screens = yield ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
-        // あれば更新、なければ追加
-        yield Promise.all(performances.map((performance) => __awaiter(this, void 0, void 0, function* () {
-            // 劇場とスクリーン名称を追加
-            const screenOfPerformance = screens.find((screen) => {
-                return (screen.get('_id').toString() === performance.screen);
-            });
-            if (screenOfPerformance === undefined) {
-                throw new Error('screen not found.');
-            }
-            performance.screen_name = screenOfPerformance.get('name');
-            performance.theater_name = screenOfPerformance.get('theater').get('name');
-            debug('creating performance...');
-            yield performanceRepo.performanceModel.create(performance);
-            debug('performance created');
-        })));
-        debug('promised.');
-    });
-}
-exports.createFromJson = createFromJson;
-/**
- * ID指定でパフォーマンスを公開する
- *
- * @memberof controller/performance
- */
-function release(performanceId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
-        debug('updating performance..._id:', performanceId);
-        yield performanceRepo.performanceModel.findByIdAndUpdate(performanceId, { canceled: false }).exec();
-        debug('performance updated');
-    });
-}
-exports.release = release;
