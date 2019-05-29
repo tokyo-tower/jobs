@@ -49,11 +49,11 @@ export async function createFromSetting(): Promise<void> {
     }
 
     // 券種情報取得
-    const ticketTypeGroup = await ttts.Models.TicketTypeGroup.findById(setting.ticket_type_group)
-        .populate('ticket_types')
-        .exec();
+    const ticketTypeGroups: ttts.factory.performance.ITicketTypeGroup[] =
+        fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`);
+    const ticketTypeGroup = ticketTypeGroups.find((t) => t.id === setting.ticket_type_group);
     debug('ticketTypeGroup:', ticketTypeGroup);
-    if (ticketTypeGroup === null) {
+    if (ticketTypeGroup === undefined) {
         throw new Error('Ticket Type Group not found.');
     }
 
@@ -84,7 +84,7 @@ export async function createFromSetting(): Promise<void> {
             screen: <any>screenOfPerformance,
             screen_name: screenOfPerformance.name,
             film: <any>film,
-            ticket_type_group: ticketTypeGroup.toObject(),
+            ticket_type_group: <any>ticketTypeGroup,
             day: performanceInfo.day,
             open_time: performanceInfo.start_time,
             start_time: performanceInfo.start_time,

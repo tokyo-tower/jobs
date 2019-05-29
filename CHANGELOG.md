@@ -17,7 +17,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
-- 劇場、スクリーン、作品コレクションを削除(一時的に動的データ管理を不可能に変更)
+- 劇場、スクリーン、作品、券種、券種グループコレクションを削除(一時的に動的データ管理を不可能に変更)
+- GMO通知コレクションを削除
+- SendGridイベントコレクションを削除
 
 ### Fixed
 

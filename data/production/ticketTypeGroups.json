@@ -1,18 +1,209 @@
 [
     {
-        "_id": "01",
+        "id": "01",
         "name": {
-            "ja": "基本グループ",
-            "en": "Default group"
+            "en": "Default group",
+            "ja": "基本グループ"
         },
-        "description": "default",
         "ticket_types": [
-            "001",
-            "002",
-            "003",
-            "004",
-            "005",
-            "006"
+            {
+                "id": "001",
+                "name": {
+                    "ru": "Тур по Top Deck (верхней смотровой площадке) (Взрослый: от 16 лет)",
+                    "es": "Top Deck Tour, (Adulto: Mayor de 16 años)",
+                    "it": "Salita al Top Deck (osservatorio speciale) - Adulti (da 16 anni in su)",
+                    "de": "Top Deck Tour - Erwachsener (ab 16)",
+                    "fr": "Visite du Top Deck (Observatoire spécial) - Adultes et lycéens",
+                    "vi": "Top Deck Tour (Người lớn từ 16 tuổi trở lên)",
+                    "id": "Top Deck Tour (Dewasa: 16 tahun ke atas)",
+                    "th": "Top Deck Tour (ผู้ใหญ่)",
+                    "ko": "Top Deck Tour(어른: 16세 이상)",
+                    "zh-hans": "Top Deck Tour(成人：16岁以上)",
+                    "zh-hant": "Top Deck Tour(成人:16歲以上)",
+                    "en": "Top Deck Tour (Adult: 16 years or over)",
+                    "ja": "トップデッキツアー(大人)"
+                },
+                "charge": 2800,
+                "description": "0",
+                "notes": "10011",
+                "cancel_charge": [
+                    {
+                        "charge": 1000,
+                        "days": 3
+                    }
+                ],
+                "ttts_extension": {
+                    "csv_code": "10011",
+                    "required_seat_num": 1,
+                    "category": "Normal"
+                },
+                "rate_limit_unit_in_seconds": 0
+            },
+            {
+                "id": "002",
+                "name": {
+                    "ru": "Тур по Top Deck (верхней смотровой площадке) (Школьный: от 7 до 15 лет)",
+                    "es": "Top Deck Tour, (Escolares de primaria a secundaria obligatoria: 7 a 15 años)",
+                    "it": "Salita al Top Deck (osservatorio speciale) - Studenti delle medie inferiori e alunni delle elementari (da 7 a 15 anni)",
+                    "de": "Top Deck Tour - Kind (7-15)",
+                    "fr": "Visite du Top Deck (Observatoire spécial) - Écoliers et collégiens",
+                    "vi": "Top Deck Tour (Trẻ em từ 7 đến 15 tuổi)",
+                    "id": "Top Deck Tour (Pelajar SD, SMP: 7-15 tahun)",
+                    "th": "Top Deck Tour (นักเรียนชั้นประถม/มัธยมต้น)",
+                    "ko": "Top Deck Tour(초/중학생: 7~15세)",
+                    "zh-hans": "Top Deck Tour(中小学生：7～15岁)",
+                    "zh-hant": "Top Deck Tour(國中小學生:7～15歲)",
+                    "en": "Top Deck Tour (Junior: 7 to 15 years)",
+                    "ja": "トップデッキツアー(小・中学生)"
+                },
+                "charge": 1800,
+                "description": "0",
+                "notes": "10031",
+                "cancel_charge": [
+                    {
+                        "charge": 1000,
+                        "days": 3
+                    }
+                ],
+                "ttts_extension": {
+                    "csv_code": "10031",
+                    "required_seat_num": 1,
+                    "category": "Normal"
+                },
+                "rate_limit_unit_in_seconds": 0
+            },
+            {
+                "id": "003",
+                "name": {
+                    "ru": "Тур по Top Deck (верхней смотровой площадке) (Дошкольный: дети от 4 до 6 лет)",
+                    "es": "Top Deck Tour, (Niños de 4 a 6 años)",
+                    "it": "Salita al Top Deck (osservatorio speciale) - Bambini (da 4 a 6 anni)",
+                    "de": "Top Deck Tour - Kleinkind (4-6)",
+                    "fr": "Visite du Top Deck (Observatoire spécial) - Enfants de 4 à 6 ans",
+                    "vi": "Top Deck Tour (Trẻ nhỏ từ 4 đến 6 tuổi)",
+                    "id": "Top Deck Tour (Anak-anak: 4-6 tahun)",
+                    "th": "Top Deck Tour (เด็กเล็ก/4 ขวบขึ้นไป)",
+                    "ko": "Top Deck Tour(유아: 4~6세)",
+                    "zh-hans": "Top Deck Tour(幼儿：4～6岁)",
+                    "zh-hant": "Top Deck Tour(幼童:4～6歲)",
+                    "en": "Top Deck Tour (Child: 4 to 6 years) ",
+                    "ja": "トップデッキツアー(幼児・4歳～)"
+                },
+                "charge": 1200,
+                "description": "0",
+                "notes": "10041",
+                "cancel_charge": [
+                    {
+                        "charge": 1000,
+                        "days": 3
+                    }
+                ],
+                "ttts_extension": {
+                    "csv_code": "10041",
+                    "required_seat_num": 1,
+                    "category": "Normal"
+                },
+                "rate_limit_unit_in_seconds": 0
+            },
+            {
+                "id": "004",
+                "name": {
+                    "ru": "Тур поTop Deck (верхней смотровой площадке) для людей на инвалидной коляске (Взрослый: от 16 лет)",
+                    "es": "Top Deck Tour, Silla de ruedas (Adulto: Mayor de 16 años)",
+                    "it": "Salita al Top Deck (osservatorio speciale) con sedia a rotelle - Adulti (da 16 anni in su)",
+                    "de": "Top Deck Tour - Rollstuhl  - Erwachsener (ab 16)",
+                    "fr": "Visite du Top Deck (Observatoire spécial) en fauteuil roulant - Adultes et lycéens",
+                    "vi": "Top Deck Tour - Xe lăn (Người lớn từ 16 tuổi trở lên)",
+                    "id": "Top Deck Tour Kursi Roda (Dewasa: 16 tahun ke atas)",
+                    "th": "Top Deck Tour นั่งรถเข็นวีลแชร์ (ผู้ใหญ่)",
+                    "ko": "Top Deck Tour 휠체어(어른: 16세 이상)",
+                    "zh-hans": "Top Deck Tour轮椅(成人：16岁以上)",
+                    "zh-hant": "Top Deck Tour 輪椅(成人:16歲以上)",
+                    "en": "Top Deck Tour: Wheelchair (Adult: 16 years or over) ",
+                    "ja": "トップデッキツアー 車いす(大人)"
+                },
+                "charge": 2800,
+                "description": "1",
+                "notes": "10011",
+                "cancel_charge": [
+                    {
+                        "charge": 1000,
+                        "days": 3
+                    }
+                ],
+                "ttts_extension": {
+                    "csv_code": "10011",
+                    "required_seat_num": 6,
+                    "category": "Wheelchair"
+                },
+                "rate_limit_unit_in_seconds": 3600
+            },
+            {
+                "id": "006",
+                "name": {
+                    "ru": "Тур по Top Deck (верхней смотровой площадке) для людей на инвалидной коляске (Дошкольный: дети от 4 до 6 лет)",
+                    "es": "Top Deck Tour, Silla de ruedas (Niños de 4 a 6 años)",
+                    "it": "Salita al Top Deck (osservatorio speciale) con sedia a rotelle - Bambini (da 4 a 6 anni)",
+                    "de": "Top Deck Tour - Rollstuhl - Kleinkind (4-6)",
+                    "fr": "Visite du Top Deck (Observatoire spécial) en fauteuil roulant - Enfants de 4 à 6 ans",
+                    "vi": "Top Deck Tour - Xe lăn (Trẻ nhỏ từ 4 đến 6 tuổi)",
+                    "id": "Top Deck Tour Kursi Roda (Anak-anak: 4-6 tahun)",
+                    "th": "Top Deck Tour นั่งรถเข็นวีลแชร์ (เด็กเล็ก/4 ขวบขึ้นไป)",
+                    "ko": "Top Deck Tour 휠체어(유아: 4~6세)",
+                    "zh-hans": "Top Deck Tour轮椅(幼儿：4～6岁)",
+                    "zh-hant": "Top Deck Tour 輪椅(幼童:4～6歲)",
+                    "en": "Top Deck Tour: Wheelchair (Child: 4 to 6 years)",
+                    "ja": "トップデッキツアー 車いす(幼児・４歳～)"
+                },
+                "charge": 1200,
+                "description": "1",
+                "notes": "10041",
+                "cancel_charge": [
+                    {
+                        "charge": 1000,
+                        "days": 3
+                    }
+                ],
+                "ttts_extension": {
+                    "csv_code": "10041",
+                    "required_seat_num": 6,
+                    "category": "Wheelchair"
+                },
+                "rate_limit_unit_in_seconds": 3600
+            },
+            {
+                "id": "005",
+                "name": {
+                    "ru": "Тур по Top Deck (верхней смотровой площадке) для людей на инвалидной коляске (Школьный: от 7 до 15 лет)",
+                    "es": "Top Deck Tour, Silla de ruedas (Escolares de primaria a secundaria obligatoria: 7 a 15 años)",
+                    "it": "Salita al Top Deck (osservatorio speciale) con sedia a rotelle - Studenti delle medie inferiori e alunni delle elementari (da 7 a 15 anni)",
+                    "de": "Top Deck Tour - Rollstuhl - Kind (7-15)",
+                    "fr": "Visite du Top Deck (Observatoire spécial) en fauteuil roulant - Écoliers et collégiens",
+                    "vi": "Top Deck Tour - Xe lăn (Trẻ em từ 7 đến 15 tuổi)",
+                    "id": "Top Deck Tour Kursi Roda (Pelajar SD, SMP: 7-15 tahun)",
+                    "th": "Top Deck Tour นั่งรถเข็นวีลแชร์ (นักเรียนชั้นประถม/มัธยมต้น)",
+                    "ko": "Top Deck Tour 휠체어(초/중학생: 7~15세)",
+                    "zh-hans": "Top Deck Tour轮椅(中小学生：7～15岁)",
+                    "zh-hant": "Top Deck Tour 輪椅(國中小學生:7～15歲)",
+                    "en": "Top Deck Tour: Wheelchair (Junior: 7 to 15 years) ",
+                    "ja": "トップデッキツアー 車いす(小・中学生)"
+                },
+                "charge": 1800,
+                "description": "1",
+                "notes": "10031",
+                "cancel_charge": [
+                    {
+                        "charge": 1000,
+                        "days": 3
+                    }
+                ],
+                "ttts_extension": {
+                    "csv_code": "10031",
+                    "required_seat_num": 6,
+                    "category": "Wheelchair"
+                },
+                "rate_limit_unit_in_seconds": 3600
+            }
         ]
     }
 ]
