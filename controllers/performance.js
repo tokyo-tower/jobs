@@ -106,6 +106,7 @@ function createFromSetting() {
             yield performanceRepo.saveIfNotExists(performance);
             savePerformances.push(performance);
         })));
+        debug(savePerformances.length, 'performances saved');
     });
 }
 exports.createFromSetting = createFromSetting;

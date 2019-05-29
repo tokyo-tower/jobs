@@ -111,6 +111,7 @@ export async function createFromSetting(): Promise<void> {
         await performanceRepo.saveIfNotExists(performance);
         savePerformances.push(performance);
     }));
+    debug(savePerformances.length, 'performances saved');
 }
 
 export interface ITargetPerformanceInfo {
