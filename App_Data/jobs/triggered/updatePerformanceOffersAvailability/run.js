@@ -25,7 +25,7 @@ const startThrough = moment(startFrom).add(parseInt(UPDATE_PERFORMANCE_OFFERS_AV
 ttts.service.itemAvailability.updatePerformanceOffersAvailability({
     startFrom: startFrom,
     startThrough: startThrough
-})(new ttts.repository.Stock(ttts.mongoose.connection), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.itemAvailability.SeatReservationOffer(redisClient), new ttts.repository.rateLimit.TicketTypeCategory(redisClient))
+})(new ttts.repository.Stock(redisClient), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.itemAvailability.SeatReservationOffer(redisClient), new ttts.repository.rateLimit.TicketTypeCategory(redisClient))
     .catch((err) => {
     console.error(err);
 })

@@ -29,7 +29,7 @@ ttts.service.itemAvailability.updatePerformanceOffersAvailability({
     startFrom: startFrom,
     startThrough: startThrough
 })(
-    new ttts.repository.Stock(ttts.mongoose.connection),
+    new ttts.repository.Stock(redisClient),
     new ttts.repository.Performance(ttts.mongoose.connection),
     new ttts.repository.itemAvailability.SeatReservationOffer(redisClient),
     new ttts.repository.rateLimit.TicketTypeCategory(redisClient)

@@ -30,7 +30,7 @@ ttts.service.itemAvailability.updatePerformanceAvailabilities({
     startFrom: startFrom,
     startThrough: startThrough,
     ttl: parseInt(PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS_STR, 10)
-})(new ttts.repository.Stock(ttts.mongoose.connection), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.itemAvailability.Performance(redisClient))
+})(new ttts.repository.Stock(redisClient), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.itemAvailability.Performance(redisClient))
     .catch((err) => {
     console.error(err);
 })
