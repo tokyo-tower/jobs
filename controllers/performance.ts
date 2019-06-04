@@ -77,7 +77,7 @@ export async function createFromSetting(): Promise<void> {
         ].join('');
 
         // パフォーマンス登録
-        const performance: ttts.factory.performance.IPerformance = {
+        const performance: ttts.factory.performance.IPerformance = <any>{
             id: id,
             theater: <any>theater,
             theater_name: theater.name,
