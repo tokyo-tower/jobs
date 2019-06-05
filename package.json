@@ -13,7 +13,7 @@
     }
   ],
   "dependencies": {
-    "@motionpicture/ttts-domain": "14.0.0-alpha.14",
+    "@motionpicture/ttts-domain": "14.0.0-alpha.15",
     "aws-sdk": "^2.379.0",
     "debug": "^3.2.6",
     "fs-extra": "^5.0.0",
@@ -46,7 +46,7 @@
   "scripts": {
     "build": "tsc",
     "check": "npm run tslint",
-    "clean": "rimraf app/**/*.js bin/**/*.js test/**/*.js index.js npm-debug.log* doc/*",
+    "clean": "rimraf App_Data/**/*.js bin/**/*.js test/**/*.js index.js npm-debug.log* doc/*",
     "doc": "echo \"implementing...\" && exit 0",
     "mocha": "mocha",
     "snyk": "snyk wizard",

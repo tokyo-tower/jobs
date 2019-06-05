@@ -28,8 +28,6 @@
 | `UPDATE_PERFORMANCE_AVAILABILITY_PERIOD_IN_DAYS`        | true     |             | パフォーマンス在庫状況更新期間                       |
 | `PERFORMANCE_AVAILABILITY_EXPIRES_IN_SECONDS`           | true     |             | パフォーマンス在庫状況のデータ保持期間               |
 | `UPDATE_PERFORMANCE_OFFERS_AVAILABILITY_PERIOD_IN_DAYS` | true     |             | パフォーマンス販売情報ごとの在庫状況更新期間         |
-| `UPDATE_EVENT_OFFERS_PERIOD_IN_DAYS`                    | true     |             | イベント販売情報更新期間                             |
-| `EVENT_OFFERS_EXPIRES_IN_SECONDS`                       | true     |             | イベント販売情報データ保持期間                       |
 | `COGNITO_USER_POOL_ID`                                  | true     |             | 入場アカウントを管理するCognitoユーザープールID      |
 | `AWS_ACCESS_KEY_ID`                                     | true     |             | AWSリソースアクセスキー                              |
 | `AWS_SECRET_ACCESS_KEY`                                 | true     |             | AWSリソースアクセスシークレット                      |

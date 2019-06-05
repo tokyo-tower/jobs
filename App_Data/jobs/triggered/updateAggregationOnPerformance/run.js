@@ -36,7 +36,7 @@ const startThrough = moment(startFrom).add(parseInt(PERFORMANCE_AGGREGATE_THROUG
 ttts.service.performance.aggregateCounts({
     startFrom: startFrom,
     startThrough: startThrough
-}, parseInt(PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS_STR, 10))(new ttts.repository.place.CheckinGate(redisClient), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.Reservation(ttts.mongoose.connection), new ttts.repository.itemAvailability.Performance(redisClient), new ttts.repository.itemAvailability.SeatReservationOffer(redisClient), new ttts.repository.PerformanceWithAggregation(redisClient), new ttts.repository.offer.ExhibitionEvent(redisClient))
+}, parseInt(PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS_STR, 10))(new ttts.repository.place.CheckinGate(redisClient), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.Reservation(ttts.mongoose.connection), new ttts.repository.itemAvailability.Performance(redisClient), new ttts.repository.itemAvailability.SeatReservationOffer(redisClient), new ttts.repository.PerformanceWithAggregation(redisClient))
     .catch((err) => {
     // tslint:disable-next-line:no-console
     console.error(err);

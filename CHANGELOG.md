@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - SendGridイベントコレクションを削除
 - 在庫作成ジョブを削除
 - パフォーマンスデータから不要な項目を削除
+- 一時イベントオファーリポジトリを削除
 
 ### Fixed
 
