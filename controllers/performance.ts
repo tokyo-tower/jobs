@@ -77,19 +77,15 @@ export async function createFromSetting(): Promise<void> {
         ].join('');
 
         // パフォーマンス登録
-        const performance: ttts.factory.performance.IPerformance = <any>{
+        const performance: ttts.factory.performance.IPerformance = {
             id: id,
-            theater: <any>theater,
-            theater_name: theater.name,
-            screen: <any>screenOfPerformance,
-            screen_name: screenOfPerformance.name,
-            film: <any>film,
-            ticket_type_group: <any>ticketTypeGroup,
-            day: performanceInfo.day,
-            open_time: performanceInfo.start_time,
-            start_time: performanceInfo.start_time,
-            end_time: performanceInfo.end_time,
-            canceled: false,
+            doorTime: performanceInfo.door_time,
+            startDate: performanceInfo.start_date,
+            endDate: performanceInfo.end_date,
+            duration: performanceInfo.duration,
+            superEvent: film,
+            location: screenOfPerformance,
+            tourNumber: performanceInfo.tour_number,
             ttts_extension: {
                 tour_number: performanceInfo.tour_number,
                 ev_service_status: ttts.factory.performance.EvServiceStatus.Normal,
@@ -100,10 +96,20 @@ export async function createFromSetting(): Promise<void> {
                 refund_update_user: '',
                 refunded_count: 0
             },
+            ticket_type_group: <any>ticketTypeGroup,
+
+            theater: theater,
+            theater_name: theater.name,
+            screen: screenOfPerformance,
+            screen_name: screenOfPerformance.name,
+            film: film,
+            day: performanceInfo.day,
+            open_time: performanceInfo.start_time,
+            start_time: performanceInfo.start_time,
+            end_time: performanceInfo.end_time,
             door_time: performanceInfo.door_time,
             start_date: performanceInfo.start_date,
             end_date: performanceInfo.end_date,
-            duration: performanceInfo.duration,
             tour_number: performanceInfo.tour_number
         };
 

@@ -1,8 +1,6 @@
 /**
  * パフォーマンスに対する集計データを更新する
- * @ignore
  */
-
 import * as ttts from '@motionpicture/ttts-domain';
 import * as moment from 'moment-timezone';
 
@@ -46,9 +44,10 @@ ttts.service.performance.aggregateCounts(
     new ttts.repository.offer.ExhibitionEvent(redisClient)
 )
     .catch((err) => {
+        // tslint:disable-next-line:no-console
         console.error(err);
     })
     .then(async () => {
-        ttts.mongoose.disconnect();
+        await ttts.mongoose.disconnect();
         redisClient.quit();
     });

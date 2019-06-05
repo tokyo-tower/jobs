@@ -1,8 +1,6 @@
 /**
  * 展示イベントの販売情報を更新する
- * @ignore
  */
-
 import * as ttts from '@motionpicture/ttts-domain';
 import * as moment from 'moment';
 
@@ -40,9 +38,10 @@ ttts.service.offer.updateExhibitionEventOffers({
     new ttts.repository.offer.ExhibitionEvent(redisClient)
 )
     .catch((err) => {
+        // tslint:disable-next-line:no-console
         console.error(err);
     })
-    .then(() => {
-        ttts.mongoose.disconnect();
+    .then(async () => {
+        await ttts.mongoose.disconnect();
         redisClient.quit();
     });

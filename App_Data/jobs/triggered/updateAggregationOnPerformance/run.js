@@ -1,8 +1,4 @@
 "use strict";
-/**
- * パフォーマンスに対する集計データを更新する
- * @ignore
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -12,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * パフォーマンスに対する集計データを更新する
+ */
 const ttts = require("@motionpicture/ttts-domain");
 const moment = require("moment-timezone");
 const mongooseConnectionOptions_1 = require("../../../../mongooseConnectionOptions");
@@ -39,9 +38,10 @@ ttts.service.performance.aggregateCounts({
     startThrough: startThrough
 }, parseInt(PERFORMANCE_AGGREGATION_EXPIRES_IN_SECONDS_STR, 10))(new ttts.repository.place.CheckinGate(redisClient), new ttts.repository.Performance(ttts.mongoose.connection), new ttts.repository.Reservation(ttts.mongoose.connection), new ttts.repository.itemAvailability.Performance(redisClient), new ttts.repository.itemAvailability.SeatReservationOffer(redisClient), new ttts.repository.PerformanceWithAggregation(redisClient), new ttts.repository.offer.ExhibitionEvent(redisClient))
     .catch((err) => {
+    // tslint:disable-next-line:no-console
     console.error(err);
 })
     .then(() => __awaiter(this, void 0, void 0, function* () {
-    ttts.mongoose.disconnect();
+    yield ttts.mongoose.disconnect();
     redisClient.quit();
 }));
