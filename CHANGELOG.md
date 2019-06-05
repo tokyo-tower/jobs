@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - 予約リポジトリのmongooseモデルをprivate化
 - パフォーマンスリポジトリのmongooseモデルをprivate化
 - 新しいRedis在庫リポジトリで再構築
+- パフォーマンスインターフェースをChevre化に向けて補強
 
 ### Deprecated
 
@@ -24,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - GMO通知コレクションを削除
 - SendGridイベントコレクションを削除
 - 在庫作成ジョブを削除
+- パフォーマンスデータから不要な項目を削除
 
 ### Fixed
 

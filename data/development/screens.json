@@ -1,8 +1,10 @@
 [
     {
         "id": "00101",
+        "branchCode": "01",
         "theater": {
             "id": "001",
+            "branchCode": "001",
             "name": {
                 "en": "TokyoTower TOP DECK",
                 "ja": "東京タワー TOP DECK"
@@ -19,479 +21,175 @@
         "sections": [
             {
                 "code": "",
+                "branchCode": "",
                 "seats": [
                     {
                         "code": "A-01",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-01"
                     },
                     {
                         "code": "A-02",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-02"
                     },
                     {
                         "code": "A-03",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-03"
                     },
                     {
                         "code": "A-04",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-04"
                     },
                     {
                         "code": "A-05",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-05"
                     },
                     {
                         "code": "A-06",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-06"
                     },
                     {
                         "code": "A-07",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-07"
                     },
                     {
                         "code": "A-08",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-08"
                     },
                     {
                         "code": "A-09",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-09"
                     },
                     {
                         "code": "A-10",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-10"
                     },
                     {
                         "code": "A-11",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-11"
                     },
                     {
                         "code": "A-12",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-12"
                     },
                     {
                         "code": "A-13",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-13"
                     },
                     {
                         "code": "A-14",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-14"
                     },
                     {
                         "code": "A-15",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-15"
                     },
                     {
                         "code": "A-16",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-16"
                     },
                     {
                         "code": "A-17",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-17"
                     },
                     {
                         "code": "A-18",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-18"
                     },
                     {
                         "code": "A-19",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-19"
                     },
                     {
                         "code": "A-20",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-20"
                     },
                     {
                         "code": "A-21",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-21"
                     },
                     {
                         "code": "A-22",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-22"
                     },
                     {
                         "code": "A-23",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-23"
                     },
                     {
                         "code": "A-24",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-24"
                     },
                     {
                         "code": "A-25",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-25"
                     },
                     {
                         "code": "A-26",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-26"
                     },
                     {
                         "code": "A-27",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-27"
                     },
                     {
                         "code": "A-28",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-28"
                     },
                     {
                         "code": "A-29",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-29"
                     },
                     {
                         "code": "A-30",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-30"
                     },
                     {
                         "code": "A-31",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-31"
                     },
                     {
                         "code": "A-32",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-32"
                     },
                     {
                         "code": "A-33",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-33"
                     },
                     {
                         "code": "A-34",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-34"
                     },
                     {
                         "code": "A-35",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-35"
                     },
                     {
                         "code": "A-36",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-36"
                     },
                     {
                         "code": "A-37",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-37"
                     },
                     {
                         "code": "A-38",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-38"
                     },
                     {
                         "code": "A-39",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-39"
                     },
                     {
                         "code": "A-40",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-40"
                     },
                     {
                         "code": "A-41",
-                        "grade": {
-                            "additional_charge": 0,
-                            "code": "00",
-                            "name": {
-                                "en": "Normal Seat",
-                                "ja": "ノーマルシート"
-                            }
-                        }
+                        "branchCode": "A-41"
                     }
                 ]
             }
         ],
-        "seats_number": 41,
-        "seats_numbers_by_seat_grade": [
-            {
-                "seats_number": 41,
-                "seat_grade_code": "00"
-            },
-            {
-                "seats_number": 0,
-                "seat_grade_code": "01"
-            },
-            {
-                "seats_number": 0,
-                "seat_grade_code": "02"
-            },
-            {
-                "seats_number": 0,
-                "seat_grade_code": "03"
-            }
-        ]
+        "seats_number": 41
     }
 ]

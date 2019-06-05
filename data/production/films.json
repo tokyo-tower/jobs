@@ -1,13 +1,11 @@
 [
     {
         "id": "001",
+        "identifier": "001",
         "name": {
             "en": "TokyoTower TOP DECK TOUR",
             "ja": "東京タワー トップデッキツアー"
         },
-        "sections": [],
-        "minutes": 15,
-        "is_mx4d": false,
-        "copyright": ""
+        "minutes": 15
     }
 ]
