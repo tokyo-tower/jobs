@@ -116,6 +116,21 @@ export async function createFromSetting(): Promise<void> {
         debug('creating performance...', performance);
         await performanceRepo.saveIfNotExists(performance);
         savePerformances.push(performance);
+
+        // 集計タスク作成
+        const taskRepo = new ttts.repository.Task(ttts.mongoose.connection);
+        const aggregateTask: ttts.factory.task.aggregateEventReservations.IAttributes = {
+            name: ttts.factory.taskName.AggregateEventReservations,
+            status: ttts.factory.taskStatus.Ready,
+            runsAt: new Date(),
+            remainingNumberOfTries: 3,
+            // tslint:disable-next-line:no-null-keyword
+            lastTriedAt: null,
+            numberOfTried: 0,
+            executionResults: [],
+            data: { id: performance.id }
+        };
+        await taskRepo.save(aggregateTask);
     }));
     debug(savePerformances.length, 'performances saved');
 }

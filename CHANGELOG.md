@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
+- イベント予約集計タスクを追加
+
 ### Changed
 
 - パフォーマンスコレクションからのリレーション削除対応に合わせて、自動生成パフォーマンスの型を調整
