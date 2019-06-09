@@ -110,7 +110,8 @@ export async function createFromSetting(): Promise<void> {
             door_time: performanceInfo.door_time,
             start_date: performanceInfo.start_date,
             end_date: performanceInfo.end_date,
-            tour_number: performanceInfo.tour_number
+            tour_number: performanceInfo.tour_number,
+            ...<any>{ canceled: false }
         };
 
         debug('creating performance...', performance);
