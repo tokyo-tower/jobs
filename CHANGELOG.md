@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - パフォーマンスリポジトリのmongooseモデルをprivate化
 - 新しいRedis在庫リポジトリで再構築
 - パフォーマンスインターフェースをChevre化に向けて補強
+- スクリーンに車椅子タイプ座席をひとつ持つように設計調整
 
 ### Deprecated
 

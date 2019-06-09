@@ -25,171 +25,301 @@
                 "seats": [
                     {
                         "code": "A-01",
-                        "branchCode": "A-01"
+                        "branchCode": "A-01",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-02",
-                        "branchCode": "A-02"
+                        "branchCode": "A-02",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-03",
-                        "branchCode": "A-03"
+                        "branchCode": "A-03",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-04",
-                        "branchCode": "A-04"
+                        "branchCode": "A-04",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-05",
-                        "branchCode": "A-05"
+                        "branchCode": "A-05",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-06",
-                        "branchCode": "A-06"
+                        "branchCode": "A-06",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-07",
-                        "branchCode": "A-07"
+                        "branchCode": "A-07",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-08",
-                        "branchCode": "A-08"
+                        "branchCode": "A-08",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-09",
-                        "branchCode": "A-09"
+                        "branchCode": "A-09",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-10",
-                        "branchCode": "A-10"
+                        "branchCode": "A-10",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-11",
-                        "branchCode": "A-11"
+                        "branchCode": "A-11",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-12",
-                        "branchCode": "A-12"
+                        "branchCode": "A-12",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-13",
-                        "branchCode": "A-13"
+                        "branchCode": "A-13",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-14",
-                        "branchCode": "A-14"
+                        "branchCode": "A-14",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-15",
-                        "branchCode": "A-15"
+                        "branchCode": "A-15",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-16",
-                        "branchCode": "A-16"
+                        "branchCode": "A-16",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-17",
-                        "branchCode": "A-17"
+                        "branchCode": "A-17",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-18",
-                        "branchCode": "A-18"
+                        "branchCode": "A-18",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-19",
-                        "branchCode": "A-19"
+                        "branchCode": "A-19",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-20",
-                        "branchCode": "A-20"
+                        "branchCode": "A-20",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-21",
-                        "branchCode": "A-21"
+                        "branchCode": "A-21",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-22",
-                        "branchCode": "A-22"
+                        "branchCode": "A-22",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-23",
-                        "branchCode": "A-23"
+                        "branchCode": "A-23",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-24",
-                        "branchCode": "A-24"
+                        "branchCode": "A-24",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-25",
-                        "branchCode": "A-25"
+                        "branchCode": "A-25",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-26",
-                        "branchCode": "A-26"
+                        "branchCode": "A-26",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-27",
-                        "branchCode": "A-27"
+                        "branchCode": "A-27",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-28",
-                        "branchCode": "A-28"
+                        "branchCode": "A-28",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-29",
-                        "branchCode": "A-29"
+                        "branchCode": "A-29",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-30",
-                        "branchCode": "A-30"
+                        "branchCode": "A-30",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-31",
-                        "branchCode": "A-31"
+                        "branchCode": "A-31",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-32",
-                        "branchCode": "A-32"
+                        "branchCode": "A-32",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-33",
-                        "branchCode": "A-33"
+                        "branchCode": "A-33",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-34",
-                        "branchCode": "A-34"
+                        "branchCode": "A-34",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-35",
-                        "branchCode": "A-35"
+                        "branchCode": "A-35",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-36",
-                        "branchCode": "A-36"
+                        "branchCode": "A-36",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-37",
-                        "branchCode": "A-37"
+                        "branchCode": "A-37",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-38",
-                        "branchCode": "A-38"
+                        "branchCode": "A-38",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-39",
-                        "branchCode": "A-39"
+                        "branchCode": "A-39",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-40",
-                        "branchCode": "A-40"
+                        "branchCode": "A-40",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
                     },
                     {
                         "code": "A-41",
-                        "branchCode": "A-41"
+                        "branchCode": "A-41",
+                        "seatingType": {
+                            "typeOf": "Normal"
+                        }
+                    },
+                    {
+                        "code": "W-01",
+                        "branchCode": "W-01",
+                        "seatingType": {
+                            "typeOf": "Wheelchair"
+                        }
                     }
                 ]
             }
         ],
-        "seats_number": 41
+        "seats_number": 42
     }
 ]
