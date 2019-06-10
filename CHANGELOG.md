@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## v9.0.0 - 2019-06-10
+
+### Added
+
 - イベント予約集計タスクを追加
 
 ### Changed
@@ -20,8 +34,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - パフォーマンスインターフェースをChevre化に向けて補強
 - スクリーンに車椅子タイプ座席をひとつ持つように設計調整
 
-### Deprecated
-
 ### Removed
 
 - 劇場、スクリーン、作品、券種、券種グループコレクションを削除(一時的に動的データ管理を不可能に変更)
@@ -33,10 +45,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - パフォーマンス残席数更新ジョブを削除
 - オファーごとのパフォーマンス残席数更新ジョブを削除
 - パフォーマンス集計ジョブを削除
-
-### Fixed
-
-### Security
 
 ## v8.1.2 - 2019-04-19
 
