@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
+- 不要なイベント集計を削除するタスクを追加
+
 ### Changed
 
 ### Deprecated
