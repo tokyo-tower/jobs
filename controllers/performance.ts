@@ -1,21 +1,17 @@
 /**
  * パフォーマンスタスクコントローラー
- * @namespace controller/performance
  */
-
 import * as ttts from '@motionpicture/ttts-domain';
 import * as createDebug from 'debug';
 import * as fs from 'fs-extra';
-import * as moment from 'moment';
-// tslint:disable-next-line:no-require-imports no-var-requires
-require('moment-timezone');
+import * as moment from 'moment-timezone';
 
 const debug = createDebug('ttts-jobs:controller:performance');
 
 /**
  * 設定からパフォーマンスデータを作成する
- * @memberof controller/performance
  */
+// tslint:disable-next-line:max-func-body-length
 export async function createFromSetting(): Promise<void> {
     // 作成情報取得
     const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
@@ -26,17 +22,39 @@ export async function createFromSetting(): Promise<void> {
     debug('targetInfo:', targetInfo);
 
     // 劇場とスクリーン情報取得
-    const screenOfPerformance = await ttts.Models.Screen.findById(setting.screen).populate('theater').exec();
+    const theaters: ttts.factory.place.movieTheater.ITheater[] =
+        fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/theaters.json`);
+    const theater = theaters.find((t) => t.id === setting.theater);
+    debug('theater:', theater);
+    if (theater === undefined) {
+        throw new Error('theater not found.');
+    }
+
+    const screens: ttts.factory.place.movieTheater.IScreen[] =
+        fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/screens.json`);
+    debug('setting:', setting);
+    const screenOfPerformance = screens.find((s) => s.id === setting.screen);
     debug('screenOfPerformance:', screenOfPerformance);
-    if (screenOfPerformance === null) {
+    if (screenOfPerformance === undefined) {
         throw new Error('screen not found.');
     }
 
     // 作品情報取得
-    const film = await ttts.Models.Film.findById({ _id: setting.film }).exec();
+    const films: ttts.factory.creativeWork.movie.IFilm[] =
+        fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/films.json`);
+    const film = films.find((f) => f.id === setting.film);
     debug('film:', film);
-    if (film === null) {
+    if (film === undefined) {
         throw new Error('film not found.');
+    }
+
+    // 券種情報取得
+    const ticketTypeGroups: ttts.factory.performance.ITicketTypeGroup[] =
+        fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/ticketTypeGroups.json`);
+    const ticketTypeGroup = ticketTypeGroups.find((t) => t.id === setting.ticket_type_group);
+    debug('ticketTypeGroup:', ticketTypeGroup);
+    if (ticketTypeGroup === undefined) {
+        throw new Error('Ticket Type Group not found.');
     }
 
     // パフォーマンス登録
@@ -61,17 +79,13 @@ export async function createFromSetting(): Promise<void> {
         // パフォーマンス登録
         const performance: ttts.factory.performance.IPerformance = {
             id: id,
-            theater: screenOfPerformance.get('theater').get('id'),
-            theater_name: screenOfPerformance.get('theater').get('name'),
-            screen: screen,
-            screen_name: screenOfPerformance.get('name'),
-            film: film.get('id'),
-            ticket_type_group: setting.ticket_type_group,
-            day: performanceInfo.day,
-            open_time: performanceInfo.start_time,
-            start_time: performanceInfo.start_time,
-            end_time: performanceInfo.end_time,
-            canceled: false,
+            doorTime: performanceInfo.door_time,
+            startDate: performanceInfo.start_date,
+            endDate: performanceInfo.end_date,
+            duration: performanceInfo.duration,
+            superEvent: film,
+            location: screenOfPerformance,
+            tourNumber: performanceInfo.tour_number,
             ttts_extension: {
                 tour_number: performanceInfo.tour_number,
                 ev_service_status: ttts.factory.performance.EvServiceStatus.Normal,
@@ -82,17 +96,44 @@ export async function createFromSetting(): Promise<void> {
                 refund_update_user: '',
                 refunded_count: 0
             },
+            ticket_type_group: <any>ticketTypeGroup,
+
+            theater: theater,
+            theater_name: theater.name,
+            screen: screenOfPerformance,
+            screen_name: screenOfPerformance.name,
+            film: film,
+            day: performanceInfo.day,
+            open_time: performanceInfo.start_time,
+            start_time: performanceInfo.start_time,
+            end_time: performanceInfo.end_time,
             door_time: performanceInfo.door_time,
             start_date: performanceInfo.start_date,
             end_date: performanceInfo.end_date,
-            duration: performanceInfo.duration,
-            tour_number: performanceInfo.tour_number
+            tour_number: performanceInfo.tour_number,
+            ...<any>{ canceled: false }
         };
 
         debug('creating performance...', performance);
         await performanceRepo.saveIfNotExists(performance);
         savePerformances.push(performance);
+
+        // 集計タスク作成
+        const taskRepo = new ttts.repository.Task(ttts.mongoose.connection);
+        const aggregateTask: ttts.factory.task.aggregateEventReservations.IAttributes = {
+            name: ttts.factory.taskName.AggregateEventReservations,
+            status: ttts.factory.taskStatus.Ready,
+            runsAt: new Date(),
+            remainingNumberOfTries: 3,
+            // tslint:disable-next-line:no-null-keyword
+            lastTriedAt: null,
+            numberOfTried: 0,
+            executionResults: [],
+            data: { id: performance.id }
+        };
+        await taskRepo.save(aggregateTask);
     }));
+    debug(savePerformances.length, 'performances saved');
 }
 
 export interface ITargetPerformanceInfo {
@@ -108,7 +149,6 @@ export interface ITargetPerformanceInfo {
 
 /**
  * パフォーマンス作成・作成対象情報取得
- * @memberof controller/performance
  */
 function getTargetInfoForCreateFromSetting(duration: number, noPerformanceTimes: string[]): ITargetPerformanceInfo[] {
     const performanceInfos: ITargetPerformanceInfo[] = [];
@@ -137,10 +177,10 @@ function getTargetInfoForCreateFromSetting(duration: number, noPerformanceTimes:
     for (let index = 0; index < days; index = index + 1) {
         const now = moment().add(start + index, 'days');
 
-        hours.forEach((hour) => {
+        hours.forEach((hourStr) => {
             // 2桁でない時は'0'詰め
             // tslint:disable-next-line:no-magic-numbers
-            hour = `0${hour}`.slice(-2);
+            const hour = `0${hourStr}`.slice(-2);
 
             minutes.forEach((minute, minuteIndex) => {
                 // ツアー情報作成
@@ -169,51 +209,4 @@ function getTargetInfoForCreateFromSetting(duration: number, noPerformanceTimes:
     }
 
     return performanceInfos;
-}
-
-/**
- *
- *
- * @memberof controller/performance
- */
-export async function createFromJson(): Promise<void> {
-    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
-
-    const performances: any[] = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/performances.json`);
-    const screens = await ttts.Models.Screen.find({}, 'name theater').populate('theater', 'name').exec();
-
-    // あれば更新、なければ追加
-    await Promise.all(performances.map(async (performance) => {
-        // 劇場とスクリーン名称を追加
-        const screenOfPerformance = screens.find((screen) => {
-            return (screen.get('_id').toString() === performance.screen);
-        });
-        if (screenOfPerformance === undefined) {
-            throw new Error('screen not found.');
-        }
-
-        performance.screen_name = screenOfPerformance.get('name');
-        performance.theater_name = screenOfPerformance.get('theater').get('name');
-
-        debug('creating performance...');
-        await performanceRepo.performanceModel.create(performance);
-        debug('performance created');
-    }));
-    debug('promised.');
-}
-
-/**
- * ID指定でパフォーマンスを公開する
- *
- * @memberof controller/performance
- */
-export async function release(performanceId: string): Promise<void> {
-    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
-
-    debug('updating performance..._id:', performanceId);
-    await performanceRepo.performanceModel.findByIdAndUpdate(
-        performanceId,
-        { canceled: false }
-    ).exec();
-    debug('performance updated');
 }

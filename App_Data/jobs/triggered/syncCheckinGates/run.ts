@@ -1,17 +1,12 @@
 /**
- * 入場ゲート情報を、所有者リポジトリーから同期する
- * @ignore
+ * 入場ゲート情報を、所有者リポジトリから同期する
  */
-
 import * as ttts from '@motionpicture/ttts-domain';
 import * as AWS from 'aws-sdk';
 import * as createDebug from 'debug';
 
-import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
-
 const debug = createDebug('ttts-jobs:syncCheckinGates');
 
-ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
 const redisClient = ttts.redis.createClient({
     // tslint:disable-next-line:no-magic-numbers
     port: parseInt(<string>process.env.REDIS_PORT, 10),
@@ -36,13 +31,14 @@ getCognitoGroups().then(async (groups) => {
         try {
             await checkinGateRepo.store(checkinGate);
         } catch (error) {
+            // tslint:disable-next-line:no-console
             console.error(error);
         }
     }));
 }).catch((error) => {
+    // tslint:disable-next-line:no-console
     console.error(error);
-}).then(() => {
-    ttts.mongoose.disconnect();
+}).then(async () => {
     redisClient.quit();
 });
 

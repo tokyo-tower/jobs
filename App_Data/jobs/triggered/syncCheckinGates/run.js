@@ -1,8 +1,4 @@
 "use strict";
-/**
- * 入場ゲート情報を、所有者リポジトリーから同期する
- * @ignore
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -12,12 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * 入場ゲート情報を、所有者リポジトリから同期する
+ */
 const ttts = require("@motionpicture/ttts-domain");
 const AWS = require("aws-sdk");
 const createDebug = require("debug");
-const mongooseConnectionOptions_1 = require("../../../../mongooseConnectionOptions");
 const debug = createDebug('ttts-jobs:syncCheckinGates');
-ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
 const redisClient = ttts.redis.createClient({
     // tslint:disable-next-line:no-magic-numbers
     port: parseInt(process.env.REDIS_PORT, 10),
@@ -40,15 +37,16 @@ getCognitoGroups().then((groups) => __awaiter(this, void 0, void 0, function* ()
             yield checkinGateRepo.store(checkinGate);
         }
         catch (error) {
+            // tslint:disable-next-line:no-console
             console.error(error);
         }
     })));
 })).catch((error) => {
+    // tslint:disable-next-line:no-console
     console.error(error);
-}).then(() => {
-    ttts.mongoose.disconnect();
+}).then(() => __awaiter(this, void 0, void 0, function* () {
     redisClient.quit();
-});
+}));
 function getCognitoGroups() {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
