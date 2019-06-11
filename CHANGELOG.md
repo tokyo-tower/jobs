@@ -18,6 +18,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v9.1.0 - 2019-06-11
+
+### Added
+
+- 不要なイベント集計を削除するタスクを追加
+
+### Changed
+
+- 券種のchargeをpriceSpecificationに置換
+
 ## v9.0.0 - 2019-06-10
 
 ### Added

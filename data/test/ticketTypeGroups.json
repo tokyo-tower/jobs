@@ -9,6 +9,7 @@
             {
                 "_id": "001",
                 "id": "001",
+                "identifier": "10011",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) (Взрослый: от 16 лет)",
                     "es": "Top Deck Tour, (Adulto: Mayor de 16 años)",
@@ -24,7 +25,17 @@
                     "en": "Top Deck Tour (Adult: 16 years or over)",
                     "ja": "トップデッキツアー(大人)"
                 },
-                "charge": 2800,
+                "priceSpecification": {
+                    "typeOf": "UnitPriceSpecification",
+                    "price": 2800,
+                    "priceCurrency": "JPY",
+                    "valueAddedTaxIncluded": true,
+                    "referenceQuantity": {
+                        "typeOf": "QuantitativeValue",
+                        "unitCode": "C62",
+                        "value": 1
+                    }
+                },
                 "description": "0",
                 "notes": "10011",
                 "cancel_charge": [
@@ -35,14 +46,13 @@
                 ],
                 "ttts_extension": {
                     "csv_code": "10011",
-                    "required_seat_num": 1,
                     "category": "Normal"
-                },
-                "rate_limit_unit_in_seconds": 0
+                }
             },
             {
                 "_id": "002",
                 "id": "002",
+                "identifier": "10031",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) (Школьный: от 7 до 15 лет)",
                     "es": "Top Deck Tour, (Escolares de primaria a secundaria obligatoria: 7 a 15 años)",
@@ -58,7 +68,17 @@
                     "en": "Top Deck Tour (Junior: 7 to 15 years)",
                     "ja": "トップデッキツアー(小・中学生)"
                 },
-                "charge": 1800,
+                "priceSpecification": {
+                    "typeOf": "UnitPriceSpecification",
+                    "price": 1800,
+                    "priceCurrency": "JPY",
+                    "valueAddedTaxIncluded": true,
+                    "referenceQuantity": {
+                        "typeOf": "QuantitativeValue",
+                        "unitCode": "C62",
+                        "value": 1
+                    }
+                },
                 "description": "0",
                 "notes": "10031",
                 "cancel_charge": [
@@ -69,14 +89,13 @@
                 ],
                 "ttts_extension": {
                     "csv_code": "10031",
-                    "required_seat_num": 1,
                     "category": "Normal"
-                },
-                "rate_limit_unit_in_seconds": 0
+                }
             },
             {
                 "_id": "003",
                 "id": "003",
+                "identifier": "10041",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) (Дошкольный: дети от 4 до 6 лет)",
                     "es": "Top Deck Tour, (Niños de 4 a 6 años)",
@@ -92,7 +111,17 @@
                     "en": "Top Deck Tour (Child: 4 to 6 years) ",
                     "ja": "トップデッキツアー(幼児・4歳～)"
                 },
-                "charge": 1200,
+                "priceSpecification": {
+                    "typeOf": "UnitPriceSpecification",
+                    "price": 1200,
+                    "priceCurrency": "JPY",
+                    "valueAddedTaxIncluded": true,
+                    "referenceQuantity": {
+                        "typeOf": "QuantitativeValue",
+                        "unitCode": "C62",
+                        "value": 1
+                    }
+                },
                 "description": "0",
                 "notes": "10041",
                 "cancel_charge": [
@@ -103,14 +132,13 @@
                 ],
                 "ttts_extension": {
                     "csv_code": "10041",
-                    "required_seat_num": 1,
                     "category": "Normal"
-                },
-                "rate_limit_unit_in_seconds": 0
+                }
             },
             {
                 "_id": "004",
                 "id": "004",
+                "identifier": "10011",
                 "name": {
                     "ru": "Тур поTop Deck (верхней смотровой площадке) для людей на инвалидной коляске (Взрослый: от 16 лет)",
                     "es": "Top Deck Tour, Silla de ruedas (Adulto: Mayor de 16 años)",
@@ -126,7 +154,17 @@
                     "en": "Top Deck Tour: Wheelchair (Adult: 16 years or over) ",
                     "ja": "トップデッキツアー 車いす(大人)"
                 },
-                "charge": 2800,
+                "priceSpecification": {
+                    "typeOf": "UnitPriceSpecification",
+                    "price": 2800,
+                    "priceCurrency": "JPY",
+                    "valueAddedTaxIncluded": true,
+                    "referenceQuantity": {
+                        "typeOf": "QuantitativeValue",
+                        "unitCode": "C62",
+                        "value": 1
+                    }
+                },
                 "description": "1",
                 "notes": "10011",
                 "cancel_charge": [
@@ -137,14 +175,13 @@
                 ],
                 "ttts_extension": {
                     "csv_code": "10011",
-                    "required_seat_num": 6,
                     "category": "Wheelchair"
-                },
-                "rate_limit_unit_in_seconds": 3600
+                }
             },
             {
                 "_id": "006",
                 "id": "006",
+                "identifier": "10041",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) для людей на инвалидной коляске (Дошкольный: дети от 4 до 6 лет)",
                     "es": "Top Deck Tour, Silla de ruedas (Niños de 4 a 6 años)",
@@ -160,7 +197,17 @@
                     "en": "Top Deck Tour: Wheelchair (Child: 4 to 6 years)",
                     "ja": "トップデッキツアー 車いす(幼児・４歳～)"
                 },
-                "charge": 1200,
+                "priceSpecification": {
+                    "typeOf": "UnitPriceSpecification",
+                    "price": 1200,
+                    "priceCurrency": "JPY",
+                    "valueAddedTaxIncluded": true,
+                    "referenceQuantity": {
+                        "typeOf": "QuantitativeValue",
+                        "unitCode": "C62",
+                        "value": 1
+                    }
+                },
                 "description": "1",
                 "notes": "10041",
                 "cancel_charge": [
@@ -171,14 +218,13 @@
                 ],
                 "ttts_extension": {
                     "csv_code": "10041",
-                    "required_seat_num": 6,
                     "category": "Wheelchair"
-                },
-                "rate_limit_unit_in_seconds": 3600
+                }
             },
             {
                 "_id": "005",
                 "id": "005",
+                "identifier": "10031",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) для людей на инвалидной коляске (Школьный: от 7 до 15 лет)",
                     "es": "Top Deck Tour, Silla de ruedas (Escolares de primaria a secundaria obligatoria: 7 a 15 años)",
@@ -194,7 +240,17 @@
                     "en": "Top Deck Tour: Wheelchair (Junior: 7 to 15 years) ",
                     "ja": "トップデッキツアー 車いす(小・中学生)"
                 },
-                "charge": 1800,
+                "priceSpecification": {
+                    "typeOf": "UnitPriceSpecification",
+                    "price": 1800,
+                    "priceCurrency": "JPY",
+                    "valueAddedTaxIncluded": true,
+                    "referenceQuantity": {
+                        "typeOf": "QuantitativeValue",
+                        "unitCode": "C62",
+                        "value": 1
+                    }
+                },
                 "description": "1",
                 "notes": "10031",
                 "cancel_charge": [
@@ -205,10 +261,8 @@
                 ],
                 "ttts_extension": {
                     "csv_code": "10031",
-                    "required_seat_num": 6,
                     "category": "Wheelchair"
-                },
-                "rate_limit_unit_in_seconds": 3600
+                }
             }
         ]
     }
