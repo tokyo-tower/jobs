@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+- 在庫インターフェースを削除
+
 ### Fixed
 
 ### Security
