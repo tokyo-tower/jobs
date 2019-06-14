@@ -13,79 +13,52 @@ async function main() {
         tls: { servername: process.env.REDIS_HOST }
     });
 
+    const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection)
     const reservationRepo = new ttts.repository.Reservation(ttts.mongoose.connection)
     const stockRepo = new ttts.repository.Stock(redisClient);
 
-
     const reservations = await reservationRepo.reservationModel.find({
-        // ids: ['TT-190609-908000-0']
+        // _id: 'TT-190609-908000-0',
         status: ttts.factory.reservationStatusType.ReservationConfirmed,
-        performance_day: { $gte: '20190610' },
+        performance_day: { $gte: '20190605' },
         'ticket_ttts_extension.category': ttts.factory.ticketTypeCategory.Wheelchair
     });
     console.log(reservations);
     console.log(reservations.length, 'reservations found');
 
-    const seatCode = 'W-01';
-
     await Promise.all(reservations.map(async (reservation) => {
-        const newStock = {
-            id: `${reservation.performance}-${seatCode}`,
-            seat_code: seatCode,
-            availability_before: ttts.factory.itemAvailability.InStock,
-            availability_after: ttts.factory.itemAvailability.OutOfStock,
-            holder: reservation.transaction
-        };
+        const event = await performanceRepo.findById(reservation.performance);
+        let availableSeats = event.screen.sections[0].seats;
+        const unavailableStocks = await stockRepo.findUnavailableOffersByEventId({ eventId: event.id });
+        const unavailableSeatNumbers = unavailableStocks.map((s) => s.seatNumber);
+        availableSeats = availableSeats.filter((s) => unavailableSeatNumbers.indexOf(s.branchCode) < 0);
 
-        // 古い車椅子在庫を解放
-        await Promise.all(reservation.stocks.map(async (stock) => {
-            const holder = await stockRepo.getHolder({
-                eventId: reservation.performance,
-                offer: {
-                    seatSection: '',
-                    seatNumber: stock.seat_code
-                },
-            });
-            if (holder === stock.holder) {
-                await stockRepo.unlock({
-                    eventId: reservation.performance,
-                    offer: {
-                        seatSection: '',
-                        seatNumber: stock.seat_code
-                    },
-                });
-                console.log('unlocked', reservation.id, stock.seat_code);
-            }
-        }));
-
-        // 新しい車椅子在庫をロック
-        await stockRepo.unlock({
-            eventId: reservation.performance,
-            offer: {
-                seatSection: '',
-                seatNumber: newStock.seat_code
-            }
-        });
+        // 余分確保分をロック
+        const selectedSeats = availableSeats.slice(0, 6);
+        console.log('locking...', selectedSeats.length, 'seats', selectedSeats);
         await stockRepo.lock({
-            eventId: reservation.performance,
-            offers: [{
-                seatSection: '',
-                seatNumber: newStock.seat_code
-            }],
-            expires: moment(reservation.performance_end_date).add(1, 'month').toDate(),
+            eventId: event.id,
+            offers: selectedSeats.map((s) => {
+                return {
+                    seatSection: '',
+                    seatNumber: s.branchCode
+                };
+            }),
+            expires: moment(event.endDate).add(1, 'month').toDate(),
             holder: reservation.transaction
         });
-        console.log('locked', reservation.id, newStock);
+        console.log('locked', reservation.id);
 
-        // 予約を新しいストックで書き換え
+        // 予約に余分確保情報を追加
         await reservationRepo.reservationModel.findOneAndUpdate(
             { _id: reservation.id },
             {
-                seat_code: newStock.seat_code,
-                'reservedTicket.ticketedSeat.seatNumber': newStock.seat_code,
-                $addToSet: {
-                    stocks: newStock
-                }
+                additionalProperty: [
+                    {
+                        name: 'extraSeatNumbers',
+                        value: JSON.stringify(selectedSeats.map((s) => s.branchCode))
+                    }
+                ]
             }
         ).exec();
         console.log('reservation updated', reservation.id);
