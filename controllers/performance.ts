@@ -111,7 +111,10 @@ export async function createFromSetting(): Promise<void> {
             start_date: performanceInfo.start_date,
             end_date: performanceInfo.end_date,
             tour_number: performanceInfo.tour_number,
-            ...<any>{ canceled: false }
+            additionalProperty: [{ name: 'tourNumber', value: String(performanceInfo.tour_number) }],
+            ...<any>{
+                canceled: false
+            }
         };
 
         debug('creating performance...', performance);

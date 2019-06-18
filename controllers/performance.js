@@ -82,7 +82,9 @@ function createFromSetting() {
                     refund_status: ttts.factory.performance.RefundStatus.None,
                     refund_update_user: '',
                     refunded_count: 0
-                }, ticket_type_group: ticketTypeGroup, theater: theater, theater_name: theater.name, screen: screenOfPerformance, screen_name: screenOfPerformance.name, film: film, day: performanceInfo.day, open_time: performanceInfo.start_time, start_time: performanceInfo.start_time, end_time: performanceInfo.end_time, door_time: performanceInfo.door_time, start_date: performanceInfo.start_date, end_date: performanceInfo.end_date, tour_number: performanceInfo.tour_number }, { canceled: false });
+                }, ticket_type_group: ticketTypeGroup, theater: theater, theater_name: theater.name, screen: screenOfPerformance, screen_name: screenOfPerformance.name, film: film, day: performanceInfo.day, open_time: performanceInfo.start_time, start_time: performanceInfo.start_time, end_time: performanceInfo.end_time, door_time: performanceInfo.door_time, start_date: performanceInfo.start_date, end_date: performanceInfo.end_date, tour_number: performanceInfo.tour_number, additionalProperty: [{ name: 'tourNumber', value: String(performanceInfo.tour_number) }] }, {
+                canceled: false
+            });
             debug('creating performance...', performance);
             yield performanceRepo.saveIfNotExists(performance);
             savePerformances.push(performance);
