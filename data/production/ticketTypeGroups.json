@@ -38,12 +38,6 @@
                 },
                 "description": "0",
                 "notes": "10011",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10011",
                     "category": "Normal"
@@ -81,12 +75,6 @@
                 },
                 "description": "0",
                 "notes": "10031",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10031",
                     "category": "Normal"
@@ -124,12 +112,6 @@
                 },
                 "description": "0",
                 "notes": "10041",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10041",
                     "category": "Normal"
@@ -167,12 +149,6 @@
                 },
                 "description": "1",
                 "notes": "10011",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10011",
                     "category": "Wheelchair"
@@ -210,12 +186,6 @@
                 },
                 "description": "1",
                 "notes": "10041",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10041",
                     "category": "Wheelchair"
@@ -253,12 +223,6 @@
                 },
                 "description": "1",
                 "notes": "10031",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10031",
                     "category": "Wheelchair"

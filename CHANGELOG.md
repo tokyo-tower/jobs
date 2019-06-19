@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+- 券種からキャンセルチャージ属性を削除
+
 ### Fixed
 
 ### Security
