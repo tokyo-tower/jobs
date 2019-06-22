@@ -9,7 +9,7 @@
             {
                 "_id": "001",
                 "id": "001",
-                "identifier": "10011",
+                "identifier": "001",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) (Взрослый: от 16 лет)",
                     "es": "Top Deck Tour, (Adulto: Mayor de 16 años)",
@@ -38,12 +38,6 @@
                 },
                 "description": "0",
                 "notes": "10011",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10011",
                     "category": "Normal"
@@ -52,7 +46,7 @@
             {
                 "_id": "002",
                 "id": "002",
-                "identifier": "10031",
+                "identifier": "002",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) (Школьный: от 7 до 15 лет)",
                     "es": "Top Deck Tour, (Escolares de primaria a secundaria obligatoria: 7 a 15 años)",
@@ -81,12 +75,6 @@
                 },
                 "description": "0",
                 "notes": "10031",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10031",
                     "category": "Normal"
@@ -95,7 +83,7 @@
             {
                 "_id": "003",
                 "id": "003",
-                "identifier": "10041",
+                "identifier": "003",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) (Дошкольный: дети от 4 до 6 лет)",
                     "es": "Top Deck Tour, (Niños de 4 a 6 años)",
@@ -124,12 +112,6 @@
                 },
                 "description": "0",
                 "notes": "10041",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10041",
                     "category": "Normal"
@@ -138,7 +120,7 @@
             {
                 "_id": "004",
                 "id": "004",
-                "identifier": "10011",
+                "identifier": "004",
                 "name": {
                     "ru": "Тур поTop Deck (верхней смотровой площадке) для людей на инвалидной коляске (Взрослый: от 16 лет)",
                     "es": "Top Deck Tour, Silla de ruedas (Adulto: Mayor de 16 años)",
@@ -167,12 +149,6 @@
                 },
                 "description": "1",
                 "notes": "10011",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10011",
                     "category": "Wheelchair"
@@ -181,7 +157,7 @@
             {
                 "_id": "006",
                 "id": "006",
-                "identifier": "10041",
+                "identifier": "006",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) для людей на инвалидной коляске (Дошкольный: дети от 4 до 6 лет)",
                     "es": "Top Deck Tour, Silla de ruedas (Niños de 4 a 6 años)",
@@ -210,12 +186,6 @@
                 },
                 "description": "1",
                 "notes": "10041",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10041",
                     "category": "Wheelchair"
@@ -224,7 +194,7 @@
             {
                 "_id": "005",
                 "id": "005",
-                "identifier": "10031",
+                "identifier": "005",
                 "name": {
                     "ru": "Тур по Top Deck (верхней смотровой площадке) для людей на инвалидной коляске (Школьный: от 7 до 15 лет)",
                     "es": "Top Deck Tour, Silla de ruedas (Escolares de primaria a secundaria obligatoria: 7 a 15 años)",
@@ -253,12 +223,6 @@
                 },
                 "description": "1",
                 "notes": "10031",
-                "cancel_charge": [
-                    {
-                        "charge": 1000,
-                        "days": 3
-                    }
-                ],
                 "ttts_extension": {
                     "csv_code": "10031",
                     "category": "Wheelchair"
