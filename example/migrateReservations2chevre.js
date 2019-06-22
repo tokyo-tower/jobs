@@ -16,21 +16,35 @@ async function main() {
     // });
     // console.log(reservations.length, 'reservations found');
 
-
     const days = []
     let day;
     for (day = 20190101; day <= 20190131; day++) {
         days.push(day);
     }
-    // for (day = 20190301; day <= 20190316; day++) {
-    //     days.push(day);
-    // }
-    // for (day = 20190501; day <= 20190531; day++) {
-    //     days.push(day);
-    // }
-    // for (day = 20190601; day < 20190618; day++) {
-    //     days.push(day);
-    // }
+    for (day = 20190201; day <= 20190228; day++) {
+        days.push(day);
+    }
+    for (day = 20190301; day <= 20190331; day++) {
+        days.push(day);
+    }
+    for (day = 20190401; day <= 20190430; day++) {
+        days.push(day);
+    }
+    for (day = 20190501; day <= 20190531; day++) {
+        days.push(day);
+    }
+    for (day = 20190601; day <= 20190630; day++) {
+        days.push(day);
+    }
+    for (day = 20190701; day <= 20190731; day++) {
+        days.push(day);
+    }
+    for (day = 20190801; day <= 20190831; day++) {
+        days.push(day);
+    }
+    for (day = 20190901; day <= 20190930; day++) {
+        days.push(day);
+    }
     console.log(days);
 
     for (const day of days) {
@@ -46,8 +60,12 @@ async function main() {
                 reservationStatus: reservation.status,
                 reservationNumber: reservation.payment_no,
                 additionalTicketText: reservation.watcher_name,
+                'reservedTicket.typeOf': 'Ticket',
+                'reservedTicket.ticketedSeat.typeOf': ttts.factory.chevre.placeType.Seat,
+                'reservedTicket.ticketedSeat.seatRow': '',
                 'reservedTicket.ticketedSeat.seatSection': '',
                 'reservedTicket.ticketedSeat.seatNumber': reservation.seat_code,
+                'reservedTicket.ticketType.typeOf': 'Offer',
                 'reservedTicket.ticketType.id': reservation.ticket_type,
                 'reservedTicket.ticketType.identifier': reservation.ticket_type,
                 'reservedTicket.ticketType.name': reservation.ticket_type_name,
@@ -58,9 +76,13 @@ async function main() {
                     value: 1,
                     unitCode: 'C62'
                 },
+                'reservationFor.typeOf': ttts.factory.chevre.eventType.ScreeningEvent,
                 'reservationFor.id': reservation.performance,
+                'reservationFor.eventStatus': ttts.factory.chevre.eventStatusType.EventScheduled,
+                'reservationFor.doorTime': moment(reservation.performance_start_date).toDate(),
                 'reservationFor.startDate': moment(reservation.performance_start_date).toDate(),
                 'reservationFor.endDate': moment(reservation.performance_end_date).toDate(),
+                'reservationFor.superEvent.location.name': reservation.theater_name,
                 'underName.name': reservation.purchaser_name,
                 'underName.givenName': reservation.purchaser_first_name,
                 'underName.familyName': reservation.purchaser_last_name,
