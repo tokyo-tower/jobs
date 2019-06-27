@@ -41,7 +41,17 @@
                 "ttts_extension": {
                     "csv_code": "10011",
                     "category": "Normal"
-                }
+                },
+                "additionalProperty": [
+                    {
+                        "name": "csvCode",
+                        "value": "10011"
+                    },
+                    {
+                        "name": "category",
+                        "value": "Normal"
+                    }
+                ]
             },
             {
                 "_id": "002",
@@ -78,7 +88,17 @@
                 "ttts_extension": {
                     "csv_code": "10031",
                     "category": "Normal"
-                }
+                },
+                "additionalProperty": [
+                    {
+                        "name": "csvCode",
+                        "value": "10031"
+                    },
+                    {
+                        "name": "category",
+                        "value": "Normal"
+                    }
+                ]
             },
             {
                 "_id": "003",
@@ -115,7 +135,17 @@
                 "ttts_extension": {
                     "csv_code": "10041",
                     "category": "Normal"
-                }
+                },
+                "additionalProperty": [
+                    {
+                        "name": "csvCode",
+                        "value": "10041"
+                    },
+                    {
+                        "name": "category",
+                        "value": "Normal"
+                    }
+                ]
             },
             {
                 "_id": "004",
@@ -152,7 +182,17 @@
                 "ttts_extension": {
                     "csv_code": "10011",
                     "category": "Wheelchair"
-                }
+                },
+                "additionalProperty": [
+                    {
+                        "name": "csvCode",
+                        "value": "10011"
+                    },
+                    {
+                        "name": "category",
+                        "value": "Wheelchair"
+                    }
+                ]
             },
             {
                 "_id": "006",
@@ -189,7 +229,17 @@
                 "ttts_extension": {
                     "csv_code": "10041",
                     "category": "Wheelchair"
-                }
+                },
+                "additionalProperty": [
+                    {
+                        "name": "csvCode",
+                        "value": "10041"
+                    },
+                    {
+                        "name": "category",
+                        "value": "Wheelchair"
+                    }
+                ]
             },
             {
                 "_id": "005",
@@ -226,7 +276,17 @@
                 "ttts_extension": {
                     "csv_code": "10031",
                     "category": "Wheelchair"
-                }
+                },
+                "additionalProperty": [
+                    {
+                        "name": "csvCode",
+                        "value": "10031"
+                    },
+                    {
+                        "name": "category",
+                        "value": "Wheelchair"
+                    }
+                ]
             }
         ]
     }
