@@ -18,6 +18,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v12.0.0 - 2019-06-27
+
+### Removed
+
+- 予約インターフェースから不要な属性を削除
+- 予約コレクションからqr_strに対するユニークインデックスを削除
+
 ## v11.0.0 - 2019-06-25
 
 ### Removed
