@@ -10,9 +10,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- 予約の入場以外の全属性をChevre化
-- 券種インターフェースをChevre化
-
 ### Deprecated
 
 ### Removed
@@ -20,6 +17,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v13.0.0 - 2019-07-01
+
+### Changed
+
+- 予約の入場以外の全属性をChevre化
+- 券種インターフェースをChevre化
 
 ## v12.0.0 - 2019-06-27
 
