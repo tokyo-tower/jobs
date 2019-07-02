@@ -83,9 +83,12 @@ export async function createFromSetting(): Promise<void> {
             startDate: performanceInfo.start_date,
             endDate: performanceInfo.end_date,
             duration: performanceInfo.duration,
-            superEvent: film,
+            superEvent: {
+                ...film,
+                location: theater
+            },
             location: screenOfPerformance,
-            tourNumber: performanceInfo.tour_number,
+            additionalProperty: [{ name: 'tourNumber', value: String(performanceInfo.tour_number) }],
             ttts_extension: {
                 tour_number: performanceInfo.tour_number,
                 ev_service_status: ttts.factory.performance.EvServiceStatus.Normal,
@@ -98,20 +101,22 @@ export async function createFromSetting(): Promise<void> {
             },
             ticket_type_group: <any>ticketTypeGroup,
 
-            theater: theater,
-            theater_name: theater.name,
-            screen: screenOfPerformance,
-            screen_name: screenOfPerformance.name,
-            film: film,
-            day: performanceInfo.day,
-            open_time: performanceInfo.start_time,
-            start_time: performanceInfo.start_time,
-            end_time: performanceInfo.end_time,
-            door_time: performanceInfo.door_time,
-            start_date: performanceInfo.start_date,
-            end_date: performanceInfo.end_date,
-            tour_number: performanceInfo.tour_number,
-            additionalProperty: [{ name: 'tourNumber', value: String(performanceInfo.tour_number) }]
+            ...<any>{
+                tourNumber: performanceInfo.tour_number,
+                theater: theater,
+                theater_name: theater.name,
+                screen: screenOfPerformance,
+                screen_name: screenOfPerformance.name,
+                film: film,
+                day: performanceInfo.day,
+                open_time: performanceInfo.start_time,
+                start_time: performanceInfo.start_time,
+                end_time: performanceInfo.end_time,
+                door_time: performanceInfo.door_time,
+                start_date: performanceInfo.start_date,
+                end_date: performanceInfo.end_date,
+                tour_number: performanceInfo.tour_number
+            }
         };
 
         debug('creating performance...', performance);
