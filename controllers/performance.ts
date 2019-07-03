@@ -99,24 +99,24 @@ export async function createFromSetting(): Promise<void> {
                 refund_update_user: '',
                 refunded_count: 0
             },
-            ticket_type_group: <any>ticketTypeGroup,
+            ticket_type_group: <any>ticketTypeGroup
 
-            ...<any>{
-                tourNumber: performanceInfo.tour_number,
-                theater: theater,
-                theater_name: theater.name,
-                screen: screenOfPerformance,
-                screen_name: screenOfPerformance.name,
-                film: film,
-                day: performanceInfo.day,
-                open_time: performanceInfo.start_time,
-                start_time: performanceInfo.start_time,
-                end_time: performanceInfo.end_time,
-                door_time: performanceInfo.door_time,
-                start_date: performanceInfo.start_date,
-                end_date: performanceInfo.end_date,
-                tour_number: performanceInfo.tour_number
-            }
+            // ...<any>{
+            //     tourNumber: performanceInfo.tour_number,
+            //     theater: theater,
+            //     theater_name: theater.name,
+            //     screen: screenOfPerformance,
+            //     screen_name: screenOfPerformance.name,
+            //     film: film,
+            //     day: performanceInfo.day,
+            //     open_time: performanceInfo.start_time,
+            //     start_time: performanceInfo.start_time,
+            //     end_time: performanceInfo.end_time,
+            //     door_time: performanceInfo.door_time,
+            //     start_date: performanceInfo.start_date,
+            //     end_date: performanceInfo.end_date,
+            //     tour_number: performanceInfo.tour_number
+            // }
         };
 
         debug('creating performance...', performance);
