@@ -18,6 +18,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v14.0.0 - 2019-07-03
+
+### Changed
+
+- パフォーマンスを開始日時で検索時にstartDateを参照するように調整
+
+### Removed
+
+- 注文取引結果からeventReservationsを削除(order.acceptedOffersへ移行)
+- 仮予約インターフェースから座席グレードを削除
+- 仮予約インターフェースからrate_limit_unit_in_secondsを削除
+- パフォーマンスインターフェースから非推奨属性を削除
+
 ## v13.0.0 - 2019-07-01
 
 ### Changed

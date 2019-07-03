@@ -73,16 +73,7 @@ function createFromSetting() {
                 performanceInfo.start_time
             ].join('');
             // パフォーマンス登録
-            const performance = {
-                id: id,
-                doorTime: performanceInfo.door_time,
-                startDate: performanceInfo.start_date,
-                endDate: performanceInfo.end_date,
-                duration: performanceInfo.duration,
-                superEvent: film,
-                location: screenOfPerformance,
-                tourNumber: performanceInfo.tour_number,
-                ttts_extension: {
+            const performance = Object.assign({ id: id, doorTime: performanceInfo.door_time, startDate: performanceInfo.start_date, endDate: performanceInfo.end_date, duration: performanceInfo.duration, superEvent: Object.assign({}, film, { location: theater }), location: screenOfPerformance, additionalProperty: [{ name: 'tourNumber', value: String(performanceInfo.tour_number) }], ttts_extension: {
                     tour_number: performanceInfo.tour_number,
                     ev_service_status: ttts.factory.performance.EvServiceStatus.Normal,
                     ev_service_update_user: '',
@@ -91,8 +82,8 @@ function createFromSetting() {
                     refund_status: ttts.factory.performance.RefundStatus.None,
                     refund_update_user: '',
                     refunded_count: 0
-                },
-                ticket_type_group: ticketTypeGroup,
+                }, ticket_type_group: ticketTypeGroup }, {
+                tourNumber: performanceInfo.tour_number,
                 theater: theater,
                 theater_name: theater.name,
                 screen: screenOfPerformance,
@@ -105,9 +96,8 @@ function createFromSetting() {
                 door_time: performanceInfo.door_time,
                 start_date: performanceInfo.start_date,
                 end_date: performanceInfo.end_date,
-                tour_number: performanceInfo.tour_number,
-                additionalProperty: [{ name: 'tourNumber', value: String(performanceInfo.tour_number) }]
-            };
+                tour_number: performanceInfo.tour_number
+            });
             debug('creating performance...', performance);
             yield performanceRepo.saveIfNotExists(performance);
             savePerformances.push(performance);
