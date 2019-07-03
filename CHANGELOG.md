@@ -10,9 +10,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- パフォーマンスを開始日時で検索時にstartDateを参照するように調整
-
 ### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## v14.0.0 - 2019-07-03
+
+### Changed
+
+- パフォーマンスを開始日時で検索時にstartDateを参照するように調整
 
 ### Removed
 
@@ -20,10 +30,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 - 仮予約インターフェースから座席グレードを削除
 - 仮予約インターフェースからrate_limit_unit_in_secondsを削除
 - パフォーマンスインターフェースから非推奨属性を削除
-
-### Fixed
-
-### Security
 
 ## v13.0.0 - 2019-07-01
 
