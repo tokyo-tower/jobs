@@ -10,8 +10,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- DBのパフォーマンスデータをChevre化
-
 ### Deprecated
 
 ### Removed
@@ -19,6 +17,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v15.0.0 - 2019-07-04
+
+### Changed
+
+- DBのパフォーマンスデータをChevre化
 
 ## v14.0.0 - 2019-07-03
 
