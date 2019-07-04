@@ -18,6 +18,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v15.0.0 - 2019-07-04
+
+### Changed
+
+- DBのパフォーマンスデータをChevre化
+
 ## v14.0.0 - 2019-07-03
 
 ### Changed
