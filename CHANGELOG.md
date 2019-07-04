@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+- 券種マスタデータから不要な属性(_id,ttts_extension)を削除
+
 ### Fixed
 
 ### Security

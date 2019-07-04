@@ -7,7 +7,6 @@
         },
         "ticket_types": [
             {
-                "_id": "001",
                 "id": "001",
                 "identifier": "001",
                 "name": {
@@ -38,10 +37,6 @@
                 },
                 "description": "0",
                 "notes": "10011",
-                "ttts_extension": {
-                    "csv_code": "10011",
-                    "category": "Normal"
-                },
                 "additionalProperty": [
                     {
                         "name": "csvCode",
@@ -54,7 +49,6 @@
                 ]
             },
             {
-                "_id": "002",
                 "id": "002",
                 "identifier": "002",
                 "name": {
@@ -85,10 +79,6 @@
                 },
                 "description": "0",
                 "notes": "10031",
-                "ttts_extension": {
-                    "csv_code": "10031",
-                    "category": "Normal"
-                },
                 "additionalProperty": [
                     {
                         "name": "csvCode",
@@ -101,7 +91,6 @@
                 ]
             },
             {
-                "_id": "003",
                 "id": "003",
                 "identifier": "003",
                 "name": {
@@ -132,10 +121,6 @@
                 },
                 "description": "0",
                 "notes": "10041",
-                "ttts_extension": {
-                    "csv_code": "10041",
-                    "category": "Normal"
-                },
                 "additionalProperty": [
                     {
                         "name": "csvCode",
@@ -148,7 +133,6 @@
                 ]
             },
             {
-                "_id": "004",
                 "id": "004",
                 "identifier": "004",
                 "name": {
@@ -179,10 +163,6 @@
                 },
                 "description": "1",
                 "notes": "10011",
-                "ttts_extension": {
-                    "csv_code": "10011",
-                    "category": "Wheelchair"
-                },
                 "additionalProperty": [
                     {
                         "name": "csvCode",
@@ -195,7 +175,6 @@
                 ]
             },
             {
-                "_id": "006",
                 "id": "006",
                 "identifier": "006",
                 "name": {
@@ -226,10 +205,6 @@
                 },
                 "description": "1",
                 "notes": "10041",
-                "ttts_extension": {
-                    "csv_code": "10041",
-                    "category": "Wheelchair"
-                },
                 "additionalProperty": [
                     {
                         "name": "csvCode",
@@ -242,7 +217,6 @@
                 ]
             },
             {
-                "_id": "005",
                 "id": "005",
                 "identifier": "005",
                 "name": {
@@ -273,10 +247,6 @@
                 },
                 "description": "1",
                 "notes": "10031",
-                "ttts_extension": {
-                    "csv_code": "10031",
-                    "category": "Wheelchair"
-                },
                 "additionalProperty": [
                     {
                         "name": "csvCode",
