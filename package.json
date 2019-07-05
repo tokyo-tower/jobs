@@ -13,6 +13,7 @@
     }
   ],
   "dependencies": {
+    "@chevre/api-nodejs-client": "1.0.0-alpha.78",
     "@motionpicture/ttts-domain": "17.0.0-alpha.18",
     "aws-sdk": "^2.379.0",
     "debug": "^3.2.6",
