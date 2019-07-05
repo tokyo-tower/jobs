@@ -14,11 +14,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
-- 券種マスタデータから不要な属性(_id,ttts_extension)を削除
-
 ### Fixed
 
 ### Security
+
+## v16.0.0 - 2019-07-05
+
+### Removed
+
+- 券種マスタデータから不要な属性(_id,ttts_extension)を削除
 
 ## v15.0.0 - 2019-07-04
 
