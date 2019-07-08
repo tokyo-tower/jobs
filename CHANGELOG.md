@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
+- Chevreイベント管理バージョンを追加
+
 ### Deprecated
 
 ### Removed

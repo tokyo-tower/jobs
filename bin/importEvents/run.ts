@@ -175,7 +175,12 @@ export async function main(): Promise<void> {
                     },
                     ticket_type_group: <any>{
                         id: offers.id,
-                        ticket_types: ticketTypes,
+                        ticket_types: ticketTypes.map((t) => {
+                            return {
+                                ...t,
+                                id: t.identifier // 互換性維持のためIDを識別子に置き換える
+                            };
+                        }),
                         name: offers.name
                     }
                 };

@@ -168,7 +168,10 @@ function main() {
                         },
                         ticket_type_group: {
                             id: offers.id,
-                            ticket_types: ticketTypes,
+                            ticket_types: ticketTypes.map((t) => {
+                                return Object.assign({}, t, { id: t.identifier // 互換性維持のためIDを識別子に置き換える
+                                 });
+                            }),
                             name: offers.name
                         }
                     };

@@ -9,20 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * create performances and reservations
+ * Chevreを使用しない場合のパフォーマンス作成
  */
 const ttts = require("@motionpicture/ttts-domain");
 const performanceController = require("../../controllers/performance");
 const mongooseConnectionOptions_1 = require("../../mongooseConnectionOptions");
-ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default)
-    .then()
-    // tslint:disable-next-line:no-console
-    .catch(console.error);
-// tslint:disable-next-line:no-floating-promises
-performanceController.createFromSetting()
-    .catch((err) => {
-    // tslint:disable-next-line:no-console
-    console.error(err);
-}).then(() => __awaiter(this, void 0, void 0, function* () {
-    yield ttts.mongoose.disconnect();
-}));
+const USE_CHEVRE = process.env.USE_CHEVRE === '1';
+if (!USE_CHEVRE) {
+    ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default)
+        .then()
+        // tslint:disable-next-line:no-console
+        .catch(console.error);
+    // tslint:disable-next-line:no-floating-promises
+    performanceController.createFromSetting()
+        .catch((err) => {
+        // tslint:disable-next-line:no-console
+        console.error(err);
+    }).then(() => __awaiter(this, void 0, void 0, function* () {
+        yield ttts.mongoose.disconnect();
+    }));
+}
