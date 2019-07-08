@@ -40,7 +40,7 @@ export async function createFromSetting(): Promise<void> {
     }
 
     // 作品情報取得
-    const films: ttts.factory.creativeWork.movie.IFilm[] =
+    const films: any[] =
         fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/films.json`);
     const film = films.find((f) => f.id === setting.film);
     debug('film:', film);

@@ -126,16 +126,7 @@ function main() {
                         startDate: moment(e.startDate).toDate(),
                         endDate: moment(e.endDate).toDate(),
                         duration: e.superEvent.duration,
-                        superEvent: {
-                            id: e.superEvent.id,
-                            name: e.superEvent.name,
-                            location: {
-                                id: movieTheater.id,
-                                branchCode: movieTheater.branchCode,
-                                name: movieTheater.name,
-                                address: movieTheater.address
-                            }
-                        },
+                        superEvent: e.superEvent,
                         location: {
                             id: screeningRoom.id,
                             branchCode: screeningRoom.branchCode,

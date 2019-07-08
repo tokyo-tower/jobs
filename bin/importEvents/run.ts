@@ -133,16 +133,7 @@ export async function main(): Promise<void> {
                     startDate: moment(e.startDate).toDate(),
                     endDate: moment(e.endDate).toDate(),
                     duration: <string>e.superEvent.duration,
-                    superEvent: {
-                        id: e.superEvent.id,
-                        name: e.superEvent.name,
-                        location: {
-                            id: movieTheater.id,
-                            branchCode: movieTheater.branchCode,
-                            name: movieTheater.name,
-                            address: <any>movieTheater.address
-                        }
-                    },
+                    superEvent: e.superEvent,
                     location: {
                         id: <string>screeningRoom.id,
                         branchCode: screeningRoom.branchCode,

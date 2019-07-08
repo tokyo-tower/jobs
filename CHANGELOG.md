@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Changed
 
 - Chevreイベント管理バージョンを追加
+- Chevreからの作品コードの引き継ぎを調整
 
 ### Deprecated
 
