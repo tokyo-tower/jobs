@@ -49,57 +49,54 @@ export async function main(): Promise<void> {
         auth: authClient
     });
 
-    // tslint:disable-next-line:max-func-body-length
-    await Promise.all(targetInfo.map(async (performanceInfo) => {
-        // 2017/10 2次 予約枠、時間の変更対応
-        const screen = (setting.special_screens[performanceInfo.start_time] !== undefined)
-            ? setting.special_screens[performanceInfo.start_time]
-            : setting.screen;
+    // 劇場検索
+    const searchMovieTheatersResult = await placeService.searchMovieTheaters({
+        project: { ids: [project.id] }
+    });
+    const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === setting.theater);
+    if (movieTheaterWithoutScreeningRoom === undefined) {
+        throw new Error('Movie Theater Not Found');
+    }
+    const movieTheater = await placeService.findMovieTheaterById({ id: movieTheaterWithoutScreeningRoom.id });
+    debug('movieTheater:', movieTheater);
 
+    const screeningRoom = movieTheater.containsPlace[0];
+
+    // 劇場作品検索
+    const workPerformedIdentifier = setting.film;
+    const searchScreeningEventSeriesResult = await eventService.search<chevreapi.factory.eventType.ScreeningEventSeries>({
+        project: { ids: [project.id] },
+        typeOf: chevreapi.factory.eventType.ScreeningEventSeries,
+        workPerformed: { identifiers: [workPerformedIdentifier] }
+    });
+    const screeningEventSeries = searchScreeningEventSeriesResult.data[0];
+    debug('screeningEventSeries:', screeningEventSeries);
+
+    // 券種検索
+    const ticketTypeGroupIdentifier = setting.ticket_type_group;
+    const searchTicketTypeGroupsResult = await offerService.searchTicketTypeGroups({
+        project: { ids: [project.id] },
+        identifier: `^${ticketTypeGroupIdentifier}$`
+    });
+    const ticketTypeGroup = searchTicketTypeGroupsResult.data[0];
+    debug('ticketTypeGroup:', ticketTypeGroup);
+
+    const searchTicketTypesResult = await offerService.searchTicketTypes({
+        project: { ids: [project.id] },
+        ids: ticketTypeGroup.ticketTypes
+    });
+    const ticketTypes = searchTicketTypesResult.data;
+    debug('ticketTypes:', ticketTypes);
+
+    for (const performanceInfo of targetInfo) {
         const id = [
             // tslint:disable-next-line:no-magic-numbers
             performanceInfo.day.slice(-6),
-            setting.film,
-            screen,
+            workPerformedIdentifier,
+            movieTheater.branchCode,
+            screeningRoom.branchCode,
             performanceInfo.start_time
         ].join('');
-
-        // 劇場検索
-        const searchMovieTheatersResult = await placeService.searchMovieTheaters({
-            project: { ids: [project.id] }
-        });
-        const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === '001');
-        if (movieTheaterWithoutScreeningRoom === undefined) {
-            throw new Error('Movie Theater Not Found');
-        }
-        const movieTheater = await placeService.findMovieTheaterById({ id: movieTheaterWithoutScreeningRoom.id });
-        debug('movieTheater:', movieTheater);
-
-        const screeningRoom = movieTheater.containsPlace[0];
-
-        // 劇場作品検索
-        const searchScreeningEventSeriesResult = await eventService.search<chevreapi.factory.eventType.ScreeningEventSeries>({
-            project: { ids: [project.id] },
-            typeOf: chevreapi.factory.eventType.ScreeningEventSeries,
-            workPerformed: { identifiers: ['001'] }
-        });
-        const screeningEventSeries = searchScreeningEventSeriesResult.data[0];
-        debug('screeningEventSeries:', screeningEventSeries);
-
-        // 券種検索
-        const searchTicketTypeGroupsResult = await offerService.searchTicketTypeGroups({
-            project: { ids: [project.id] },
-            identifier: '^01$'
-        });
-        const ticketTypeGroup = searchTicketTypeGroupsResult.data[0];
-        debug('ticketTypeGroup:', ticketTypeGroup);
-
-        const searchTicketTypesResult = await offerService.searchTicketTypes({
-            project: { ids: [project.id] },
-            ids: ticketTypeGroup.ticketTypes
-        });
-        const ticketTypes = searchTicketTypesResult.data;
-        debug('ticketTypes:', ticketTypes);
 
         const offers = {
             id: ticketTypeGroup.id,
@@ -166,7 +163,8 @@ export async function main(): Promise<void> {
             attributes: event,
             upsert: true
         });
-    }));
+        debug('upserted', id);
+    }
 }
 
 export interface ITargetPerformanceInfo {

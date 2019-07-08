@@ -55,7 +55,7 @@ export async function main(): Promise<void> {
     const searchMovieTheatersResult = await placeService.searchMovieTheaters({
         project: { ids: [project.id] }
     });
-    const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === '001');
+    const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === setting.theater);
     if (movieTheaterWithoutScreeningRoom === undefined) {
         throw new Error('Movie Theater Not Found');
     }
@@ -65,18 +65,20 @@ export async function main(): Promise<void> {
     const screeningRoom = movieTheater.containsPlace[0];
 
     // 劇場作品検索
+    const workPerformedIdentifier = setting.film;
     const searchScreeningEventSeriesResult = await eventService.search<chevreapi.factory.eventType.ScreeningEventSeries>({
         project: { ids: [project.id] },
         typeOf: chevreapi.factory.eventType.ScreeningEventSeries,
-        workPerformed: { identifiers: ['001'] }
+        workPerformed: { identifiers: [workPerformedIdentifier] }
     });
     const screeningEventSeries = searchScreeningEventSeriesResult.data[0];
     debug('screeningEventSeries:', screeningEventSeries);
 
     // 券種検索
+    const ticketTypeGroupIdentifier = setting.ticket_type_group;
     const searchTicketTypeGroupsResult = await offerService.searchTicketTypeGroups({
         project: { ids: [project.id] },
-        identifier: '^01$'
+        identifier: `^${ticketTypeGroupIdentifier}$`
     });
     const ticketTypeGroup = searchTicketTypeGroupsResult.data[0];
     debug('ticketTypeGroup:', ticketTypeGroup);
@@ -112,7 +114,7 @@ export async function main(): Promise<void> {
     const taskRepo = new ttts.repository.Task(ttts.mongoose.connection);
 
     // イベントごとに永続化トライ
-    await Promise.all(events.map(async (e) => {
+    for (const e of events) {
         try {
             let tourNumber = '';
             if (Array.isArray(e.additionalProperty)) {
@@ -209,7 +211,7 @@ export async function main(): Promise<void> {
             // tslint:disable-next-line:no-console
             console.error(error);
         }
-    }));
+    }
 }
 
 function getImportPeriod() {

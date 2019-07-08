@@ -56,7 +56,7 @@ function main() {
         const searchMovieTheatersResult = yield placeService.searchMovieTheaters({
             project: { ids: [project.id] }
         });
-        const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === '001');
+        const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === setting.theater);
         if (movieTheaterWithoutScreeningRoom === undefined) {
             throw new Error('Movie Theater Not Found');
         }
@@ -64,17 +64,19 @@ function main() {
         debug('movieTheater:', movieTheater);
         const screeningRoom = movieTheater.containsPlace[0];
         // 劇場作品検索
+        const workPerformedIdentifier = setting.film;
         const searchScreeningEventSeriesResult = yield eventService.search({
             project: { ids: [project.id] },
             typeOf: chevreapi.factory.eventType.ScreeningEventSeries,
-            workPerformed: { identifiers: ['001'] }
+            workPerformed: { identifiers: [workPerformedIdentifier] }
         });
         const screeningEventSeries = searchScreeningEventSeriesResult.data[0];
         debug('screeningEventSeries:', screeningEventSeries);
         // 券種検索
+        const ticketTypeGroupIdentifier = setting.ticket_type_group;
         const searchTicketTypeGroupsResult = yield offerService.searchTicketTypeGroups({
             project: { ids: [project.id] },
-            identifier: '^01$'
+            identifier: `^${ticketTypeGroupIdentifier}$`
         });
         const ticketTypeGroup = searchTicketTypeGroupsResult.data[0];
         debug('ticketTypeGroup:', ticketTypeGroup);
@@ -106,7 +108,7 @@ function main() {
         const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         const taskRepo = new ttts.repository.Task(ttts.mongoose.connection);
         // イベントごとに永続化トライ
-        yield Promise.all(events.map((e) => __awaiter(this, void 0, void 0, function* () {
+        for (const e of events) {
             try {
                 let tourNumber = '';
                 if (Array.isArray(e.additionalProperty)) {
@@ -199,7 +201,7 @@ function main() {
                 // tslint:disable-next-line:no-console
                 console.error(error);
             }
-        })));
+        }
     });
 }
 exports.main = main;
