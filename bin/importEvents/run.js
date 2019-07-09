@@ -130,23 +130,7 @@ function main() {
                         location: {
                             id: screeningRoom.id,
                             branchCode: screeningRoom.branchCode,
-                            name: screeningRoom.name,
-                            // sections: screeningRoom.containsPlace.map((p) => {
-                            //     return {
-                            //         code: <string>p.branchCode,
-                            //         branchCode: <string>p.branchCode,
-                            //         seats: (Array.isArray(p.containsPlace))
-                            //             ? p.containsPlace.map((seat) => {
-                            //                 return {
-                            //                     code: <string>seat.branchCode,
-                            //                     branchCode: <string>seat.branchCode,
-                            //                     seatingType: (<any>seat).seatingType
-                            //                 };
-                            //             })
-                            //             : []
-                            //     };
-                            // }),
-                            seats_number: 42
+                            name: screeningRoom.name
                         },
                         additionalProperty: e.additionalProperty,
                         ttts_extension: {
