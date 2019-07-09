@@ -131,21 +131,21 @@ function main() {
                             id: screeningRoom.id,
                             branchCode: screeningRoom.branchCode,
                             name: screeningRoom.name,
-                            sections: screeningRoom.containsPlace.map((p) => {
-                                return {
-                                    code: p.branchCode,
-                                    branchCode: p.branchCode,
-                                    seats: (Array.isArray(p.containsPlace))
-                                        ? p.containsPlace.map((seat) => {
-                                            return {
-                                                code: seat.branchCode,
-                                                branchCode: seat.branchCode,
-                                                seatingType: seat.seatingType
-                                            };
-                                        })
-                                        : []
-                                };
-                            }),
+                            // sections: screeningRoom.containsPlace.map((p) => {
+                            //     return {
+                            //         code: <string>p.branchCode,
+                            //         branchCode: <string>p.branchCode,
+                            //         seats: (Array.isArray(p.containsPlace))
+                            //             ? p.containsPlace.map((seat) => {
+                            //                 return {
+                            //                     code: <string>seat.branchCode,
+                            //                     branchCode: <string>seat.branchCode,
+                            //                     seatingType: (<any>seat).seatingType
+                            //                 };
+                            //             })
+                            //             : []
+                            //     };
+                            // }),
                             seats_number: 42
                         },
                         additionalProperty: e.additionalProperty,
