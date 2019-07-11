@@ -17,6 +17,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+- パフォーマンスインターフェースから券種情報を削除
+- Chevreを使用しないパフォーマンス管理を削除
+
 ### Fixed
 
 ### Security
