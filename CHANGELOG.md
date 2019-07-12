@@ -10,19 +10,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## v17.0.0 - 2019-07-12
+
+### Changed
+
 - Chevreイベント管理バージョンを追加
 - Chevreからの作品コードの引き継ぎを調整
-
-### Deprecated
 
 ### Removed
 
 - パフォーマンスインターフェースから券種情報を削除
 - Chevreを使用しないパフォーマンス管理を削除
-
-### Fixed
-
-### Security
 
 ## v16.0.0 - 2019-07-05
 
