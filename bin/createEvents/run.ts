@@ -7,7 +7,6 @@ import * as fs from 'fs-extra';
 import * as moment from 'moment-timezone';
 
 const debug = createDebug('ttts-jobs:createEvents');
-const USE_CHEVRE = process.env.USE_CHEVRE === '1';
 
 const project = { typeOf: <'Project'>'Project', id: <string>process.env.PROJECT_ID };
 
@@ -16,10 +15,6 @@ const project = { typeOf: <'Project'>'Project', id: <string>process.env.PROJECT_
  */
 // tslint:disable-next-line:max-func-body-length
 export async function main(): Promise<void> {
-    if (!USE_CHEVRE) {
-        return;
-    }
-
     // 作成情報取得
     const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
     debug('setting:', setting);

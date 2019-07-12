@@ -18,15 +18,11 @@ const fs = require("fs-extra");
 const moment = require("moment-timezone");
 const mongooseConnectionOptions_1 = require("../../mongooseConnectionOptions");
 const debug = createDebug('ttts-jobs:createEvents');
-const USE_CHEVRE = process.env.USE_CHEVRE === '1';
 const project = { typeOf: 'Project', id: process.env.PROJECT_ID };
 // tslint:disable-next-line:max-func-body-length
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
-        if (!USE_CHEVRE) {
-            return;
-        }
         // 作成情報取得
         const setting = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
         debug('setting:', setting);

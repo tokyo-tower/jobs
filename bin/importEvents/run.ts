@@ -10,17 +10,12 @@ import * as moment from 'moment-timezone';
 import mongooseConnectionOptions from '../../mongooseConnectionOptions';
 
 const debug = createDebug('ttts-jobs:createEvents');
-const USE_CHEVRE = process.env.USE_CHEVRE === '1';
 
 const project = { typeOf: <'Project'>'Project', id: <string>process.env.PROJECT_ID };
 
 // tslint:disable-next-line:max-func-body-length
 export async function main(): Promise<void> {
     await ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
-
-    if (!USE_CHEVRE) {
-        return;
-    }
 
     // 作成情報取得
     const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);

@@ -28,7 +28,6 @@
 | `AWS_ACCESS_KEY_ID`                    | true     |             | AWSリソースアクセスキー                         |
 | `AWS_SECRET_ACCESS_KEY`                | true     |             | AWSリソースアクセスシークレット                 |
 | `PROJECT_ID`                           | true     |             | Project ID                                      |
-| `USE_CHEVRE`                           | true     |             | Use Chevre Flag                                 |
 | `CHEVRE_AUTHORIZE_SERVER_DOMAIN`       | true     |             | Chevre API Settings                             |
 | `CHEVRE_CLIENT_ID`                     | true     |             | Chevre API Settings                             |
 | `CHEVRE_CLIENT_SECRET`                 | true     |             | Chevre API Settings                             |
