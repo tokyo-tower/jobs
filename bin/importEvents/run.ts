@@ -10,17 +10,12 @@ import * as moment from 'moment-timezone';
 import mongooseConnectionOptions from '../../mongooseConnectionOptions';
 
 const debug = createDebug('ttts-jobs:createEvents');
-const USE_CHEVRE = process.env.USE_CHEVRE === '1';
 
 const project = { typeOf: <'Project'>'Project', id: <string>process.env.PROJECT_ID };
 
 // tslint:disable-next-line:max-func-body-length
 export async function main(): Promise<void> {
     await ttts.mongoose.connect(<string>process.env.MONGOLAB_URI, mongooseConnectionOptions);
-
-    if (!USE_CHEVRE) {
-        return;
-    }
 
     // 作成情報取得
     const setting: any = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
@@ -55,7 +50,7 @@ export async function main(): Promise<void> {
     const searchMovieTheatersResult = await placeService.searchMovieTheaters({
         project: { ids: [project.id] }
     });
-    const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === '001');
+    const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === setting.theater);
     if (movieTheaterWithoutScreeningRoom === undefined) {
         throw new Error('Movie Theater Not Found');
     }
@@ -65,18 +60,20 @@ export async function main(): Promise<void> {
     const screeningRoom = movieTheater.containsPlace[0];
 
     // 劇場作品検索
+    const workPerformedIdentifier = setting.film;
     const searchScreeningEventSeriesResult = await eventService.search<chevreapi.factory.eventType.ScreeningEventSeries>({
         project: { ids: [project.id] },
         typeOf: chevreapi.factory.eventType.ScreeningEventSeries,
-        workPerformed: { identifiers: ['001'] }
+        workPerformed: { identifiers: [workPerformedIdentifier] }
     });
     const screeningEventSeries = searchScreeningEventSeriesResult.data[0];
     debug('screeningEventSeries:', screeningEventSeries);
 
     // 券種検索
+    const ticketTypeGroupIdentifier = setting.ticket_type_group;
     const searchTicketTypeGroupsResult = await offerService.searchTicketTypeGroups({
         project: { ids: [project.id] },
-        identifier: '^01$'
+        identifier: `^${ticketTypeGroupIdentifier}$`
     });
     const ticketTypeGroup = searchTicketTypeGroupsResult.data[0];
     debug('ticketTypeGroup:', ticketTypeGroup);
@@ -112,7 +109,7 @@ export async function main(): Promise<void> {
     const taskRepo = new ttts.repository.Task(ttts.mongoose.connection);
 
     // イベントごとに永続化トライ
-    await Promise.all(events.map(async (e) => {
+    for (const e of events) {
         try {
             let tourNumber = '';
             if (Array.isArray(e.additionalProperty)) {
@@ -131,36 +128,11 @@ export async function main(): Promise<void> {
                     startDate: moment(e.startDate).toDate(),
                     endDate: moment(e.endDate).toDate(),
                     duration: <string>e.superEvent.duration,
-                    superEvent: {
-                        id: e.superEvent.id,
-                        name: e.superEvent.name,
-                        location: {
-                            id: movieTheater.id,
-                            branchCode: movieTheater.branchCode,
-                            name: movieTheater.name,
-                            address: <any>movieTheater.address
-                        }
-                    },
+                    superEvent: e.superEvent,
                     location: {
                         id: <string>screeningRoom.id,
                         branchCode: screeningRoom.branchCode,
-                        name: screeningRoom.name,
-                        sections: screeningRoom.containsPlace.map((p) => {
-                            return {
-                                code: <string>p.branchCode,
-                                branchCode: <string>p.branchCode,
-                                seats: (Array.isArray(p.containsPlace))
-                                    ? p.containsPlace.map((seat) => {
-                                        return {
-                                            code: <string>seat.branchCode,
-                                            branchCode: <string>seat.branchCode,
-                                            seatingType: (<any>seat).seatingType
-                                        };
-                                    })
-                                    : []
-                            };
-                        }),
-                        seats_number: 42
+                        name: screeningRoom.name
                     },
                     additionalProperty: e.additionalProperty,
                     ttts_extension: {
@@ -175,7 +147,12 @@ export async function main(): Promise<void> {
                     },
                     ticket_type_group: <any>{
                         id: offers.id,
-                        ticket_types: ticketTypes,
+                        ticket_types: ticketTypes.map((t) => {
+                            return {
+                                ...t,
+                                id: t.identifier // 互換性維持のためIDを識別子に置き換える
+                            };
+                        }),
                         name: offers.name
                     }
                 };
@@ -204,7 +181,7 @@ export async function main(): Promise<void> {
             // tslint:disable-next-line:no-console
             console.error(error);
         }
-    }));
+    }
 }
 
 function getImportPeriod() {

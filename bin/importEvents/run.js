@@ -18,15 +18,11 @@ const fs = require("fs-extra");
 const moment = require("moment-timezone");
 const mongooseConnectionOptions_1 = require("../../mongooseConnectionOptions");
 const debug = createDebug('ttts-jobs:createEvents');
-const USE_CHEVRE = process.env.USE_CHEVRE === '1';
 const project = { typeOf: 'Project', id: process.env.PROJECT_ID };
 // tslint:disable-next-line:max-func-body-length
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield ttts.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
-        if (!USE_CHEVRE) {
-            return;
-        }
         // 作成情報取得
         const setting = fs.readJsonSync(`${process.cwd()}/data/${process.env.NODE_ENV}/setting.json`);
         debug('setting:', setting);
@@ -56,7 +52,7 @@ function main() {
         const searchMovieTheatersResult = yield placeService.searchMovieTheaters({
             project: { ids: [project.id] }
         });
-        const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === '001');
+        const movieTheaterWithoutScreeningRoom = searchMovieTheatersResult.data.find((d) => d.branchCode === setting.theater);
         if (movieTheaterWithoutScreeningRoom === undefined) {
             throw new Error('Movie Theater Not Found');
         }
@@ -64,17 +60,19 @@ function main() {
         debug('movieTheater:', movieTheater);
         const screeningRoom = movieTheater.containsPlace[0];
         // 劇場作品検索
+        const workPerformedIdentifier = setting.film;
         const searchScreeningEventSeriesResult = yield eventService.search({
             project: { ids: [project.id] },
             typeOf: chevreapi.factory.eventType.ScreeningEventSeries,
-            workPerformed: { identifiers: ['001'] }
+            workPerformed: { identifiers: [workPerformedIdentifier] }
         });
         const screeningEventSeries = searchScreeningEventSeriesResult.data[0];
         debug('screeningEventSeries:', screeningEventSeries);
         // 券種検索
+        const ticketTypeGroupIdentifier = setting.ticket_type_group;
         const searchTicketTypeGroupsResult = yield offerService.searchTicketTypeGroups({
             project: { ids: [project.id] },
-            identifier: '^01$'
+            identifier: `^${ticketTypeGroupIdentifier}$`
         });
         const ticketTypeGroup = searchTicketTypeGroupsResult.data[0];
         debug('ticketTypeGroup:', ticketTypeGroup);
@@ -106,7 +104,7 @@ function main() {
         const performanceRepo = new ttts.repository.Performance(ttts.mongoose.connection);
         const taskRepo = new ttts.repository.Task(ttts.mongoose.connection);
         // イベントごとに永続化トライ
-        yield Promise.all(events.map((e) => __awaiter(this, void 0, void 0, function* () {
+        for (const e of events) {
             try {
                 let tourNumber = '';
                 if (Array.isArray(e.additionalProperty)) {
@@ -124,36 +122,11 @@ function main() {
                         startDate: moment(e.startDate).toDate(),
                         endDate: moment(e.endDate).toDate(),
                         duration: e.superEvent.duration,
-                        superEvent: {
-                            id: e.superEvent.id,
-                            name: e.superEvent.name,
-                            location: {
-                                id: movieTheater.id,
-                                branchCode: movieTheater.branchCode,
-                                name: movieTheater.name,
-                                address: movieTheater.address
-                            }
-                        },
+                        superEvent: e.superEvent,
                         location: {
                             id: screeningRoom.id,
                             branchCode: screeningRoom.branchCode,
-                            name: screeningRoom.name,
-                            sections: screeningRoom.containsPlace.map((p) => {
-                                return {
-                                    code: p.branchCode,
-                                    branchCode: p.branchCode,
-                                    seats: (Array.isArray(p.containsPlace))
-                                        ? p.containsPlace.map((seat) => {
-                                            return {
-                                                code: seat.branchCode,
-                                                branchCode: seat.branchCode,
-                                                seatingType: seat.seatingType
-                                            };
-                                        })
-                                        : []
-                                };
-                            }),
-                            seats_number: 42
+                            name: screeningRoom.name
                         },
                         additionalProperty: e.additionalProperty,
                         ttts_extension: {
@@ -168,7 +141,10 @@ function main() {
                         },
                         ticket_type_group: {
                             id: offers.id,
-                            ticket_types: ticketTypes,
+                            ticket_types: ticketTypes.map((t) => {
+                                return Object.assign({}, t, { id: t.identifier // 互換性維持のためIDを識別子に置き換える
+                                 });
+                            }),
                             name: offers.name
                         }
                     };
@@ -196,7 +172,7 @@ function main() {
                 // tslint:disable-next-line:no-console
                 console.error(error);
             }
-        })));
+        }
     });
 }
 exports.main = main;
