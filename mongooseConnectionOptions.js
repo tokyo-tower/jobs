@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @see http://mongodb.github.io/node-mongodb-native/2.2/api/MongoClient.html
  */
 const mongooseConnectionOptions = {
+    autoIndex: false,
     autoReconnect: true,
     keepAlive: true,
     connectTimeoutMS: 30000,
