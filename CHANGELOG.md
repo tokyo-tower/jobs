@@ -10,9 +10,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
+- 予約番号と購入番号を分離
+
 ### Deprecated
 
 ### Removed
+
+- 注文照会キーを削除
 
 ### Fixed
 
