@@ -1,7 +1,7 @@
 /**
  * 入場ゲート情報を、所有者リポジトリから同期する
  */
-import * as ttts from '@motionpicture/ttts-domain';
+import * as ttts from '@tokyotower/domain';
 import * as AWS from 'aws-sdk';
 import * as createDebug from 'debug';
 

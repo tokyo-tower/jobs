@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * 入場ゲート情報を、所有者リポジトリから同期する
  */
-const ttts = require("@motionpicture/ttts-domain");
+const ttts = require("@tokyotower/domain");
 const AWS = require("aws-sdk");
 const createDebug = require("debug");
 const debug = createDebug('ttts-jobs:syncCheckinGates');

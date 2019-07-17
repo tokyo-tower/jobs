@@ -1,4 +1,4 @@
-import { mongoose } from '@motionpicture/ttts-domain';
+import { mongoose } from '@tokyotower/domain';
 
 /**
  * mongoose接続オプション
