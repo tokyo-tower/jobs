@@ -4,7 +4,7 @@
  * @ignore
  */
 
-import * as ttts from '@motionpicture/ttts-domain';
+import * as ttts from '@tokyotower/domain';
 import * as createDebug from 'debug';
 
 import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';

@@ -18,6 +18,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v18.0.0 - 2019-07-18
+
+### Changed
+
+- 予約番号と購入番号を分離
+
+### Removed
+
+- 注文照会キーを削除
+
 ## v17.0.1 - 2019-07-15
 
 ### Changed

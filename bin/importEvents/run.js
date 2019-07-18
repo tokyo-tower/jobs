@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Chevreからイベントをインポート
  */
 const chevreapi = require("@chevre/api-nodejs-client");
-const ttts = require("@motionpicture/ttts-domain");
+const ttts = require("@tokyotower/domain");
 const createDebug = require("debug");
 const fs = require("fs-extra");
 const moment = require("moment-timezone");

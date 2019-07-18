@@ -1,7 +1,7 @@
 /**
  * ウェブフックをたたく
  */
-import * as ttts from '@motionpicture/ttts-domain';
+import * as ttts from '@tokyotower/domain';
 
 import mongooseConnectionOptions from '../../../../mongooseConnectionOptions';
 
