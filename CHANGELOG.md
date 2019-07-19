@@ -18,6 +18,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v19.0.0 - 2019-07-19
+
+### Removed
+
+- 継続的ジョブを削除
+
 ## v18.0.0 - 2019-07-18
 
 ### Changed
